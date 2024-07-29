@@ -1,0 +1,19 @@
+[
+    {
+        "reason": "To have a single color type",
+        "operations": [
+            {
+                "remove": "gpu-color-dict-or-list-f64"
+            },
+            {
+                "remove": "gpu-color"
+            },
+            {
+                "rename": {
+                    "from": "gpu-color-dict",
+                    "to": "gpu-color"
+                }
+            }
+        ]
+    }
+]

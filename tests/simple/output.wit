@@ -1,0 +1,10 @@
+package webidl:my-package-idl;
+
+interface my-interface {
+  record gpu-color {
+    r: f64,
+    g: f64,
+    b: f64,
+    a: f64,
+  }
+}

@@ -1,0 +1,25 @@
+[
+    {
+        "reason": "Just because",
+        "operations": [
+            {
+                "replace-refs": {
+                    "old": "gpu-color",
+                    "new": "gpu-color-dict"
+                }
+            },
+            {
+                "remove": "gpu-color-dict-or-list-f64"
+            },
+            {
+                "remove": "gpu-color"
+            },
+            {
+                "rename": {
+                    "from": "gpu-color-dict",
+                    "to": "gpu-color"
+                }
+            }
+        ]
+    }
+]
