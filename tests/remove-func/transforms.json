@@ -1,0 +1,13 @@
+[
+    {
+        "reason": "Remove functions",
+        "operations": [
+            {
+                "remove-func": {
+                    "resource": "gpu-queue",
+                    "name": "on-submitted-work-done"
+                }
+            }
+        ]
+    }
+]

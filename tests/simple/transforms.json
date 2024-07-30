@@ -9,10 +9,10 @@
                 }
             },
             {
-                "remove": "gpu-color-dict-or-list-f64"
+                "remove-type": "gpu-color-dict-or-list-f64"
             },
             {
-                "remove": "gpu-color"
+                "remove-type": "gpu-color"
             },
             {
                 "rename": {

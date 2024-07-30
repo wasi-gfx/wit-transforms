@@ -1,0 +1,7 @@
+package webidl:my-package-idl;
+
+interface my-interface {
+  resource gpu-queue {
+    on-submitted-work-done: func();
+  }
+}

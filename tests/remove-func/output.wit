@@ -1,0 +1,6 @@
+package webidl:my-package-idl;
+
+interface my-interface {
+  resource gpu-queue {
+  }
+}

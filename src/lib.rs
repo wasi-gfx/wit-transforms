@@ -12,7 +12,12 @@ pub struct Transform {
 #[serde(rename_all = "kebab-case")]
 pub enum Operations {
     /// Remove a type
-    Remove(String),
+    RemoveType(String),
+    /// Remove a function
+    RemoveFunc {
+        name: String,
+        resource: Option<String>,
+    },
     /// Rename a type
     Rename { from: String, to: String },
     /// Replace all references to a type with a reference to another type
@@ -35,13 +40,51 @@ pub fn transform(
     for transform in transforms {
         for operation in transform.operations {
             match operation {
-                Operations::Remove(item) => match &mut package.items_mut()[0] {
+                Operations::RemoveType(item) => match &mut package.items_mut()[0] {
                     wit_encoder::PackageItem::Interface(interface) => {
                         interface.items_mut().retain(|i| match i {
                             InterfaceItem::TypeDef(def) => def.name().as_ref() != item,
-                            InterfaceItem::Function(func) => func.name().as_ref() != item,
+                            InterfaceItem::Function(_) => true,
                         });
                     }
+                    wit_encoder::PackageItem::World(_) => todo!(),
+                },
+                Operations::RemoveFunc { name, resource } => match &mut package.items_mut()[0] {
+                    wit_encoder::PackageItem::Interface(interface) => match resource {
+                        Some(resource) => {
+                            let type_def = interface
+                                .items_mut()
+                                .iter_mut()
+                                .find_map(|i| match i {
+                                    InterfaceItem::TypeDef(def)
+                                        if def.name().as_ref() == resource =>
+                                    {
+                                        Some(def)
+                                    }
+                                    _ => None,
+                                })
+                                .expect("Can't find resource");
+                            let resource = match type_def.kind_mut() {
+                                wit_encoder::TypeDefKind::Resource(resource) => resource,
+                                _ => panic!("{resource}, is not a resource"),
+                            };
+                            resource.funcs_mut().retain(|f| match f.kind() {
+                                wit_encoder::ResourceFuncKind::Method(n, _) => {
+                                    n.to_string() != name
+                                }
+                                wit_encoder::ResourceFuncKind::Static(n, _) => {
+                                    n.to_string() != name
+                                }
+                                wit_encoder::ResourceFuncKind::Constructor => name != "constructor",
+                            });
+                        }
+                        None => {
+                            interface.items_mut().retain(|i| match i {
+                                InterfaceItem::TypeDef(_) => false,
+                                InterfaceItem::Function(func) => func.name().as_ref() != name,
+                            });
+                        }
+                    },
                     wit_encoder::PackageItem::World(_) => todo!(),
                 },
                 Operations::Rename { from, to } => {

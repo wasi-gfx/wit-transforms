@@ -30,3 +30,8 @@ fn webgpu() {
 fn simple() {
     test("simple");
 }
+
+#[test]
+fn remove_func() {
+    test("remove-func");
+}
