@@ -1,6 +1,6 @@
 [
     {
-        "reason": "To have a single color type",
+        "reason": "Have a single color type",
         "operations": [
             {
                 "remove-type": "gpu-color-dict-or-list-f64"
@@ -12,6 +12,40 @@
                 "rename": {
                     "from": "gpu-color-dict",
                     "to": "gpu-color"
+                }
+            }
+        ]
+    },
+    {
+        "reason": "Have a single origin 3D type",
+        "operations": [
+            {
+                "remove-type": "gpu-origin3-d-dict-or-list-gpu-integer-coordinate"
+            },
+            {
+                "remove-type": "gpu-origin3-d"
+            },
+            {
+                "rename": {
+                    "from": "gpu-origin3-d-dict",
+                    "to": "gpu-origin3-d"
+                }
+            }
+        ]
+    },
+    {
+        "reason": "Have a single extent 3D type",
+        "operations": [
+            {
+                "remove-type": "gpu-extent3-d-dict-or-list-gpu-integer-coordinate"
+            },
+            {
+                "remove-type": "gpu-extent3-d"
+            },
+            {
+                "rename": {
+                    "from": "gpu-extent3-d-dict",
+                    "to": "gpu-extent3-d"
                 }
             }
         ]

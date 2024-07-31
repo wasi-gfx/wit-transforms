@@ -1278,16 +1278,11 @@ interface my-interface {
     max-draw-count: option<gpu-size64>,
     label: option<string>,
   }
-  record gpu-origin3-d-dict {
+  record gpu-origin3-d {
     x: option<gpu-integer-coordinate>,
     y: option<gpu-integer-coordinate>,
     z: option<gpu-integer-coordinate>,
   }
-  variant gpu-origin3-d-dict-or-list-gpu-integer-coordinate {
-    gpu-origin3-d-dict(gpu-origin3-d-dict),
-    list-gpu-integer-coordinate(list<gpu-integer-coordinate>),
-  }
-  type gpu-origin3-d = gpu-origin3-d-dict-or-list-gpu-integer-coordinate;
   record gpu-image-copy-texture {
     texture: borrow<gpu-texture>,
     mip-level: option<gpu-integer-coordinate>,
@@ -1302,16 +1297,11 @@ interface my-interface {
     origin: option<gpu-origin3-d>,
     aspect: option<gpu-texture-aspect>,
   }
-  record gpu-extent3-d-dict {
+  record gpu-extent3-d {
     width: gpu-integer-coordinate,
     height: option<gpu-integer-coordinate>,
     depth-or-array-layers: option<gpu-integer-coordinate>,
   }
-  variant gpu-extent3-d-dict-or-list-gpu-integer-coordinate {
-    gpu-extent3-d-dict(gpu-extent3-d-dict),
-    list-gpu-integer-coordinate(list<gpu-integer-coordinate>),
-  }
-  type gpu-extent3-d = gpu-extent3-d-dict-or-list-gpu-integer-coordinate;
   record gpu-texture-descriptor {
     size: gpu-extent3-d,
     mip-level-count: option<gpu-integer-coordinate>,
