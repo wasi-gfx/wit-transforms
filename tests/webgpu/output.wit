@@ -5,29 +5,9 @@ interface my-interface {
   }
   resource predefined-color-space {
   }
-  resource html-video-element {
-  }
-  resource html-image-element {
-  }
-  resource html-canvas-element {
-  }
-  resource offscreen-canvas {
-  }
-  resource video-frame {
-  }
-  resource image-bitmap {
-  }
-  resource image-data {
-  }
   resource event-target {
   }
-  resource dom-exception {
-  }
   resource event {
-  }
-  record event-init {  }
-  record gpu-object-descriptor-base {
-    label: option<string>,
   }
   resource gpu-supported-limits {
     max-texture-dimension1-d: func() -> u32;
@@ -126,7 +106,6 @@ interface my-interface {
     create-buffer: func(descriptor: gpu-buffer-descriptor) -> gpu-buffer;
     create-texture: func(descriptor: gpu-texture-descriptor) -> gpu-texture;
     create-sampler: func(descriptor: option<gpu-sampler-descriptor>) -> gpu-sampler;
-    import-external-texture: func(descriptor: gpu-external-texture-descriptor) -> gpu-external-texture;
     create-bind-group-layout: func(descriptor: gpu-bind-group-layout-descriptor) -> gpu-bind-group-layout;
     create-pipeline-layout: func(descriptor: gpu-pipeline-layout-descriptor) -> gpu-pipeline-layout;
     create-bind-group: func(descriptor: gpu-bind-group-descriptor) -> gpu-bind-group;
@@ -333,15 +312,6 @@ interface my-interface {
     label: func() -> string;
     set-label: func(label: string);
   }
-  variant html-video-element-or-video-frame {
-    html-video-element(borrow<html-video-element>),
-    video-frame(borrow<video-frame>),
-  }
-  record gpu-external-texture-descriptor {
-    source: html-video-element-or-video-frame,
-    color-space: option<borrow<predefined-color-space>>,
-    label: option<string>,
-  }
   resource gpu-sampler {
     label: func() -> string;
     set-label: func(label: string);
@@ -513,10 +483,6 @@ interface my-interface {
     compilation-hints: option<list<gpu-shader-module-compilation-hint>>,
     label: option<string>,
   }
-  record gpu-pipeline-descriptor-base {
-    layout: gpu-auto-layout-mode-or-gpu-pipeline-layout,
-    label: option<string>,
-  }
   resource record-gpu-pipeline-constant-value {
     constructor();
     add: func(key: string, value: gpu-pipeline-constant-value);
@@ -678,16 +644,6 @@ interface my-interface {
     vertex,
     instance,
   }
-  variant html-canvas-element-or-html-image-element-or-html-video-element-or-image-bitmap-or-image-data-or-offscreen-canvas-or-video-frame {
-    html-canvas-element(borrow<html-canvas-element>),
-    html-image-element(borrow<html-image-element>),
-    html-video-element(borrow<html-video-element>),
-    image-bitmap(borrow<image-bitmap>),
-    image-data(borrow<image-data>),
-    offscreen-canvas(borrow<offscreen-canvas>),
-    video-frame(borrow<video-frame>),
-  }
-  type gpu-image-copy-external-image-source = html-canvas-element-or-html-image-element-or-html-video-element-or-image-bitmap-or-image-data-or-offscreen-canvas-or-video-frame;
   resource gpu-command-buffer {
     label: func() -> string;
     set-label: func(label: string);
@@ -819,7 +775,6 @@ interface my-interface {
     on-submitted-work-done: func();
     write-buffer: func(buffer: borrow<gpu-buffer>, buffer-offset: gpu-size64, data: allow-shared-buffer-source, data-offset: option<gpu-size64>, size: option<gpu-size64>);
     write-texture: func(destination: gpu-image-copy-texture, data: allow-shared-buffer-source, data-layout: gpu-image-data-layout, size: gpu-extent3-d);
-    copy-external-image-to-texture: func(source: gpu-image-copy-external-image, destination: gpu-image-copy-texture-tagged, copy-size: gpu-extent3-d);
     label: func() -> string;
     set-label: func(label: string);
   }
@@ -1322,20 +1277,6 @@ interface my-interface {
     timestamp-writes: option<gpu-render-pass-timestamp-writes>,
     max-draw-count: option<gpu-size64>,
     label: option<string>,
-  }
-  record gpu-origin2-d-dict {
-    x: option<gpu-integer-coordinate>,
-    y: option<gpu-integer-coordinate>,
-  }
-  variant gpu-origin2-d-dict-or-list-gpu-integer-coordinate {
-    gpu-origin2-d-dict(gpu-origin2-d-dict),
-    list-gpu-integer-coordinate(list<gpu-integer-coordinate>),
-  }
-  type gpu-origin2-d = gpu-origin2-d-dict-or-list-gpu-integer-coordinate;
-  record gpu-image-copy-external-image {
-    source: gpu-image-copy-external-image-source,
-    origin: option<gpu-origin2-d>,
-    flip-y: option<bool>,
   }
   record gpu-origin3-d-dict {
     x: option<gpu-integer-coordinate>,

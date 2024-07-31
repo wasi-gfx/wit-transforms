@@ -3,16 +3,100 @@
         "reason": "To have a single color type",
         "operations": [
             {
-                "remove": "gpu-color-dict-or-list-f64"
+                "remove-type": "gpu-color-dict-or-list-f64"
             },
             {
-                "remove": "gpu-color"
+                "remove-type": "gpu-color"
             },
             {
                 "rename": {
                     "from": "gpu-color-dict",
                     "to": "gpu-color"
                 }
+            }
+        ]
+    },
+    {
+        "reason": "Remove gpu-supported-limits.copy-external-image-to-texture as it's web related",
+        "operations": [
+            {
+                "remove-func": {
+                    "resource": "gpu-queue",
+                    "name": "copy-external-image-to-texture"
+                }
+            },
+            {
+                "remove-type": "gpu-image-copy-external-image"
+            },
+            {
+                "remove-type": "gpu-image-copy-external-image-source"
+            },
+            {
+                "remove-type": "html-canvas-element-or-html-image-element-or-html-video-element-or-image-bitmap-or-image-data-or-offscreen-canvas-or-video-frame"
+            },
+            {
+                "remove-type": "html-canvas-element"
+            },
+            {
+                "remove-type": "html-image-element"
+            },
+            {
+                "remove-type": "image-bitmap"
+            },
+            {
+                "remove-type": "image-data"
+            },
+            {
+                "remove-type": "offscreen-canvas"
+            },
+            {
+                "remove-type": "gpu-origin2-d-dict"
+            },
+            {
+                "remove-type": "gpu-origin2-d-dict-or-list-gpu-integer-coordinate"
+            },
+            {
+                "remove-type": "gpu-origin2-d"
+            }
+        ]
+    },
+    {
+        "reason": "Remove gpu-device.import-external-texture as it's web related",
+        "operations": [
+            {
+                "remove-func": {
+                    "resource": "gpu-device",
+                    "name": "import-external-texture"
+                }
+            },
+            {
+                "remove-type": "gpu-external-texture-descriptor"
+            },
+            {
+                "remove-type": "html-video-element-or-video-frame"
+            },
+            {
+                "remove-type": "html-video-element"
+            },
+            {
+                "remove-type": "video-frame"
+            }
+        ]
+    },
+    {
+        "reason": "Remove bases that are never used",
+        "operations": [
+            {
+                "remove-type": "dom-exception"
+            },
+            {
+                "remove-type": "event-init"
+            },
+            {
+                "remove-type": "gpu-object-descriptor-base"
+            },
+            {
+                "remove-type": "gpu-pipeline-descriptor-base"
             }
         ]
     }
