@@ -9,7 +9,7 @@
                 "remove-type": "gpu-color"
             },
             {
-                "rename": {
+                "rename-type": {
                     "from": "gpu-color-dict",
                     "to": "gpu-color"
                 }
@@ -26,7 +26,7 @@
                 "remove-type": "gpu-origin3-d"
             },
             {
-                "rename": {
+                "rename-type": {
                     "from": "gpu-origin3-d-dict",
                     "to": "gpu-origin3-d"
                 }
@@ -43,7 +43,7 @@
                 "remove-type": "gpu-extent3-d"
             },
             {
-                "rename": {
+                "rename-type": {
                     "from": "gpu-extent3-d-dict",
                     "to": "gpu-extent3-d"
                 }

@@ -12,20 +12,19 @@ pub struct Transform {
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
 pub enum Operations {
+    /// Add new wit
+    AddType(wit_encoder::TypeDef),
     /// Remove a type
     RemoveType(String),
-    /// Remove a function
-    RemoveFunc {
-        name: String,
-        resource: Option<String>,
-    },
-    /// Remove a field from a record
-    RemoveRecordField { record: String, field: String },
+    /// Rename a type
+    RenameType { from: String, to: String },
     /// Add a field to a record
     AddRecordField {
         record: String,
         field: wit_encoder::Field,
     },
+    /// Remove a field from a record
+    RemoveRecordField { record: String, field: String },
     /// Rename a field of a record
     RenameRecordField {
         record: String,
@@ -38,19 +37,13 @@ pub enum Operations {
         field: String,
         new_type: Type,
     },
-    /// Rename a type
-    Rename { from: String, to: String },
+    /// Remove a function
+    RemoveFunc {
+        name: String,
+        resource: Option<String>,
+    },
     /// Replace all references to a type with a reference to another type
     ReplaceRefs { old: String, new: String },
-    /// Add new wit
-    Add(Add),
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-#[serde(rename_all = "kebab-case")]
-pub enum Add {
-    /// Type
-    Type(wit_encoder::TypeDef),
 }
 
 pub fn transform(
@@ -60,32 +53,28 @@ pub fn transform(
     for transform in transforms {
         for operation in transform.operations {
             match operation {
+                Operations::AddType(new_type) => {
+                    interface.items_mut().push(InterfaceItem::TypeDef(new_type));
+                }
                 Operations::RemoveType(item) => {
                     interface.items_mut().retain(|i| match i {
                         InterfaceItem::TypeDef(def) => def.name().as_ref() != item,
                         InterfaceItem::Function(_) => true,
                     });
                 }
-                Operations::RemoveFunc { name, resource } => match resource {
-                    Some(resource) => {
-                        let type_def = find_type_def(&mut interface, &resource);
-                        let resource = match type_def.kind_mut() {
-                            wit_encoder::TypeDefKind::Resource(resource) => resource,
-                            _ => panic!("{resource}, is not a resource"),
-                        };
-                        resource.funcs_mut().retain(|f| match f.kind() {
-                            wit_encoder::ResourceFuncKind::Method(n, _) => n.to_string() != name,
-                            wit_encoder::ResourceFuncKind::Static(n, _) => n.to_string() != name,
-                            wit_encoder::ResourceFuncKind::Constructor => name != "constructor",
-                        });
-                    }
-                    None => {
-                        interface.items_mut().retain(|i| match i {
-                            InterfaceItem::TypeDef(_) => false,
-                            InterfaceItem::Function(func) => func.name().as_ref() != name,
-                        });
-                    }
-                },
+                Operations::RenameType { from, to } => {
+                    let from = Ident::new(from);
+                    let to = Ident::new(to);
+                    visit_names_mut(&mut interface, |name| {
+                        if name == &from {
+                            *name = to.clone();
+                        }
+                    });
+                }
+                Operations::AddRecordField { record, field } => {
+                    let record = find_record(&mut interface, &record);
+                    record.fields_mut().push(field);
+                }
                 Operations::RemoveRecordField { record, field } => {
                     let record = find_record(&mut interface, &record);
                     // TODO: don't use retain_mut
@@ -121,19 +110,26 @@ pub fn transform(
                         .expect(&format!("{record_name}.{field} not found"));
                     field.set_type(new_type);
                 }
-                Operations::AddRecordField { record, field } => {
-                    let record = find_record(&mut interface, &record);
-                    record.fields_mut().push(field);
-                }
-                Operations::Rename { from, to } => {
-                    let from = Ident::new(from);
-                    let to = Ident::new(to);
-                    visit_names_mut(&mut interface, |name| {
-                        if name == &from {
-                            *name = to.clone();
-                        }
-                    });
-                }
+                Operations::RemoveFunc { name, resource } => match resource {
+                    Some(resource) => {
+                        let type_def = find_type_def(&mut interface, &resource);
+                        let resource = match type_def.kind_mut() {
+                            wit_encoder::TypeDefKind::Resource(resource) => resource,
+                            _ => panic!("{resource}, is not a resource"),
+                        };
+                        resource.funcs_mut().retain(|f| match f.kind() {
+                            wit_encoder::ResourceFuncKind::Method(n, _) => n.to_string() != name,
+                            wit_encoder::ResourceFuncKind::Static(n, _) => n.to_string() != name,
+                            wit_encoder::ResourceFuncKind::Constructor => name != "constructor",
+                        });
+                    }
+                    None => {
+                        interface.items_mut().retain(|i| match i {
+                            InterfaceItem::TypeDef(_) => false,
+                            InterfaceItem::Function(func) => func.name().as_ref() != name,
+                        });
+                    }
+                },
                 Operations::ReplaceRefs { old, new } => {
                     let old = Ident::new(old);
                     let new = Ident::new(new);
@@ -143,11 +139,6 @@ pub fn transform(
                         }
                     });
                 }
-                Operations::Add(add) => match add {
-                    Add::Type(ty) => {
-                        interface.items_mut().push(InterfaceItem::TypeDef(ty));
-                    }
-                },
             }
         }
     }

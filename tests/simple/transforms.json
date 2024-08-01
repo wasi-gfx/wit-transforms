@@ -15,7 +15,7 @@
                 "remove-type": "gpu-color"
             },
             {
-                "rename": {
+                "rename-type": {
                     "from": "gpu-color-dict",
                     "to": "gpu-color"
                 }
