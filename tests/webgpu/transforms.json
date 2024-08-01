@@ -153,5 +153,114 @@
                 "remove-type": "any"
             }
         ]
+    },
+    {
+        "reason": "Remove allow-shared-buffer-source as it's web related",
+        "operations": [
+            {
+                "retype-record-field": {
+                    "record": "gpu-shader-module-descriptor",
+                    "field": "source-map",
+                    "new-type": {
+                        "option": "string"
+                    }
+                }
+            },
+            {
+                // TODO: replaced with something else.
+                "remove-func": {
+                    "resource": "gpu-queue",
+                    "name": "write-buffer"
+                }
+            },
+            {
+                // TODO: replaced with something else.
+                "remove-func": {
+                    "resource": "gpu-queue",
+                    "name": "write-texture"
+                }
+            },
+            {
+                "remove-type": "array-buffer-view"
+            },
+            {
+                "remove-type": "allow-shared-buffer-source"
+            },
+            {
+                "remove-type": "data-view"
+            },
+            {
+                "remove-type": "uint8-array"
+            },
+            {
+                "remove-type": "uint8-array-constructor-options"
+            },
+            {
+                "remove-type": "uint8-array-set-src"
+            },
+            {
+                "remove-type": "uint8-clamped-array"
+            },
+            {
+                "remove-type": "uint8-clamped-array-constructor-options"
+            },
+            {
+                "remove-type": "uint8-clamped-array-set-src"
+            },
+            {
+                "remove-type": "uint16-array"
+            },
+            {
+                "remove-type": "uint16-array-constructor-options"
+            },
+            {
+                "remove-type": "uint16-array-set-src"
+            },
+            {
+                "remove-type": "int8-array"
+            },
+            {
+                "remove-type": "int8-array-constructor-options"
+            },
+            {
+                "remove-type": "int8-array-set-src"
+            },
+            {
+                "remove-type": "int16-array"
+            },
+            {
+                "remove-type": "int16-array-constructor-options"
+            },
+            {
+                "remove-type": "int16-array-set-src"
+            },
+            {
+                "remove-type": "int32-array"
+            },
+            {
+                "remove-type": "int32-array-constructor-options"
+            },
+            {
+                "remove-type": "int32-array-set-src"
+            },
+            {
+                "remove-type": "float32-array"
+            },
+            {
+                "remove-type": "float32-array-constructor-options"
+            },
+            {
+                "remove-type": "float32-array-set-src"
+            },
+            {
+                "remove-type": "float64-array"
+            },
+            {
+                "remove-type": "float64-array-constructor-options"
+            },
+            {
+                "remove-type": "float64-array-set-src"
+            }
+        ]
     }
 ]
