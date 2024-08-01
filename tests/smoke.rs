@@ -22,6 +22,11 @@ fn test(path: &str) {
 }
 
 #[test]
+fn record() {
+    test("record");
+}
+
+#[test]
 fn webgpu() {
     test("webgpu");
 }

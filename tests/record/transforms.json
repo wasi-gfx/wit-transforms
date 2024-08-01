@@ -1,0 +1,38 @@
+[
+    {
+        "reason": "Record transformations",
+        "operations": [
+            {
+                "remove-record-field": {
+                    "record": "my-record",
+                    "field": "remove"
+                }
+            },
+            {
+                "add-record-field": {
+                    "record": "my-record",
+                    "field": {
+                        "name": "added",
+                        "type": {
+                            "option": "string"
+                        }
+                    }
+                }
+            },
+            {
+                "rename-record-field": {
+                    "record": "my-record",
+                    "old-field-name" : "rename-old-name",
+                    "new-field-name" : "rename-new-name"
+                }
+            },
+            {
+                "retype-record-field": {
+                    "record": "my-record",
+                    "field": "retype",
+                    "new-type": "f32"
+                }
+            }
+        ]
+    }
+]

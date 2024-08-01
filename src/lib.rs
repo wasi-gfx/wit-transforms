@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use wit_encoder::{Ident, InterfaceItem};
+use wit_encoder::{Ident, Interface, InterfaceItem, Record, Type, TypeDef};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
@@ -10,6 +10,7 @@ pub struct Transform {
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
 pub enum Operations {
     /// Remove a type
     RemoveType(String),
@@ -17,6 +18,25 @@ pub enum Operations {
     RemoveFunc {
         name: String,
         resource: Option<String>,
+    },
+    /// Remove a field from a record
+    RemoveRecordField { record: String, field: String },
+    /// Add a field to a record
+    AddRecordField {
+        record: String,
+        field: wit_encoder::Field,
+    },
+    /// Rename a field of a record
+    RenameRecordField {
+        record: String,
+        old_field_name: String,
+        new_field_name: String,
+    },
+    /// Change type of a field in a record
+    RetypeRecordField {
+        record: String,
+        field: String,
+        new_type: Type,
     },
     /// Rename a type
     Rename { from: String, to: String },
@@ -52,18 +72,7 @@ pub fn transform(
                 Operations::RemoveFunc { name, resource } => match &mut package.items_mut()[0] {
                     wit_encoder::PackageItem::Interface(interface) => match resource {
                         Some(resource) => {
-                            let type_def = interface
-                                .items_mut()
-                                .iter_mut()
-                                .find_map(|i| match i {
-                                    InterfaceItem::TypeDef(def)
-                                        if def.name().as_ref() == resource =>
-                                    {
-                                        Some(def)
-                                    }
-                                    _ => None,
-                                })
-                                .expect("Can't find resource");
+                            let type_def = find_type_def(interface, &resource);
                             let resource = match type_def.kind_mut() {
                                 wit_encoder::TypeDefKind::Resource(resource) => resource,
                                 _ => panic!("{resource}, is not a resource"),
@@ -85,6 +94,59 @@ pub fn transform(
                             });
                         }
                     },
+                    wit_encoder::PackageItem::World(_) => todo!(),
+                },
+                Operations::RemoveRecordField { record, field } => {
+                    match &mut package.items_mut()[0] {
+                        wit_encoder::PackageItem::Interface(interface) => {
+                            let record = find_record(interface, &record);
+                            // TODO: don't use retain_mut
+                            record
+                                .fields_mut()
+                                .retain_mut(|f| f.name().to_string() != field);
+                        }
+                        wit_encoder::PackageItem::World(_) => todo!(),
+                    }
+                }
+                Operations::RenameRecordField {
+                    record: record_name,
+                    old_field_name,
+                    new_field_name,
+                } => match &mut package.items_mut()[0] {
+                    wit_encoder::PackageItem::Interface(interface) => {
+                        let old_field_name = Ident::new(old_field_name);
+                        let record = find_record(interface, &record_name);
+                        let field = record
+                            .fields_mut()
+                            .iter_mut()
+                            .find(|f| f.name() == &old_field_name)
+                            .expect(&format!("{record_name}.{old_field_name} not found"));
+                        field.set_name(new_field_name);
+                    }
+                    wit_encoder::PackageItem::World(_) => todo!(),
+                },
+                Operations::RetypeRecordField {
+                    record: record_name,
+                    field,
+                    new_type,
+                } => match &mut package.items_mut()[0] {
+                    wit_encoder::PackageItem::Interface(interface) => {
+                        let field = Ident::new(field);
+                        let record = find_record(interface, &record_name);
+                        let field = record
+                            .fields_mut()
+                            .iter_mut()
+                            .find(|f| f.name() == &field)
+                            .expect(&format!("{record_name}.{field} not found"));
+                        field.set_type(new_type);
+                    }
+                    wit_encoder::PackageItem::World(_) => todo!(),
+                },
+                Operations::AddRecordField { record, field } => match &mut package.items_mut()[0] {
+                    wit_encoder::PackageItem::Interface(interface) => {
+                        let record = find_record(interface, &record);
+                        record.fields_mut().push(field);
+                    }
                     wit_encoder::PackageItem::World(_) => todo!(),
                 },
                 Operations::Rename { from, to } => {
@@ -117,6 +179,27 @@ pub fn transform(
         }
     }
     package
+}
+
+fn find_record<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Record {
+    let type_def = find_type_def(interface, &name);
+    let record = match type_def.kind_mut() {
+        wit_encoder::TypeDefKind::Record(resource) => resource,
+        _ => panic!("{name} is not a record"),
+    };
+    record
+}
+
+fn find_type_def<'a>(interface: &'a mut Interface, name: &str) -> &'a mut TypeDef {
+    let name = Ident::new(name.to_owned());
+    interface
+        .items_mut()
+        .iter_mut()
+        .find_map(|i| match i {
+            InterfaceItem::TypeDef(def) if def.name() == &name => Some(def),
+            _ => None,
+        })
+        .expect(&format!("Can't find type {name}"))
 }
 
 fn visit_names_mut<F>(package: &mut wit_encoder::Package, f: F)
