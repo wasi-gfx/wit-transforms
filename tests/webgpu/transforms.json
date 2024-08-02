@@ -155,17 +155,101 @@
         ]
     },
     {
-        "reason": "Remove allow-shared-buffer-source as it's web related",
+        "reason": "Beautify gpu-*-binding.set-bind-group. No tuple params",
         "operations": [
+            // TODO: add support for dynamic-offsets
             {
-                "retype-record-field": {
-                    "record": "gpu-shader-module-descriptor",
-                    "field": "source-map",
-                    "new-type": {
-                        "option": "string"
+                "retype-resource-func-params": {
+                    "resource": "gpu-render-bundle-encoder",
+                    "func": "set-bind-group",
+                    "new-params": {
+                        "items": [
+                            ["index", {
+                                "named": "gpu-index32"
+                            }],
+                            ["bind-group", {
+                                "option": {
+                                    "borrow": "gpu-bind-group"
+                                }
+                            }],
+                            ["dynamic-offsets", {
+                                "option": {
+                                    "list": {
+                                        "named": "gpu-buffer-dynamic-offset"
+                                    }
+                                }
+                            }]
+                        ]
                     }
                 }
             },
+            {
+                "remove-type": "gpu-render-bundle-encoder-set-bind-group-params"
+            },
+            // TODO: add support for dynamic-offsets
+            {
+                "retype-resource-func-params": {
+                    "resource": "gpu-render-pass-encoder",
+                    "func": "set-bind-group",
+                    "new-params": {
+                        "items": [
+                            ["index", {
+                                "named": "gpu-index32"
+                            }],
+                            ["bind-group", {
+                                "option": {
+                                    "borrow": "gpu-bind-group"
+                                }
+                            }],
+                            ["dynamic-offsets", {
+                                "option": {
+                                    "list": {
+                                        "named": "gpu-buffer-dynamic-offset"
+                                    }
+                                }
+                            }]
+                        ]
+                    }
+                }
+            },
+            {
+                "remove-type": "gpu-render-pass-encoder-set-bind-group-params"
+            },
+            // TODO: add support for dynamic-offsets
+            {
+                "retype-resource-func-params": {
+                    "resource": "gpu-compute-pass-encoder",
+                    "func": "set-bind-group",
+                    "new-params": {
+                        "items": [
+                            ["index", {
+                                "named": "gpu-index32"
+                            }],
+                            ["bind-group", {
+                                "option": {
+                                    "borrow": "gpu-bind-group"
+                                }
+                            }],
+                            ["dynamic-offsets", {
+                                "option": {
+                                    "list": {
+                                        "named": "gpu-buffer-dynamic-offset"
+                                    }
+                                }
+                            }]
+                        ]
+                    }
+                }
+
+            },
+            {
+                "remove-type": "gpu-compute-pass-encoder-set-bind-group-params"
+            }
+        ]
+    },
+    {
+        "reason": "Remove allow-shared-buffer-source as it's web related",
+        "operations": [
             {
                 // TODO: replaced with something else.
                 "remove-resource-func": {
@@ -215,6 +299,15 @@
             },
             {
                 "remove-type": "uint16-array-set-src"
+            },
+            {
+                "remove-type": "uint32-array"
+            },
+            {
+                "remove-type": "uint32-array-constructor-options"
+            },
+            {
+                "remove-type": "uint32-array-set-src"
             },
             {
                 "remove-type": "int8-array"
