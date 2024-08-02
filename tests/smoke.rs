@@ -51,6 +51,6 @@ fn simple() {
 }
 
 #[test]
-fn remove_func() {
-    test("remove-func");
+fn resource() {
+    test("resource");
 }

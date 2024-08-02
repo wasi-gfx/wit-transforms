@@ -1,0 +1,11 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  resource my-resource {
+    constructor(foo: s32, bar: string);
+    rename-old-name: func(foo: s32, bar: string) -> f64;
+    change-params: func(foo: s32, bar: string) -> f64;
+    change-results: func(foo: s32, bar: string) -> f64;
+    remove: func();
+  }
+}

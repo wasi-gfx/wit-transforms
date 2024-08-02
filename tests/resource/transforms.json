@@ -1,0 +1,59 @@
+[
+    {
+        "reason": "Resource transformations",
+        "operations": [
+            {
+                "retype-resource-func-params": {
+                    "resource": "my-resource",
+                    "func": "constructor",
+                    "new-params": {
+                        "items": [
+                            ["foo", "s32"]
+                        ]
+                    }
+                }
+            },
+            {
+                "remove-resource-func": {
+                    "resource": "my-resource",
+                    "func": "remove"
+                }
+            },
+            {
+                "rename-resource-func": {
+                    "resource": "my-resource",
+                    "old-func-name": "rename-old-name",
+                    "new-func-name": "rename-new-name"
+                }
+            },
+            {
+                "retype-resource-func-params": {
+                    "resource": "my-resource",
+                    "func": "change-params",
+                    "new-params": {
+                        "items": [
+                            ["foo", "s64"],
+                            ["bar", "string"]
+                        ]
+                    }
+                }
+            },
+            {
+                "retype-resource-func-results": {
+                    "resource": "my-resource",
+                    "func": "change-results",
+                    "new-results": {
+                        "anon": "s64"
+                    }
+                }
+            }
+        ]
+    }
+]
+
+// constructor(foo: s32, bar: string);
+// rename-old-name: func(foo: s32, bar: string) -> f64;
+// change-params: func(foo: s32, bar: string) -> f64;
+// change-results: func(foo: s32, bar: string) -> f64;
+// remove: func();
+// }

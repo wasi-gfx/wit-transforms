@@ -54,9 +54,9 @@
         "reason": "Remove gpu-supported-limits.copy-external-image-to-texture as it's web related",
         "operations": [
             {
-                "remove-func": {
+                "remove-resource-func": {
                     "resource": "gpu-queue",
-                    "name": "copy-external-image-to-texture"
+                    "func": "copy-external-image-to-texture"
                 }
             },
             {
@@ -98,9 +98,9 @@
         "reason": "Remove gpu-device.import-external-texture as it's web related",
         "operations": [
             {
-                "remove-func": {
+                "remove-resource-func": {
                     "resource": "gpu-device",
-                    "name": "import-external-texture"
+                    "func": "import-external-texture"
                 }
             },
             {
@@ -168,16 +168,16 @@
             },
             {
                 // TODO: replaced with something else.
-                "remove-func": {
+                "remove-resource-func": {
                     "resource": "gpu-queue",
-                    "name": "write-buffer"
+                    "func": "write-buffer"
                 }
             },
             {
                 // TODO: replaced with something else.
-                "remove-func": {
+                "remove-resource-func": {
                     "resource": "gpu-queue",
-                    "name": "write-texture"
+                    "func": "write-texture"
                 }
             },
             {

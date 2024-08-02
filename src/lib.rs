@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
-use wit_encoder::{Ident, Interface, InterfaceItem, Record, Type, TypeDef};
+use wit_encoder::{
+    Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc, Results, Type, TypeDef,
+};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
@@ -37,10 +39,30 @@ pub enum Operations {
         field: String,
         new_type: Type,
     },
-    /// Remove a function
-    RemoveFunc {
-        name: String,
-        resource: Option<String>,
+    /// Add a function to a record
+    AddResourceFunc {
+        resource: String,
+        func: wit_encoder::ResourceFunc,
+    },
+    /// Remove a func from a resource
+    RemoveResourceFunc { resource: String, func: String },
+    /// Rename a func of a resource
+    RenameResourceFunc {
+        resource: String,
+        old_func_name: String,
+        new_func_name: String,
+    },
+    /// Change the params of a func in a resource
+    RetypeResourceFuncParams {
+        resource: String,
+        func: String,
+        new_params: Params,
+    },
+    /// Change the params of a func in a resource
+    RetypeResourceFuncResults {
+        resource: String,
+        func: String,
+        new_results: Results,
     },
     /// Replace all references to a type with a reference to another type
     ReplaceRefs { old: String, new: String },
@@ -110,26 +132,48 @@ pub fn transform(
                         .expect(&format!("{record_name}.{field} not found"));
                     field.set_type(new_type);
                 }
-                Operations::RemoveFunc { name, resource } => match resource {
-                    Some(resource) => {
-                        let type_def = find_type_def(&mut interface, &resource);
-                        let resource = match type_def.kind_mut() {
-                            wit_encoder::TypeDefKind::Resource(resource) => resource,
-                            _ => panic!("{resource}, is not a resource"),
-                        };
-                        resource.funcs_mut().retain(|f| match f.kind() {
-                            wit_encoder::ResourceFuncKind::Method(n, _) => n.to_string() != name,
-                            wit_encoder::ResourceFuncKind::Static(n, _) => n.to_string() != name,
-                            wit_encoder::ResourceFuncKind::Constructor => name != "constructor",
-                        });
-                    }
-                    None => {
-                        interface.items_mut().retain(|i| match i {
-                            InterfaceItem::TypeDef(_) => false,
-                            InterfaceItem::Function(func) => func.name().as_ref() != name,
-                        });
-                    }
-                },
+                Operations::AddResourceFunc { resource, func } => {
+                    let resource = find_resource(&mut interface, &resource);
+                    resource.func(func);
+                }
+                Operations::RemoveResourceFunc { resource, func } => {
+                    let func = Ident::new(func);
+                    let resource = find_resource(&mut interface, &resource);
+                    resource.funcs_mut().retain(|f| match f.kind() {
+                        wit_encoder::ResourceFuncKind::Method(n, _) => n != &func,
+                        wit_encoder::ResourceFuncKind::Static(n, _) => n != &func,
+                        wit_encoder::ResourceFuncKind::Constructor => {
+                            func.raw_name() != "constructor"
+                        }
+                    });
+                }
+                Operations::RenameResourceFunc {
+                    resource,
+                    old_func_name,
+                    new_func_name,
+                } => {
+                    let resource = find_resource(&mut interface, &resource);
+                    let func = find_resource_func(resource, &old_func_name, false);
+                    func.set_name(new_func_name);
+                }
+                Operations::RetypeResourceFuncParams {
+                    resource,
+                    func,
+                    new_params,
+                } => {
+                    let resource = find_resource(&mut interface, &resource);
+                    let func = find_resource_func(resource, &func, true);
+                    func.set_params(new_params);
+                }
+                Operations::RetypeResourceFuncResults {
+                    resource,
+                    func,
+                    new_results,
+                } => {
+                    let resource = find_resource(&mut interface, &resource);
+                    let func = find_resource_func(resource, &func, false);
+                    func.set_results(new_results);
+                }
                 Operations::ReplaceRefs { old, new } => {
                     let old = Ident::new(old);
                     let new = Ident::new(new);
@@ -145,10 +189,38 @@ pub fn transform(
     interface
 }
 
+fn find_resource_func<'a>(
+    resource: &'a mut Resource,
+    name: &str,
+    allow_constructor: bool,
+) -> &'a mut ResourceFunc {
+    let name = Ident::new(name.to_string());
+    resource
+        .funcs_mut()
+        .iter_mut()
+        .find(|f| match f.kind() {
+            wit_encoder::ResourceFuncKind::Method(n, _) => n == &name,
+            wit_encoder::ResourceFuncKind::Static(n, _) => n == &name,
+            wit_encoder::ResourceFuncKind::Constructor => {
+                allow_constructor && name.raw_name() == "constructor"
+            }
+        })
+        .expect(&format!("Can't find type {name}"))
+}
+
+fn find_resource<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Resource {
+    let type_def = find_type_def(interface, &name);
+    let record = match type_def.kind_mut() {
+        wit_encoder::TypeDefKind::Resource(resource) => resource,
+        _ => panic!("{name} is not a resource"),
+    };
+    record
+}
+
 fn find_record<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Record {
     let type_def = find_type_def(interface, &name);
     let record = match type_def.kind_mut() {
-        wit_encoder::TypeDefKind::Record(resource) => resource,
+        wit_encoder::TypeDefKind::Record(record) => record,
         _ => panic!("{name} is not a record"),
     };
     record
@@ -200,7 +272,7 @@ where
                 match ty.kind_mut() {
                     wit_encoder::TypeDefKind::Record(record) => {
                         for field in record.fields_mut() {
-                            type_found(field.ty_mut(), &f);
+                            type_found(field.type_mut(), &f);
                         }
                     }
                     wit_encoder::TypeDefKind::Resource(resource) => {
