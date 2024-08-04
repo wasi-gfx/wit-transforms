@@ -308,10 +308,6 @@ interface my-interface {
     astc12x12-unorm,
     astc12x12-unorm-srgb,
   }
-  resource gpu-external-texture {
-    label: func() -> string;
-    set-label: func(label: string);
-  }
   resource gpu-sampler {
     label: func() -> string;
     set-label: func(label: string);
@@ -397,7 +393,6 @@ interface my-interface {
     format: gpu-texture-format,
     view-dimension: option<gpu-texture-view-dimension>,
   }
-  record gpu-external-texture-binding-layout {  }
   resource gpu-bind-group {
     label: func() -> string;
     set-label: func(label: string);
@@ -834,13 +829,12 @@ interface my-interface {
     offset: option<gpu-size64>,
     size: option<gpu-size64>,
   }
-  variant gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view {
+  variant gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view {
     gpu-buffer-binding(gpu-buffer-binding),
-    gpu-external-texture(borrow<gpu-external-texture>),
     gpu-sampler(borrow<gpu-sampler>),
     gpu-texture-view(borrow<gpu-texture-view>),
   }
-  type gpu-binding-resource = gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view;
+  type gpu-binding-resource = gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view;
   type gpu-integer-coordinate = u32;
   record gpu-texture-view-descriptor {
     format: option<gpu-texture-format>,
@@ -860,7 +854,6 @@ interface my-interface {
     sampler: option<gpu-sampler-binding-layout>,
     texture: option<gpu-texture-binding-layout>,
     storage-texture: option<gpu-storage-texture-binding-layout>,
-    external-texture: option<gpu-external-texture-binding-layout>,
   }
   record gpu-bind-group-layout-descriptor {
     entries: list<gpu-bind-group-layout-entry>,
