@@ -1,0 +1,10 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  variant my-variant {
+    rename-new-name(string),
+    retype(f32),
+    retype-remove-type,
+    added(option<string>),
+  }
+}

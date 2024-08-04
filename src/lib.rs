@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use wit_encoder::{
-    Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc, Results, Type, TypeDef,
+    Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc, Results, Type,
+    TypeDef, Variant, VariantCase,
 };
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -39,7 +40,7 @@ pub enum Operations {
         field: String,
         new_type: Type,
     },
-    /// Add a function to a record
+    /// Add a function to a resource
     AddResourceFunc {
         resource: String,
         func: wit_encoder::ResourceFunc,
@@ -63,6 +64,25 @@ pub enum Operations {
         resource: String,
         func: String,
         new_results: Results,
+    },
+    /// Add a case to a variant
+    AddVariantCase {
+        variant: String,
+        case: wit_encoder::VariantCase,
+    },
+    /// Remove a case from a variant
+    RemoveVariantCase { variant: String, case: String },
+    /// Rename a case of a variant
+    RenameVariantCase {
+        variant: String,
+        old_case_name: String,
+        new_case_name: String,
+    },
+    /// Change the value of a case in a variant
+    RetypeVariantCase {
+        variant: String,
+        case: String,
+        new_type: Option<Type>,
     },
     /// Replace all references to a type with a reference to another type
     ReplaceRefs { old: String, new: String },
@@ -174,6 +194,33 @@ pub fn transform(
                     let func = find_resource_func(resource, &func, false);
                     func.set_results(new_results);
                 }
+                Operations::AddVariantCase { variant, case } => {
+                    let variant = find_variant(&mut interface, &variant);
+                    variant.cases_mut().push(case);
+                }
+                Operations::RemoveVariantCase { variant, case } => {
+                    let variant = find_variant(&mut interface, &variant);
+                    let case = Ident::new(case.to_string());
+                    variant.cases_mut().retain(|f| f.name() != &case);
+                }
+                Operations::RenameVariantCase {
+                    variant,
+                    old_case_name,
+                    new_case_name,
+                } => {
+                    let variant = find_variant(&mut interface, &variant);
+                    let case = find_variant_case(variant, &old_case_name);
+                    case.set_name(new_case_name);
+                }
+                Operations::RetypeVariantCase {
+                    variant,
+                    case,
+                    new_type: new_case,
+                } => {
+                    let variant = find_variant(&mut interface, &variant);
+                    let case = find_variant_case(variant, &case);
+                    *case.type_mut() = new_case;
+                }
                 Operations::ReplaceRefs { old, new } => {
                     let old = Ident::new(old);
                     let new = Ident::new(new);
@@ -187,6 +234,24 @@ pub fn transform(
         }
     }
     interface
+}
+
+fn find_record<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Record {
+    let type_def = find_type_def(interface, &name);
+    let record = match type_def.kind_mut() {
+        wit_encoder::TypeDefKind::Record(record) => record,
+        _ => panic!("{name} is not a record"),
+    };
+    record
+}
+
+fn find_resource<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Resource {
+    let type_def = find_type_def(interface, &name);
+    let record = match type_def.kind_mut() {
+        wit_encoder::TypeDefKind::Resource(resource) => resource,
+        _ => panic!("{name} is not a resource"),
+    };
+    record
 }
 
 fn find_resource_func<'a>(
@@ -208,22 +273,22 @@ fn find_resource_func<'a>(
         .expect(&format!("Can't find type {name}"))
 }
 
-fn find_resource<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Resource {
+fn find_variant<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Variant {
     let type_def = find_type_def(interface, &name);
     let record = match type_def.kind_mut() {
-        wit_encoder::TypeDefKind::Resource(resource) => resource,
-        _ => panic!("{name} is not a resource"),
+        wit_encoder::TypeDefKind::Variant(variant) => variant,
+        _ => panic!("{name} is not a variant"),
     };
     record
 }
 
-fn find_record<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Record {
-    let type_def = find_type_def(interface, &name);
-    let record = match type_def.kind_mut() {
-        wit_encoder::TypeDefKind::Record(record) => record,
-        _ => panic!("{name} is not a record"),
-    };
-    record
+fn find_variant_case<'a>(variant: &'a mut Variant, name: &str) -> &'a mut VariantCase {
+    let name = Ident::new(name.to_string());
+    variant
+        .cases_mut()
+        .iter_mut()
+        .find(|f| f.name() == &name)
+        .expect(&format!("Can't find variant case {name}"))
 }
 
 fn find_type_def<'a>(interface: &'a mut Interface, name: &str) -> &'a mut TypeDef {

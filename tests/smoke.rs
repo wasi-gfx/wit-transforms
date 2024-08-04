@@ -51,6 +51,11 @@ fn simple() {
 }
 
 #[test]
+fn variant() {
+    test("variant");
+}
+
+#[test]
 fn resource() {
     test("resource");
 }

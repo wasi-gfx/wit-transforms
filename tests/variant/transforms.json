@@ -1,0 +1,45 @@
+[
+    {
+        "reason": "variant transformations",
+        "operations": [
+            {
+                "remove-variant-case": {
+                    "variant": "my-variant",
+                    "case": "remove"
+                }
+            },
+            {
+                "add-variant-case": {
+                    "variant": "my-variant",
+                    "case": {
+                        "name": "added",
+                        "type": {
+                            "option": "string"
+                        }
+                    }
+                }
+            },
+            {
+                "rename-variant-case": {
+                    "variant": "my-variant",
+                    "old-case-name" : "rename-old-name",
+                    "new-case-name" : "rename-new-name"
+                }
+            },
+            {
+                "retype-variant-case": {
+                    "variant": "my-variant",
+                    "case": "retype",
+                    "new-type": "f32"
+                }
+            },
+            {
+                "retype-variant-case": {
+                    "variant": "my-variant",
+                    "case": "retype-remove-type",
+                    "new-type": null
+                }
+            }
+        ]
+    }
+]
