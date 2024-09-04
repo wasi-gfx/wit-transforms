@@ -1,0 +1,10 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  enum my-enum {
+    rename-new-name,
+    retype,
+    retype-remove-type,
+    added,
+  }
+}

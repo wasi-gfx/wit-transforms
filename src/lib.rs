@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use wit_encoder::{
-    Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc, Results, Type,
-    TypeDef, Variant, VariantCase,
+    Enum, EnumCase, Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc,
+    Results, Type, TypeDef, Variant, VariantCase,
 };
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -83,6 +83,25 @@ pub enum Operations {
         variant: String,
         case: String,
         new_type: Option<Type>,
+    },
+    /// Add a case to a enum
+    AddEnumCase {
+        #[serde(rename = "enum")]
+        enum_: String,
+        case: wit_encoder::EnumCase,
+    },
+    /// Remove a case from a enum
+    RemoveEnumCase {
+        #[serde(rename = "enum")]
+        enum_: String,
+        case: String
+    },
+    /// Rename a case of a enum
+    RenameEnumCase {
+        #[serde(rename = "enum")]
+        enum_: String,
+        old_case_name: String,
+        new_case_name: String,
     },
     /// Replace all references to a type with a reference to another type
     ReplaceRefs { old: String, new: String },
@@ -221,6 +240,24 @@ pub fn transform(
                     let case = find_variant_case(variant, &case);
                     *case.type_mut() = new_case;
                 }
+                Operations::AddEnumCase { enum_, case } => {
+                    let enum_ = find_enum(&mut interface, &enum_);
+                    enum_.cases_mut().push(case);
+                }
+                Operations::RemoveEnumCase { enum_, case } => {
+                    let enum_ = find_enum(&mut interface, &enum_);
+                    let case = Ident::new(case.to_string());
+                    enum_.cases_mut().retain(|f| f.name() != &case);
+                }
+                Operations::RenameEnumCase {
+                    enum_,
+                    old_case_name,
+                    new_case_name,
+                } => {
+                    let enum_ = find_enum(&mut interface, &enum_);
+                    let case = find_enum_case(enum_, &old_case_name);
+                    case.set_name(new_case_name);
+                }
                 Operations::ReplaceRefs { old, new } => {
                     let old = Ident::new(old);
                     let new = Ident::new(new);
@@ -289,6 +326,24 @@ fn find_variant_case<'a>(variant: &'a mut Variant, name: &str) -> &'a mut Varian
         .iter_mut()
         .find(|f| f.name() == &name)
         .expect(&format!("Can't find variant case {name}"))
+}
+
+fn find_enum<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Enum {
+    let type_def = find_type_def(interface, &name);
+    let record = match type_def.kind_mut() {
+        wit_encoder::TypeDefKind::Enum(enum_) => enum_,
+        _ => panic!("{name} is not a enum"),
+    };
+    record
+}
+
+fn find_enum_case<'a>(enum_: &'a mut Enum, name: &str) -> &'a mut EnumCase {
+    let name = Ident::new(name.to_string());
+    enum_
+        .cases_mut()
+        .iter_mut()
+        .find(|f| f.name() == &name)
+        .expect(&format!("Can't find enum case {name}"))
 }
 
 fn find_type_def<'a>(interface: &'a mut Interface, name: &str) -> &'a mut TypeDef {

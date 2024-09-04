@@ -1,0 +1,31 @@
+[
+    {
+        "reason": "enum transformations",
+        "operations": [
+            {
+                "remove-enum-case": {
+                    "enum": "my-enum",
+                    "case": "remove"
+                }
+            },
+            {
+                "add-enum-case": {
+                    "enum": "my-enum",
+                    "case": {
+                        "name": "added",
+                        "type": {
+                            "option": "string"
+                        }
+                    }
+                }
+            },
+            {
+                "rename-enum-case": {
+                    "enum": "my-enum",
+                    "old-case-name" : "rename-old-name",
+                    "new-case-name" : "rename-new-name"
+                }
+            }
+        ]
+    }
+]

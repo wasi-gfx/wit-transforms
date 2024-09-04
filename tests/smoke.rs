@@ -56,6 +56,11 @@ fn variant() {
 }
 
 #[test]
+fn enum_() {
+    test("enum");
+}
+
+#[test]
 fn resource() {
     test("resource");
 }
