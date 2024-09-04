@@ -426,5 +426,30 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "Change predefined-color-space to enum",
+        "operations": [
+            {
+                "remove-type": "predefined-color-space"
+            },
+            {
+                "add-type": {
+                    "name": "predefined-color-space",
+                    "kind": {
+                        "enum": {
+                            "cases": [
+                                {
+                                    "name": "srgb"
+                                },
+                                {
+                                    "name": "display-p3"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
     }
 ]

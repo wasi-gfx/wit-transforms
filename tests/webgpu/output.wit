@@ -1,8 +1,6 @@
 package webidl:my-package-idl;
 
 interface my-interface {
-  resource predefined-color-space {
-  }
   resource event {
   }
   resource gpu-supported-limits {
@@ -998,5 +996,9 @@ interface my-interface {
     usage: gpu-texture-usage-flags,
     view-formats: option<list<gpu-texture-format>>,
     label: option<string>,
+  }
+  enum predefined-color-space {
+    srgb,
+    display-p3,
   }
 }
