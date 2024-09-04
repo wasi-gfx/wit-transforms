@@ -161,6 +161,9 @@
             },
             {
                 "remove-type": "gpu-pipeline-descriptor-base"
+            },
+            {
+                "remove-type": "event-target"
             }
         ]
     },
@@ -383,6 +386,44 @@
             },
             {
                 "remove-type": "float64-array-set-src"
+            }
+        ]
+    },
+    {
+        "reason": "Change event handler to stream",
+        "operations": [
+            {
+                "remove-resource-func": {
+                    "resource": "gpu-device",
+                    "func": "onuncapturederror"
+                }
+            },
+            {
+                "remove-resource-func": {
+                    "resource": "gpu-device",
+                    "func": "set-onuncapturederror"
+                }
+            },
+            {
+                "remove-type": "event-handler"
+            },
+            {
+                "add-resource-func": {
+                    "resource": "gpu-device",
+                    "func": {
+                        "kind": {
+                            "method": ["uncaptured-errors", {
+                                // TODO: change to stream of errors
+                                "named": {
+                                    "items": []
+                                }
+                            }]
+                        },
+                        "params": {
+                            "items": []
+                        }
+                    }
+                }
             }
         ]
     }
