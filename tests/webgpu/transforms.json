@@ -454,5 +454,59 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "Remove prefixes of identifiers with leading digits",
+        "operations": [
+            {
+                "rename-enum-case": {
+                    "enum": "gpu-texture-dimension",
+                    "old-case-name" : "x1d",
+                    "new-case-name" : "d1"
+                }
+            },
+            {
+                "rename-enum-case": {
+                    "enum": "gpu-texture-dimension",
+                    "old-case-name" : "x2d",
+                    "new-case-name" : "d2"
+                }
+            },
+            {
+                "rename-enum-case": {
+                    "enum": "gpu-texture-dimension",
+                    "old-case-name" : "x3d",
+                    "new-case-name" : "d3"
+                }
+            },
+            {
+                "rename-enum-case": {
+                    "enum": "gpu-texture-view-dimension",
+                    "old-case-name" : "x1d",
+                    "new-case-name" : "d1"
+                }
+            },
+            {
+                "rename-enum-case": {
+                    "enum": "gpu-texture-view-dimension",
+                    "old-case-name" : "x2d",
+                    "new-case-name" : "d2"
+                }
+            },
+            {
+                "rename-enum-case": {
+                    "enum": "gpu-texture-view-dimension",
+                    "old-case-name" : "x2d-array",
+                    "new-case-name" : "d2-array"
+                }
+            },
+            {
+                "rename-enum-case": {
+                    "enum": "gpu-texture-view-dimension",
+                    "old-case-name" : "x3d",
+                    "new-case-name" : "d3"
+                }
+            }
+        ]
     }
 ]

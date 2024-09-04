@@ -173,9 +173,9 @@ interface my-interface {
     set-label: func(label: string);
   }
   enum gpu-texture-dimension {
-    x1d,
-    x2d,
-    x3d,
+    d1,
+    d2,
+    d3,
   }
   type gpu-texture-usage-flags = u32;
   resource gpu-texture-usage {
@@ -190,12 +190,12 @@ interface my-interface {
     set-label: func(label: string);
   }
   enum gpu-texture-view-dimension {
-    x1d,
-    x2d,
-    x2d-array,
+    d1,
+    d2,
+    d2-array,
     cube,
     cube-array,
-    x3d,
+    d3,
   }
   enum gpu-texture-aspect {
     all,
