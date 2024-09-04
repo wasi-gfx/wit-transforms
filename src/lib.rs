@@ -94,7 +94,7 @@ pub enum Operations {
     RemoveEnumCase {
         #[serde(rename = "enum")]
         enum_: String,
-        case: String
+        case: String,
     },
     /// Rename a case of a enum
     RenameEnumCase {
