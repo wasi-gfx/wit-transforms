@@ -6,5 +6,6 @@ interface my-interface {
     rename-new-name: func(foo: s32, bar: string) -> f64;
     change-params: func(foo: s64, bar: string) -> f64;
     change-results: func(foo: s32, bar: string) -> s64;
+    added-func: func(foo: s64, bar: string) -> f64;
   }
 }
