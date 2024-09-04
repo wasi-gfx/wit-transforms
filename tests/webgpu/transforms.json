@@ -164,6 +164,9 @@
             },
             {
                 "remove-type": "event-target"
+            },
+            {
+                "remove-type": "event"
             }
         ]
     },
