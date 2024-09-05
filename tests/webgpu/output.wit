@@ -431,13 +431,13 @@ interface my-interface {
   enum gpu-auto-layout-mode {
     auto,
   }
-  variant gpu-auto-layout-mode-or-gpu-pipeline-layout {
+  variant gpu-layout {
     gpu-auto-layout-mode(gpu-auto-layout-mode),
     gpu-pipeline-layout(borrow<gpu-pipeline-layout>),
   }
   record gpu-shader-module-compilation-hint {
     entry-point: string,
-    layout: option<gpu-auto-layout-mode-or-gpu-pipeline-layout>,
+    layout: option<gpu-layout>,
   }
   record gpu-shader-module-descriptor {
     code: string,
@@ -468,7 +468,7 @@ interface my-interface {
   }
   record gpu-compute-pipeline-descriptor {
     compute: gpu-programmable-stage,
-    layout: gpu-auto-layout-mode-or-gpu-pipeline-layout,
+    layout: gpu-layout,
     label: option<string>,
   }
   resource gpu-render-pipeline {
@@ -886,7 +886,7 @@ interface my-interface {
     depth-stencil: option<gpu-depth-stencil-state>,
     multisample: option<gpu-multisample-state>,
     fragment: option<gpu-fragment-state>,
-    layout: gpu-auto-layout-mode-or-gpu-pipeline-layout,
+    layout: gpu-layout,
     label: option<string>,
   }
   record gpu-image-data-layout {

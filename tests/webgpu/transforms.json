@@ -522,5 +522,23 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "Simplify naming of gpu-layout",
+        "operations": [
+            {
+                "rename-type": {
+                    "from" : "gpu-auto-layout-mode-or-gpu-pipeline-layout",
+                    // TODO: is this a good name?
+                    "to" : "gpu-layout"
+                }
+            },
+            {
+                "replace-refs": {
+                    "old": "gpu-auto-layout-mode-or-gpu-pipeline-layout",
+                    "new": "gpu-layout"
+                }
+            }
+        ]
     }
 ]
