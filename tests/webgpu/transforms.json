@@ -508,5 +508,19 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "Simplify naming of gpu-binding-resource",
+        "operations": [
+            {
+                "remove-type": "gpu-binding-resource"
+            },
+            {
+                "rename-type": {
+                    "from" : "gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view",
+                    "to" : "gpu-binding-resource"
+                }
+            }
+        ]
     }
 ]

@@ -820,12 +820,11 @@ interface my-interface {
     offset: option<gpu-size64>,
     size: option<gpu-size64>,
   }
-  variant gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view {
+  variant gpu-binding-resource {
     gpu-buffer-binding(gpu-buffer-binding),
     gpu-sampler(borrow<gpu-sampler>),
     gpu-texture-view(borrow<gpu-texture-view>),
   }
-  type gpu-binding-resource = gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view;
   type gpu-integer-coordinate = u32;
   record gpu-texture-view-descriptor {
     format: option<gpu-texture-format>,
