@@ -378,12 +378,43 @@ fn visit_refs_mut<F>(interface: &mut wit_encoder::Interface, f: F)
 where
     F: Fn(&mut wit_encoder::Ident),
 {
-    fn type_found<F>(ty: &mut wit_encoder::Type, f: F)
+    fn type_found<F>(ty: &mut wit_encoder::Type, f: &F)
     where
         F: Fn(&mut wit_encoder::Ident),
     {
-        if let wit_encoder::Type::Named(ty) = ty {
-            f(ty);
+        match ty {
+            Type::Named(ty) => f(ty),
+            Type::Option(ty) => type_found(ty, f),
+            Type::List(ty) => type_found(ty, f),
+            Type::Borrow(resource) => f(resource),
+            Type::Tuple(tuple) => {
+                for ty in tuple.types_mut() {
+                    type_found(ty, f)
+                }
+            }
+            Type::Result(result) => {
+                if let Some(ty) = result.get_ok_mut() {
+                    type_found(ty, f);
+                }
+                if let Some(ty) = result.get_err_mut() {
+                    type_found(ty, f);
+                }
+            }
+            Type::Bool
+            | Type::U8
+            | Type::U16
+            | Type::U32
+            | Type::U64
+            | Type::S8
+            | Type::S16
+            | Type::S32
+            | Type::S64
+            | Type::F32
+            | Type::F64
+            | Type::Char
+            | Type::String => {
+                // Only named types can be replaced globally
+            }
         }
     }
     for item in interface.items_mut() {
@@ -399,6 +430,18 @@ where
                         for func in resource.funcs_mut() {
                             for (_, ty) in func.params_mut().items_mut() {
                                 type_found(ty, &f);
+                            }
+                            if let Some(results) = func.results_mut() {
+                                match results {
+                                    wit_encoder::Results::Named(named) => {
+                                        for (_, ty) in named.items_mut() {
+                                            type_found(ty, &f);
+                                        }
+                                    }
+                                    wit_encoder::Results::Anon(ty) => {
+                                        type_found(ty, &f);
+                                    }
+                                }
                             }
                         }
                     }

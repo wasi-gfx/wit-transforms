@@ -1,0 +1,13 @@
+[
+    {
+        "reason": "Text replace refs",
+        "operations": [
+            {
+                "replace-refs": {
+                    "old": "a",
+                    "new": "b"
+                }
+            }
+        ]
+    }
+]

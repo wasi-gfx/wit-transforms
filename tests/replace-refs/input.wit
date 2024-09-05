@@ -1,0 +1,24 @@
+package webidl:my-package-idl;
+
+interface my-interface {
+  my-func: func(foo: a) -> a;
+  type a = f32;
+  type b = f64;
+  record my-record {
+    foo: a,
+    bar: string,
+  }
+  variant my-variant {
+    foo(a),
+    bar(string),
+  }
+  resource my-resource {
+    single-param: func(foo: a, bar: string);
+    multi-params: func(foo: a, bar: a);
+    simple-return: func() -> a;
+    result-ok: func() -> result<a, string>;
+    result-both: func() -> result<a, a>;
+    result-err: func() -> result<_, a>;
+  }
+  type my-type = a;
+}

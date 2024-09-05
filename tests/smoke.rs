@@ -69,3 +69,8 @@ fn enum_() {
 fn resource() {
     test("resource");
 }
+
+#[test]
+fn replace_refs() {
+    test("replace-refs");
+}
