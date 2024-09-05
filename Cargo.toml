@@ -8,8 +8,9 @@ edition = "2021"
 [dependencies]
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-wit-encoder = { git = "https://github.com/bytecodealliance/wasm-tools.git", rev = "2e9d4ba50e89967a42175183530482d6366dd19a" }
+wit-encoder = { git = "https://github.com/bytecodealliance/wasm-tools.git", rev = "83f25b72581d5e50fc7f453bcd94c5a147399ab6" }
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
-wit-parser = { git = "https://github.com/bytecodealliance/wasm-tools.git", rev = "2e9d4ba50e89967a42175183530482d6366dd19a" }
+wit-parser = { git = "https://github.com/bytecodealliance/wasm-tools.git", rev = "83f25b72581d5e50fc7f453bcd94c5a147399ab6" }
+json_comments = "0.2.2"
