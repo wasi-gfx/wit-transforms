@@ -1,0 +1,9 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  variant to-remove {
+    case,
+  }
+  resource rename-resource {
+  }
+}

@@ -51,6 +51,11 @@ fn simple() {
 }
 
 #[test]
+fn type_() {
+    test("type");
+}
+
+#[test]
 fn variant() {
     test("variant");
 }
