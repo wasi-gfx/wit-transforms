@@ -52,7 +52,6 @@ interface my-interface {
     max-buffer-size: func() -> u64;
     max-vertex-attributes: func() -> u32;
     max-vertex-buffer-array-stride: func() -> u32;
-    max-inter-stage-shader-components: func() -> u32;
     max-inter-stage-shader-variables: func() -> u32;
     max-color-attachments: func() -> u32;
     max-color-attachment-bytes-per-sample: func() -> u32;
@@ -91,9 +90,9 @@ interface my-interface {
   resource gpu-adapter {
     features: func() -> gpu-supported-features;
     limits: func() -> gpu-supported-limits;
+    info: func() -> gpu-adapter-info;
     is-fallback-adapter: func() -> bool;
     request-device: func(descriptor: option<gpu-device-descriptor>) -> gpu-device;
-    request-adapter-info: func() -> gpu-adapter-info;
   }
   resource record-gpu-size64 {
     constructor();
@@ -109,6 +108,7 @@ interface my-interface {
     depth-clip-control,
     depth32float-stencil8,
     texture-compression-bc,
+    texture-compression-bc-sliced3d,
     texture-compression-etc2,
     texture-compression-astc,
     timestamp-query,
@@ -117,6 +117,8 @@ interface my-interface {
     rg11b10ufloat-renderable,
     bgra8unorm-storage,
     float32-filterable,
+    clip-distances,
+    dual-source-blending,
   }
   resource gpu-device {
     features: func() -> gpu-supported-features;
@@ -445,30 +447,6 @@ interface my-interface {
     label: func() -> string;
     set-label: func(label: string);
   }
-  variant any {
-    %bool(bool),
-    %s8(s8),
-    %s16(s16),
-    %s32(s32),
-    %s64(s64),
-    %u8(u8),
-    %u16(u16),
-    %u32(u32),
-    %u64(u64),
-    %f32(f32),
-    %f64(f64),
-    %string(string),
-  }
-  resource object {
-    constructor();
-    add: func(key: string, value: any);
-    get: func(key: string) -> any;
-    has: func(key: string) -> bool;
-    remove: func(key: string);
-    keys: func() -> list<string>;
-    values: func() -> list<any>;
-    entries: func() -> tuple<string, any>;
-  }
   enum gpu-compilation-message-type {
     error,
     warning,
@@ -509,7 +487,6 @@ interface my-interface {
   }
   record gpu-shader-module-descriptor {
     code: string,
-    source-map: option<object>,
     compilation-hints: option<list<gpu-shader-module-compilation-hint>>,
     label: option<string>,
   }
@@ -586,6 +563,10 @@ interface my-interface {
     src-alpha-saturated,
     constant,
     one-minus-constant,
+    src1,
+    one-minus-src1,
+    src1-alpha,
+    one-minus-src1-alpha,
   }
   enum gpu-blend-operation {
     add,
@@ -1081,12 +1062,20 @@ interface my-interface {
     opaque,
     premultiplied,
   }
+  enum gpu-canvas-tone-mapping-mode {
+    standard,
+    extended,
+  }
+  record gpu-canvas-tone-mapping {
+    mode: option<gpu-canvas-tone-mapping-mode>,
+  }
   record gpu-canvas-configuration {
     device: borrow<gpu-device>,
     format: gpu-texture-format,
     usage: option<gpu-texture-usage-flags>,
     view-formats: option<list<gpu-texture-format>>,
     color-space: option<borrow<predefined-color-space>>,
+    tone-mapping: option<gpu-canvas-tone-mapping>,
     alpha-mode: option<gpu-canvas-alpha-mode>,
   }
   enum gpu-device-lost-reason {
@@ -1179,6 +1168,7 @@ interface my-interface {
   record gpu-texture-view-descriptor {
     format: option<gpu-texture-format>,
     dimension: option<gpu-texture-view-dimension>,
+    usage: option<gpu-texture-usage-flags>,
     aspect: option<gpu-texture-aspect>,
     base-mip-level: option<gpu-integer-coordinate>,
     mip-level-count: option<gpu-integer-coordinate>,
