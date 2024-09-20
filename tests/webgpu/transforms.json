@@ -171,26 +171,6 @@
         ]
     },
     {
-        "reason": "gpu-shader-module-descriptor.source-map as string. Remove all `object` related types",
-        "operations": [
-            {
-                "retype-record-field": {
-                    "record": "gpu-shader-module-descriptor",
-                    "field": "source-map",
-                    "new-type": {
-                        "option": "string"
-                    }
-                }
-            },
-            {
-                "remove-type": "object"
-            },
-            {
-                "remove-type": "any"
-            }
-        ]
-    },
-    {
         "reason": "Beautify gpu-*-binding.set-bind-group. No tuple params",
         "operations": [
             // TODO: add support for dynamic-offsets
