@@ -39,6 +39,22 @@
                 }
             },
             {
+                "retype-resource-func-param-name": {
+                    "resource": "my-resource",
+                    "func": "change-single-param-name",
+                    "old-param-name": "bar",
+                    "new-name": "biz"
+                }
+            },
+            {
+                "retype-resource-func-param-type": {
+                    "resource": "my-resource",
+                    "func": "change-single-param-type",
+                    "param": "bar",
+                    "new-type": "bool"
+                }
+            },
+            {
                 "retype-resource-func-results": {
                     "resource": "my-resource",
                     "func": "change-results",

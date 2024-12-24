@@ -59,6 +59,20 @@ pub enum Operations {
         func: String,
         new_params: Params,
     },
+    /// Change a single param name of a func in a resource
+    RetypeResourceFuncParamName {
+        resource: String,
+        func: String,
+        old_param_name: String,
+        new_name: String,
+    },
+    /// Change a single param type of a func in a resource
+    RetypeResourceFuncParamType {
+        resource: String,
+        func: String,
+        param: String,
+        new_type: Type,
+    },
     /// Change the params of a func in a resource
     RetypeResourceFuncResults {
         resource: String,
@@ -203,6 +217,38 @@ pub fn transform(
                     let resource = find_resource(&mut interface, &resource);
                     let func = find_resource_func(resource, &func, true);
                     func.set_params(new_params);
+                }
+                Operations::RetypeResourceFuncParamName {
+                    resource,
+                    func,
+                    old_param_name,
+                    new_name,
+                } => {
+                    let resource = find_resource(&mut interface, &resource);
+                    let func = find_resource_func(resource, &func, true);
+                    let param = func
+                        .params_mut()
+                        .items_mut()
+                        .into_iter()
+                        .find(|(name, _)| old_param_name == name.raw_name())
+                        .unwrap();
+                    param.0 = Ident::new(new_name);
+                }
+                Operations::RetypeResourceFuncParamType {
+                    resource,
+                    func,
+                    param,
+                    new_type,
+                } => {
+                    let resource = find_resource(&mut interface, &resource);
+                    let func = find_resource_func(resource, &func, true);
+                    let param = func
+                        .params_mut()
+                        .items_mut()
+                        .into_iter()
+                        .find(|(name, _)| param == name.raw_name())
+                        .unwrap();
+                    param.1 = new_type;
                 }
                 Operations::RetypeResourceFuncResults {
                     resource,

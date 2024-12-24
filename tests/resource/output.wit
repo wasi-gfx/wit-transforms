@@ -5,6 +5,8 @@ interface my-interface {
     constructor(foo: s32);
     rename-new-name: func(foo: s32, bar: string) -> f64;
     change-params: func(foo: s64, bar: string) -> f64;
+    change-single-param-name: func(foo: s32, biz: string) -> f64;
+    change-single-param-type: func(foo: s32, bar: bool) -> f64;
     change-results: func(foo: s32, bar: string) -> s64;
     added-func: func(foo: s64, bar: string) -> f64;
   }
