@@ -708,6 +708,8 @@ interface my-interface {
   resource gpu-queue {
     submit: func(command-buffers: list<borrow<gpu-command-buffer>>);
     on-submitted-work-done: func();
+    write-buffer-cloned: func(buffer: borrow<gpu-buffer>, buffer-offset: gpu-size64, data: list<u8>, data-offset: option<gpu-size64>, size: option<gpu-size64>);
+    write-texture-cloned: func(destination: gpu-image-copy-texture, data: list<u8>, data-layout: gpu-image-data-layout, size: gpu-extent3-d);
     label: func() -> string;
     set-label: func(label: string);
   }

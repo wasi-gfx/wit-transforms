@@ -264,20 +264,40 @@
         ]
     },
     {
-        "reason": "Remove allow-shared-buffer-source as it's web related",
+        "reason": "Remove allow-shared-buffer-source as it's web related and temporarily replace it with list<u8>",
         "operations": [
             {
-                // TODO: replaced with something else.
-                "remove-resource-func": {
+                "retype-resource-func-param-type": {
                     "resource": "gpu-queue",
-                    "func": "write-buffer"
+                    "func": "write-buffer",
+                    "param": "data",
+                    "new-type": {
+                        "list": "u8"
+                    }
                 }
             },
             {
-                // TODO: replaced with something else.
-                "remove-resource-func": {
+                "rename-resource-func": {
                     "resource": "gpu-queue",
-                    "func": "write-texture"
+                    "old-func-name": "write-buffer",
+                    "new-func-name": "write-buffer-cloned"
+                }
+            },
+            {
+                "retype-resource-func-param-type": {
+                    "resource": "gpu-queue",
+                    "func": "write-texture",
+                    "param": "data",
+                    "new-type": {
+                        "list": "u8"
+                    }
+                }
+            },
+            {
+                "rename-resource-func": {
+                    "resource": "gpu-queue",
+                    "old-func-name": "write-texture",
+                    "new-func-name": "write-texture-cloned"
                 }
             },
             {
