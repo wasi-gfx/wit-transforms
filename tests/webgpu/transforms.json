@@ -520,5 +520,51 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "Remove array-buffer and replace it temporarily with list<u8>",
+        "operations": [
+            {
+                "remove-type": "array-buffer"
+            },
+            {
+                "remove-type": "array-buffer-constructor-options"
+            },
+            {
+                "retype-resource-func-results": {
+                    "resource": "gpu-buffer",
+                    "func": "get-mapped-range",
+                    "new-results": {
+                        "anon": {
+                            "list": "u8"
+                        }
+                    }
+                }
+            },
+            {
+                "rename-resource-func": {
+                    "resource": "gpu-buffer",
+                    "old-func-name": "get-mapped-range",
+                    "new-func-name": "get-mapped-range-get-cloned"
+                }
+            },
+            {
+                "add-resource-func": {
+                    "resource": "gpu-buffer",
+                    "func": {
+                        "kind": {
+                            "method": ["get-mapped-range-set-cloned", { "named": { "items": [] } }]
+                        },
+                        "params": {
+                            "items": [
+                                ["data", { "list": "u8" }],
+                                ["offset", { "option": { "named": "gpu-size64" } }],
+                                ["size", { "option": { "named": "gpu-size64" } }]
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
     }
 ]
