@@ -191,6 +191,14 @@
         ]
     },
     {
+        "reason": "GPURenderPassLayout is only used as the base of GPURenderBundleEncoderDescriptor. Since wit doesn't have inheritance the fields are duplicated in the child so no need for the parent.",
+        "operations": [
+            {
+                "remove-type": "gpu-render-pass-layout"
+            }
+        ]
+    },
+    {
         "reason": "Beautify gpu-*-binding.set-bind-group. No tuple params",
         "operations": [
             // TODO: add support for dynamic-offsets
