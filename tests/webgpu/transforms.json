@@ -514,7 +514,7 @@
         ]
     },
     {
-        "reason": "Simplify naming of gpu-layout",
+        "reason": "Simplify naming of gpu-layout, and merge gpu-auto-layout-mode cases into gpu-layout",
         "operations": [
             {
                 "rename-type": {
@@ -522,6 +522,23 @@
                     // TODO: is this a good name?
                     "to" : "gpu-layout"
                 }
+            },
+            {
+                "add-variant-case": {
+                    "variant": "gpu-layout",
+                    "case": {
+                        "name": "auto"
+                    }
+                }
+            },
+            {
+                "remove-variant-case": {
+                    "variant": "gpu-layout",
+                    "case": "gpu-auto-layout-mode"
+                }
+            },
+            {
+                "remove-type": "gpu-auto-layout-mode"
             },
             {
                 "replace-refs": {
