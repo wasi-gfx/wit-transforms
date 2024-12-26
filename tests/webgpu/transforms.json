@@ -1,5 +1,16 @@
 [
     {
+        "reason": "Remove navigators",
+        "operations": [
+            {
+                "remove-type": "navigator"
+            },
+            {
+                "remove-type": "worker-navigator"
+            }
+        ]
+    },
+    {
         "reason": "Have a single color type",
         "operations": [
             {
@@ -91,6 +102,15 @@
             },
             {
                 "remove-type": "gpu-origin2-d"
+            },
+            {
+                "remove-resource-func": {
+                    "resource": "gpu-canvas-context",
+                    "func": "canvas"
+                }
+            },
+            {
+                "remove-type": "html-canvas-element-or-offscreen-canvas"
             }
         ]
     },
@@ -389,44 +409,6 @@
             },
             {
                 "remove-type": "float64-array-set-src"
-            }
-        ]
-    },
-    {
-        "reason": "Change event handler to stream",
-        "operations": [
-            {
-                "remove-resource-func": {
-                    "resource": "gpu-device",
-                    "func": "onuncapturederror"
-                }
-            },
-            {
-                "remove-resource-func": {
-                    "resource": "gpu-device",
-                    "func": "set-onuncapturederror"
-                }
-            },
-            {
-                "remove-type": "event-handler"
-            },
-            {
-                "add-resource-func": {
-                    "resource": "gpu-device",
-                    "func": {
-                        "kind": {
-                            "method": ["uncaptured-errors", {
-                                // TODO: change to stream of errors
-                                "named": {
-                                    "items": []
-                                }
-                            }]
-                        },
-                        "params": {
-                            "items": []
-                        }
-                    }
-                }
             }
         ]
     },

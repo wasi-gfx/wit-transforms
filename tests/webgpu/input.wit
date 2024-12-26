@@ -1,17 +1,16 @@
 package webidl:my-package-idl;
 
 interface my-interface {
-  resource event-handler {
+  use wasi:io/poll.{ pollable };
+  resource navigator {
+    gpu: func() -> gpu;
   }
-  resource predefined-color-space {
+  resource worker-navigator {
+    gpu: func() -> gpu;
   }
   resource html-video-element {
   }
   resource html-image-element {
-  }
-  resource html-canvas-element {
-  }
-  resource offscreen-canvas {
   }
   resource video-frame {
   }
@@ -26,6 +25,9 @@ interface my-interface {
   resource event {
   }
   record event-init {  }
+  record predefined-color-space {  }
+  record html-canvas-element {  }
+  record offscreen-canvas {  }
   record gpu-object-descriptor-base {
     label: option<string>,
   }
@@ -94,15 +96,15 @@ interface my-interface {
     is-fallback-adapter: func() -> bool;
     request-device: func(descriptor: option<gpu-device-descriptor>) -> gpu-device;
   }
-  resource record-gpu-size64 {
+  resource record-option-gpu-size64 {
     constructor();
-    add: func(key: string, value: gpu-size64);
-    get: func(key: string) -> gpu-size64;
+    add: func(key: string, value: option<gpu-size64>);
+    get: func(key: string) -> option<option<gpu-size64>>;
     has: func(key: string) -> bool;
     remove: func(key: string);
     keys: func() -> list<string>;
-    values: func() -> list<gpu-size64>;
-    entries: func() -> tuple<string, gpu-size64>;
+    values: func() -> list<option<gpu-size64>>;
+    entries: func() -> list<tuple<string, option<gpu-size64>>>;
   }
   enum gpu-feature-name {
     depth-clip-control,
@@ -145,8 +147,7 @@ interface my-interface {
     lost: func() -> gpu-device-lost-info;
     push-error-scope: func(filter: gpu-error-filter);
     pop-error-scope: func() -> option<gpu-error>;
-    onuncapturederror: func() -> event-handler;
-    set-onuncapturederror: func(onuncapturederror: event-handler);
+    onuncapturederror-subscribe: func() -> pollable;
   }
   resource gpu-buffer {
     size: func() -> gpu-size64-out;
@@ -341,7 +342,7 @@ interface my-interface {
   }
   record gpu-external-texture-descriptor {
     source: html-video-element-or-video-frame,
-    color-space: option<borrow<predefined-color-space>>,
+    color-space: option<predefined-color-space>,
     label: option<string>,
   }
   resource gpu-sampler {
@@ -497,12 +498,12 @@ interface my-interface {
   resource record-gpu-pipeline-constant-value {
     constructor();
     add: func(key: string, value: gpu-pipeline-constant-value);
-    get: func(key: string) -> gpu-pipeline-constant-value;
+    get: func(key: string) -> option<gpu-pipeline-constant-value>;
     has: func(key: string) -> bool;
     remove: func(key: string);
     keys: func() -> list<string>;
     values: func() -> list<gpu-pipeline-constant-value>;
-    entries: func() -> tuple<string, gpu-pipeline-constant-value>;
+    entries: func() -> list<tuple<string, gpu-pipeline-constant-value>>;
   }
   record gpu-programmable-stage {
     module: borrow<gpu-shader-module>,
@@ -641,7 +642,7 @@ interface my-interface {
     snorm16x4,
     float16x2,
     float16x4,
-    %float32,
+    float32,
     float32x2,
     float32x3,
     float32x4,
@@ -660,12 +661,12 @@ interface my-interface {
     instance,
   }
   variant html-canvas-element-or-html-image-element-or-html-video-element-or-image-bitmap-or-image-data-or-offscreen-canvas-or-video-frame {
-    html-canvas-element(borrow<html-canvas-element>),
+    html-canvas-element(html-canvas-element),
     html-image-element(borrow<html-image-element>),
     html-video-element(borrow<html-video-element>),
     image-bitmap(borrow<image-bitmap>),
     image-data(borrow<image-data>),
-    offscreen-canvas(borrow<offscreen-canvas>),
+    offscreen-canvas(offscreen-canvas),
     video-frame(borrow<video-frame>),
   }
   type gpu-image-copy-external-image-source = html-canvas-element-or-html-image-element-or-html-video-element-or-image-bitmap-or-image-data-or-offscreen-canvas-or-video-frame;
@@ -791,7 +792,7 @@ interface my-interface {
   }
   record gpu-device-descriptor {
     required-features: option<list<gpu-feature-name>>,
-    required-limits: option<record-gpu-size64>,
+    required-limits: option<record-option-gpu-size64>,
     default-queue: option<gpu-queue-descriptor>,
     label: option<string>,
   }
@@ -1054,9 +1055,14 @@ interface my-interface {
     timestamp,
   }
   resource gpu-canvas-context {
+    canvas: func() -> html-canvas-element-or-offscreen-canvas;
     configure: func(configuration: gpu-canvas-configuration);
     unconfigure: func();
     get-current-texture: func() -> gpu-texture;
+  }
+  variant html-canvas-element-or-offscreen-canvas {
+    html-canvas-element(html-canvas-element),
+    offscreen-canvas(offscreen-canvas),
   }
   enum gpu-canvas-alpha-mode {
     opaque,
@@ -1074,7 +1080,7 @@ interface my-interface {
     format: gpu-texture-format,
     usage: option<gpu-texture-usage-flags>,
     view-formats: option<list<gpu-texture-format>>,
-    color-space: option<borrow<predefined-color-space>>,
+    color-space: option<predefined-color-space>,
     tone-mapping: option<gpu-canvas-tone-mapping>,
     alpha-mode: option<gpu-canvas-alpha-mode>,
   }
@@ -1349,7 +1355,7 @@ interface my-interface {
     aspect: option<gpu-texture-aspect>,
   }
   record gpu-image-copy-texture-tagged {
-    color-space: option<borrow<predefined-color-space>>,
+    color-space: option<predefined-color-space>,
     premultiplied-alpha: option<bool>,
     texture: borrow<gpu-texture>,
     mip-level: option<gpu-integer-coordinate>,
