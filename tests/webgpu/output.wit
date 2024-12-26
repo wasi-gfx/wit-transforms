@@ -424,12 +424,9 @@ interface my-interface {
   record gpu-pipeline-error-init {
     reason: gpu-pipeline-error-reason,
   }
-  enum gpu-auto-layout-mode {
-    auto,
-  }
   variant gpu-layout {
-    gpu-auto-layout-mode(gpu-auto-layout-mode),
     gpu-pipeline-layout(borrow<gpu-pipeline-layout>),
+    auto,
   }
   record gpu-shader-module-compilation-hint {
     entry-point: string,
