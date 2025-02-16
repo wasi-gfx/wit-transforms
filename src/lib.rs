@@ -132,10 +132,19 @@ pub fn transform(
                     interface.items_mut().push(InterfaceItem::TypeDef(new_type));
                 }
                 Operations::RemoveType(item) => {
-                    interface.items_mut().retain(|i| match i {
-                        InterfaceItem::TypeDef(def) => def.name().as_ref() != item,
-                        InterfaceItem::Function(_) => true,
-                    });
+                    let items = interface.items_mut();
+                    let found = items
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(index, i)| match i {
+                            InterfaceItem::TypeDef(def) if def.name().as_ref() == item => {
+                                Some(index)
+                            }
+                            _ => None,
+                        })
+                        .collect::<Vec<_>>();
+                    assert_eq!(found.len(), 1, "`{}` has to match exactly one func", item);
+                    items.remove(found[0]);
                 }
                 Operations::RenameType { from, to } => {
                     let from = Ident::new(from);
@@ -152,10 +161,17 @@ pub fn transform(
                 }
                 Operations::RemoveRecordField { record, field } => {
                     let record = find_record(&mut interface, &record);
-                    // TODO: don't use retain_mut
-                    record
-                        .fields_mut()
-                        .retain_mut(|f| f.name().to_string() != field);
+                    let fields = record.fields_mut();
+                    let found = fields
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, f)| match f.name().to_string() == field {
+                            true => Some(i),
+                            false => None,
+                        })
+                        .collect::<Vec<_>>();
+                    assert_eq!(found.len(), 1, "`{}` has to match exactly one func", field);
+                    fields.remove(found[0]);
                 }
                 Operations::RenameRecordField {
                     record: record_name,
@@ -192,13 +208,28 @@ pub fn transform(
                 Operations::RemoveResourceFunc { resource, func } => {
                     let func = Ident::new(func);
                     let resource = find_resource(&mut interface, &resource);
-                    resource.funcs_mut().retain(|f| match f.kind() {
-                        wit_encoder::ResourceFuncKind::Method(n, _) => n != &func,
-                        wit_encoder::ResourceFuncKind::Static(n, _) => n != &func,
-                        wit_encoder::ResourceFuncKind::Constructor => {
-                            func.raw_name() != "constructor"
-                        }
-                    });
+                    let funcs = resource.funcs_mut();
+                    let found = funcs
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, f)| match f.kind() {
+                            wit_encoder::ResourceFuncKind::Method(n, _) if n == &func => Some(i),
+                            wit_encoder::ResourceFuncKind::Static(n, _) if n == &func => Some(i),
+                            wit_encoder::ResourceFuncKind::Constructor
+                                if func.raw_name() == "constructor" =>
+                            {
+                                Some(i)
+                            }
+                            _ => None,
+                        })
+                        .collect::<Vec<_>>();
+                    assert_eq!(
+                        found.len(),
+                        1,
+                        "`{}` has to match exactly one func",
+                        func.raw_name()
+                    );
+                    funcs.remove(found[0]);
                 }
                 Operations::RenameResourceFunc {
                     resource,
@@ -266,7 +297,17 @@ pub fn transform(
                 Operations::RemoveVariantCase { variant, case } => {
                     let variant = find_variant(&mut interface, &variant);
                     let case = Ident::new(case.to_string());
-                    variant.cases_mut().retain(|f| f.name() != &case);
+                    let cases = variant.cases_mut();
+                    let found = cases
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, c)| match c.name() == &case {
+                            true => Some(i),
+                            false => None,
+                        })
+                        .collect::<Vec<_>>();
+                    assert_eq!(found.len(), 1, "`{}` has to match exactly one func", case);
+                    cases.remove(found[0]);
                 }
                 Operations::RenameVariantCase {
                     variant,
@@ -293,7 +334,17 @@ pub fn transform(
                 Operations::RemoveEnumCase { enum_, case } => {
                     let enum_ = find_enum(&mut interface, &enum_);
                     let case = Ident::new(case.to_string());
-                    enum_.cases_mut().retain(|f| f.name() != &case);
+                    let cases = enum_.cases_mut();
+                    let found = cases
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, c)| match c.name() == &case {
+                            true => Some(i),
+                            false => None,
+                        })
+                        .collect::<Vec<_>>();
+                    assert_eq!(found.len(), 1, "`{}` has to match exactly one func", case);
+                    cases.remove(found[0]);
                 }
                 Operations::RenameEnumCase {
                     enum_,
