@@ -3,6 +3,7 @@ use std::{fs, path::Path};
 use wit_transforms::Transform;
 
 fn test(path: &str) {
+    assert_output_parses(path);
     let mut resolve = wit_parser::Resolve::new();
     // TODO: remove once we have streams
     resolve.push_file(format!("./tests/pollable.wit")).unwrap();
@@ -31,6 +32,15 @@ fn test(path: &str) {
 
     let expected = fs::read_to_string(Path::new(&format!("./tests/{path}/output.wit"))).unwrap();
     assert_eq!(expected, package.to_string());
+}
+
+fn assert_output_parses(path: &str) {
+    let mut resolve = wit_parser::Resolve::new();
+    // TODO: remove once we get rid of pollable
+    resolve.push_file(&format!("./tests/pollable.wit")).unwrap();
+    resolve
+        .push_file(&format!("./tests/{path}/output.wit"))
+        .unwrap();
 }
 
 fn parse_json_file(path: String) -> Vec<Transform> {
