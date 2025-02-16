@@ -199,7 +199,7 @@
         ]
     },
     {
-        "reason": "Beautify gpu-*-binding.set-bind-group. No tuple params",
+        "reason": "Beautify gpu-*-binding.set-bind-group, no tuple params. Note: offset & length are not optional in JS, but seems to be JS specific reason for this https://github.com/gpuweb/gpuweb/pull/440#discussion_r342299860",
         "operations": [
             // TODO: add support for dynamic-offsets
             {
@@ -216,11 +216,21 @@
                                     "borrow": "gpu-bind-group"
                                 }
                             }],
-                            ["dynamic-offsets", {
+                            ["dynamic-offsets-data", {
                                 "option": {
                                     "list": {
                                         "named": "gpu-buffer-dynamic-offset"
                                     }
+                                }
+                            }],
+                            ["dynamic-offsets-data-start", {
+                                "option": {
+                                    "named": "gpu-size64"
+                                }
+                            }],
+                            ["dynamic-offsets-data-length", {
+                                "option": {
+                                    "named": "gpu-size32"
                                 }
                             }]
                         ]
@@ -245,11 +255,21 @@
                                     "borrow": "gpu-bind-group"
                                 }
                             }],
-                            ["dynamic-offsets", {
+                            ["dynamic-offsets-data", {
                                 "option": {
                                     "list": {
                                         "named": "gpu-buffer-dynamic-offset"
                                     }
+                                }
+                            }],
+                            ["dynamic-offsets-data-start", {
+                                "option": {
+                                    "named": "gpu-size64"
+                                }
+                            }],
+                            ["dynamic-offsets-data-length", {
+                                "option": {
+                                    "named": "gpu-size32"
                                 }
                             }]
                         ]
@@ -274,11 +294,21 @@
                                     "borrow": "gpu-bind-group"
                                 }
                             }],
-                            ["dynamic-offsets", {
+                            ["dynamic-offsets-data", {
                                 "option": {
                                     "list": {
                                         "named": "gpu-buffer-dynamic-offset"
                                     }
+                                }
+                            }],
+                            ["dynamic-offsets-data-start", {
+                                "option": {
+                                    "named": "gpu-size64"
+                                }
+                            }],
+                            ["dynamic-offsets-data-length", {
+                                "option": {
+                                    "named": "gpu-size32"
                                 }
                             }]
                         ]
