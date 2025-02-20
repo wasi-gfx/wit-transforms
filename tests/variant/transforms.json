@@ -20,6 +20,23 @@
                 }
             },
             {
+                "add-variant-cases": {
+                    "variant": "my-variant",
+                    "cases": [
+                        {
+                            "name": "from-list-a",
+                            "type": {
+                                "list": "bool"
+                            }
+                        },
+                        {
+                            "name": "from-list-b",
+                            "type": "string"
+                        }
+                    ]
+                }
+            },
+            {
                 "rename-variant-case": {
                     "variant": "my-variant",
                     "old-case-name" : "rename-old-name",

@@ -1,6 +1,6 @@
 use wit_encoder::{
-    Enum, EnumCase, Ident, Interface, InterfaceItem, Record, Resource, ResourceFunc, Type, TypeDef,
-    Variant, VariantCase,
+    Enum, EnumCase, Field, Ident, Interface, InterfaceItem, Record, Resource, ResourceFunc, Type,
+    TypeDef, Variant, VariantCase,
 };
 
 use crate::{Operations, Transform};
@@ -43,6 +43,10 @@ pub fn transform(
                     let record = find_record(&mut interface, &record);
                     record.fields_mut().push(field);
                 }
+                Operations::AddRecordFields { record, fields } => {
+                    let record = find_record(&mut interface, &record);
+                    record.fields_mut().extend(fields);
+                }
                 Operations::RemoveRecordField { record, field } => {
                     let record = find_record(&mut interface, &record);
                     let fields = record.fields_mut();
@@ -62,13 +66,8 @@ pub fn transform(
                     old_field_name,
                     new_field_name,
                 } => {
-                    let old_field_name = Ident::new(old_field_name);
                     let record = find_record(&mut interface, &record_name);
-                    let field = record
-                        .fields_mut()
-                        .iter_mut()
-                        .find(|f| f.name() == &old_field_name)
-                        .expect(&format!("{record_name}.{old_field_name} not found"));
+                    let field = find_record_field(record, &old_field_name);
                     field.set_name(new_field_name);
                 }
                 Operations::RetypeRecordField {
@@ -76,13 +75,8 @@ pub fn transform(
                     field,
                     new_type,
                 } => {
-                    let field = Ident::new(field);
                     let record = find_record(&mut interface, &record_name);
-                    let field = record
-                        .fields_mut()
-                        .iter_mut()
-                        .find(|f| f.name() == &field)
-                        .expect(&format!("{record_name}.{field} not found"));
+                    let field = find_record_field(record, &field);
                     field.set_type(new_type);
                 }
                 Operations::AddResourceFunc { resource, func } => {
@@ -178,6 +172,10 @@ pub fn transform(
                     let variant = find_variant(&mut interface, &variant);
                     variant.cases_mut().push(case);
                 }
+                Operations::AddVariantCases { variant, cases } => {
+                    let variant = find_variant(&mut interface, &variant);
+                    variant.cases_mut().extend(cases);
+                }
                 Operations::RemoveVariantCase { variant, case } => {
                     let variant = find_variant(&mut interface, &variant);
                     let case = Ident::new(case.to_string());
@@ -261,6 +259,16 @@ fn find_record<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Record {
         _ => panic!("{name} is not a record"),
     };
     record
+}
+
+fn find_record_field<'a>(record: &'a mut Record, name: &str) -> &'a mut Field {
+    let field_name = Ident::new(name.to_owned());
+    let field = record
+        .fields_mut()
+        .iter_mut()
+        .find(|f| f.name() == &field_name)
+        .expect(&format!("Can't find record field {field_name}"));
+    field
 }
 
 fn find_resource<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Resource {

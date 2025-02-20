@@ -6,5 +6,7 @@ interface my-interface {
     retype(f32),
     retype-remove-type,
     added(option<string>),
+    from-list-a(list<bool>),
+    from-list-b(string),
   }
 }
