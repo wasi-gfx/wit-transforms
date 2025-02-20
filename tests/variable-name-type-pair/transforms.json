@@ -1,0 +1,25 @@
+[
+    {
+        "reason": "transformations using variables referencing name-types pairs",
+        "operations": [
+            {
+                "vars": {
+                    "$_CASES": {
+                        "find-name-type-pair-list": {
+                            "record-fields": {
+                                "record": "my-record"
+                            },
+                            "convert-to": "variant-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-variant-cases": {
+                        "variant": "my-variant",
+                        "cases": "$_CASES"
+                    }
+                }
+            }
+        ]
+    }
+]

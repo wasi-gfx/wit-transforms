@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -10,7 +12,49 @@ pub struct Transform {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
 pub struct OperationWithVars {
-    pub operation: Operation,
+    #[serde(rename = "operation")]
+    pub unresolved_operation: serde_json::Value,
+    #[serde(default)]
+    pub resolved_operation: Option<Operation>,
+    #[serde(default)]
+    #[serde(skip_serializing_if = "HashMap::is_empty")]
+    pub vars: HashMap<String, Find>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
+pub enum Find {
+    FindType {
+        #[serde(flatten)]
+        find_type: FindType,
+    },
+    FindNameTypePairList {
+        #[serde(flatten)]
+        find_name_type_pair_list: FindNameTypePairList,
+        convert_to: NameTypePairConvertTo,
+    },
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
+pub enum NameTypePairConvertTo {
+    VariantCases,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
+pub enum FindType {
+    VariantCase { variant: String, case: String },
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
+pub enum FindNameTypePairList {
+    RecordFields { record: String },
 }
 
 #[derive(Serialize, Deserialize, Debug)]

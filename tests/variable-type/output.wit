@@ -1,0 +1,9 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  variant my-variant {
+    my-case(option<bool>),
+    my-other-case(u32),
+  }
+  type took-variant-case = option<bool>;
+}

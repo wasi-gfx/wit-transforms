@@ -1,17 +1,21 @@
+use std::collections::HashMap;
+
 use wit_encoder::{
     Enum, EnumCase, Field, Ident, Interface, InterfaceItem, Record, Resource, ResourceFunc, Type,
     TypeDef, Variant, VariantCase,
 };
 
-use crate::{Operation, Transform};
+use crate::{Find, FindNameTypePairList, FindType, NameTypePairConvertTo, Operation, Transform};
 
 pub fn transform(
     mut interface: wit_encoder::Interface,
-    transforms: Vec<Transform>,
+    mut transforms: Vec<Transform>,
 ) -> wit_encoder::Interface {
+    resolve_variables(&mut interface, &mut transforms);
+
     for transform in transforms {
         for operation in transform.operations {
-            match operation.operation {
+            match operation.resolved_operation.unwrap() {
                 Operation::AddType(new_type) => {
                     interface.items_mut().push(InterfaceItem::TypeDef(new_type));
                 }
@@ -466,4 +470,97 @@ where
             }
         }
     }
+}
+
+// Doesn't actually have to take &mut reference to Interface, just easier with mut as we can reuse find functions.
+fn resolve_variables(interface: &mut wit_encoder::Interface, transforms: &mut Vec<Transform>) {
+    for transform in transforms {
+        for operation in &mut transform.operations {
+            find_variables_dfs(
+                interface,
+                &operation.vars,
+                &mut operation.unresolved_operation,
+            );
+            // TODO: get rid of clone
+            operation.resolved_operation =
+                Some(serde_json::from_value(operation.unresolved_operation.clone()).unwrap());
+        }
+    }
+}
+
+fn find_variables_dfs(
+    interface: &mut wit_encoder::Interface,
+    vars: &HashMap<String, Find>,
+    unresolved_operation: &mut serde_json::Value,
+) {
+    match unresolved_operation {
+        serde_json::Value::String(s) => {
+            if is_var(s) {
+                let finder = vars.get(s).expect("Variable not found");
+                let value = find_var_value(interface, finder).unwrap();
+                *unresolved_operation = value;
+            }
+        }
+        serde_json::Value::Array(values) => {
+            for value in values {
+                find_variables_dfs(interface, vars, value);
+            }
+        }
+        serde_json::Value::Object(map) => {
+            for value in map.values_mut() {
+                find_variables_dfs(interface, vars, value);
+            }
+        }
+        serde_json::Value::Null | serde_json::Value::Bool(_) | serde_json::Value::Number(_) => {}
+    }
+}
+
+fn find_var_value(
+    interface: &mut wit_encoder::Interface,
+    finder: &Find,
+) -> anyhow::Result<serde_json::Value> {
+    Ok(match finder {
+        Find::FindType { find_type } => {
+            let found_type = match find_type {
+                FindType::VariantCase { variant, case } => {
+                    let variant = find_variant(interface, &variant);
+                    let case = find_variant_case(variant, &case);
+                    let t = match case.type_() {
+                        Some(t) => t,
+                        None => anyhow::bail!("Variant case doesn't have a value"),
+                    };
+                    t
+                }
+            };
+            serde_json::to_value(found_type).unwrap()
+        }
+        Find::FindNameTypePairList {
+            find_name_type_pair_list,
+            convert_to: into,
+        } => {
+            let pairs: Vec<(&Ident, &Type)> = match find_name_type_pair_list {
+                FindNameTypePairList::RecordFields { record } => {
+                    let record = find_record(interface, &record);
+                    record
+                        .fields()
+                        .iter()
+                        .map(|f| (f.name(), f.type_()))
+                        .collect()
+                }
+            };
+            match into {
+                NameTypePairConvertTo::VariantCases => {
+                    let cases: Vec<VariantCase> = pairs
+                        .into_iter()
+                        .map(|(n, t)| (n.clone(), t.clone()).into())
+                        .collect();
+                    serde_json::to_value(cases).unwrap()
+                }
+            }
+        }
+    })
+}
+
+fn is_var(s: &str) -> bool {
+    s.starts_with("$_") && s.len() >= 3
 }
