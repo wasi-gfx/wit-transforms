@@ -3,7 +3,7 @@ use wit_encoder::{
     TypeDef, Variant, VariantCase,
 };
 
-use crate::{Operations, Transform};
+use crate::{Operation, Transform};
 
 pub fn transform(
     mut interface: wit_encoder::Interface,
@@ -11,11 +11,11 @@ pub fn transform(
 ) -> wit_encoder::Interface {
     for transform in transforms {
         for operation in transform.operations {
-            match operation {
-                Operations::AddType(new_type) => {
+            match operation.operation {
+                Operation::AddType(new_type) => {
                     interface.items_mut().push(InterfaceItem::TypeDef(new_type));
                 }
-                Operations::RemoveType(item) => {
+                Operation::RemoveType(item) => {
                     let items = interface.items_mut();
                     let found = items
                         .iter()
@@ -30,7 +30,7 @@ pub fn transform(
                     assert_eq!(found.len(), 1, "`{}` has to match exactly one func", item);
                     items.remove(found[0]);
                 }
-                Operations::RenameType { from, to } => {
+                Operation::RenameType { from, to } => {
                     let from = Ident::new(from);
                     let to = Ident::new(to);
                     visit_names_mut(&mut interface, |name| {
@@ -39,15 +39,15 @@ pub fn transform(
                         }
                     });
                 }
-                Operations::AddRecordField { record, field } => {
+                Operation::AddRecordField { record, field } => {
                     let record = find_record(&mut interface, &record);
                     record.fields_mut().push(field);
                 }
-                Operations::AddRecordFields { record, fields } => {
+                Operation::AddRecordFields { record, fields } => {
                     let record = find_record(&mut interface, &record);
                     record.fields_mut().extend(fields);
                 }
-                Operations::RemoveRecordField { record, field } => {
+                Operation::RemoveRecordField { record, field } => {
                     let record = find_record(&mut interface, &record);
                     let fields = record.fields_mut();
                     let found = fields
@@ -61,7 +61,7 @@ pub fn transform(
                     assert_eq!(found.len(), 1, "`{}` has to match exactly one func", field);
                     fields.remove(found[0]);
                 }
-                Operations::RenameRecordField {
+                Operation::RenameRecordField {
                     record: record_name,
                     old_field_name,
                     new_field_name,
@@ -70,7 +70,7 @@ pub fn transform(
                     let field = find_record_field(record, &old_field_name);
                     field.set_name(new_field_name);
                 }
-                Operations::RetypeRecordField {
+                Operation::RetypeRecordField {
                     record: record_name,
                     field,
                     new_type,
@@ -79,11 +79,11 @@ pub fn transform(
                     let field = find_record_field(record, &field);
                     field.set_type(new_type);
                 }
-                Operations::AddResourceFunc { resource, func } => {
+                Operation::AddResourceFunc { resource, func } => {
                     let resource = find_resource(&mut interface, &resource);
                     resource.func(func);
                 }
-                Operations::RemoveResourceFunc { resource, func } => {
+                Operation::RemoveResourceFunc { resource, func } => {
                     let func = Ident::new(func);
                     let resource = find_resource(&mut interface, &resource);
                     let funcs = resource.funcs_mut();
@@ -109,7 +109,7 @@ pub fn transform(
                     );
                     funcs.remove(found[0]);
                 }
-                Operations::RenameResourceFunc {
+                Operation::RenameResourceFunc {
                     resource,
                     old_func_name,
                     new_func_name,
@@ -118,7 +118,7 @@ pub fn transform(
                     let func = find_resource_func(resource, &old_func_name, false);
                     func.set_name(new_func_name);
                 }
-                Operations::RetypeResourceFuncParams {
+                Operation::RetypeResourceFuncParams {
                     resource,
                     func,
                     new_params,
@@ -127,7 +127,7 @@ pub fn transform(
                     let func = find_resource_func(resource, &func, true);
                     func.set_params(new_params);
                 }
-                Operations::RetypeResourceFuncParamName {
+                Operation::RetypeResourceFuncParamName {
                     resource,
                     func,
                     old_param_name,
@@ -143,7 +143,7 @@ pub fn transform(
                         .unwrap();
                     param.0 = Ident::new(new_name);
                 }
-                Operations::RetypeResourceFuncParamType {
+                Operation::RetypeResourceFuncParamType {
                     resource,
                     func,
                     param,
@@ -159,7 +159,7 @@ pub fn transform(
                         .unwrap();
                     param.1 = new_type;
                 }
-                Operations::RetypeResourceFuncResults {
+                Operation::RetypeResourceFuncResults {
                     resource,
                     func,
                     new_results,
@@ -168,15 +168,15 @@ pub fn transform(
                     let func = find_resource_func(resource, &func, false);
                     func.set_results(new_results);
                 }
-                Operations::AddVariantCase { variant, case } => {
+                Operation::AddVariantCase { variant, case } => {
                     let variant = find_variant(&mut interface, &variant);
                     variant.cases_mut().push(case);
                 }
-                Operations::AddVariantCases { variant, cases } => {
+                Operation::AddVariantCases { variant, cases } => {
                     let variant = find_variant(&mut interface, &variant);
                     variant.cases_mut().extend(cases);
                 }
-                Operations::RemoveVariantCase { variant, case } => {
+                Operation::RemoveVariantCase { variant, case } => {
                     let variant = find_variant(&mut interface, &variant);
                     let case = Ident::new(case.to_string());
                     let cases = variant.cases_mut();
@@ -191,7 +191,7 @@ pub fn transform(
                     assert_eq!(found.len(), 1, "`{}` has to match exactly one func", case);
                     cases.remove(found[0]);
                 }
-                Operations::RenameVariantCase {
+                Operation::RenameVariantCase {
                     variant,
                     old_case_name,
                     new_case_name,
@@ -200,7 +200,7 @@ pub fn transform(
                     let case = find_variant_case(variant, &old_case_name);
                     case.set_name(new_case_name);
                 }
-                Operations::RetypeVariantCase {
+                Operation::RetypeVariantCase {
                     variant,
                     case,
                     new_type: new_case,
@@ -209,11 +209,11 @@ pub fn transform(
                     let case = find_variant_case(variant, &case);
                     *case.type_mut() = new_case;
                 }
-                Operations::AddEnumCase { enum_, case } => {
+                Operation::AddEnumCase { enum_, case } => {
                     let enum_ = find_enum(&mut interface, &enum_);
                     enum_.cases_mut().push(case);
                 }
-                Operations::RemoveEnumCase { enum_, case } => {
+                Operation::RemoveEnumCase { enum_, case } => {
                     let enum_ = find_enum(&mut interface, &enum_);
                     let case = Ident::new(case.to_string());
                     let cases = enum_.cases_mut();
@@ -228,7 +228,7 @@ pub fn transform(
                     assert_eq!(found.len(), 1, "`{}` has to match exactly one func", case);
                     cases.remove(found[0]);
                 }
-                Operations::RenameEnumCase {
+                Operation::RenameEnumCase {
                     enum_,
                     old_case_name,
                     new_case_name,
@@ -237,7 +237,7 @@ pub fn transform(
                     let case = find_enum_case(enum_, &old_case_name);
                     case.set_name(new_case_name);
                 }
-                Operations::ReplaceRefs { old, new } => {
+                Operation::ReplaceRefs { old, new } => {
                     let old = Ident::new(old);
                     let new = Ident::new(new);
                     visit_refs_mut(&mut interface, |name| {

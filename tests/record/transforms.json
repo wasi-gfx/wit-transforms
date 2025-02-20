@@ -3,53 +3,63 @@
         "reason": "Record transformations",
         "operations": [
             {
-                "remove-record-field": {
-                    "record": "my-record",
-                    "field": "remove"
+                "operation": {
+                    "remove-record-field": {
+                        "record": "my-record",
+                        "field": "remove"
+                    }
                 }
             },
             {
-                "add-record-field": {
-                    "record": "my-record",
-                    "field": {
-                        "name": "added",
-                        "type": {
-                            "option": "string"
+                "operation": {
+                    "add-record-field": {
+                        "record": "my-record",
+                        "field": {
+                            "name": "added",
+                            "type": {
+                                "option": "string"
+                            }
                         }
                     }
                 }
             },
             {
-                "add-record-fields": {
-                    "record": "my-record",
-                    "fields": [
-                        {
-                            "name": "from-list-a",
-                            "type": {
-                                "tuple": {
-                                    "types": ["u32", "f32"]
+                "operation": {
+                    "add-record-fields": {
+                        "record": "my-record",
+                        "fields": [
+                            {
+                                "name": "from-list-a",
+                                "type": {
+                                    "tuple": {
+                                        "types": ["u32", "f32"]
+                                    }
                                 }
+                            },
+                            {
+                                "name": "from-list-b",
+                                "type": "string"
                             }
-                        },
-                        {
-                            "name": "from-list-b",
-                            "type": "string"
-                        }
-                    ]
+                        ]
+                    }
                 }
             },
             {
-                "rename-record-field": {
-                    "record": "my-record",
-                    "old-field-name" : "rename-old-name",
-                    "new-field-name" : "rename-new-name"
+                "operation": {
+                    "rename-record-field": {
+                        "record": "my-record",
+                        "old-field-name" : "rename-old-name",
+                        "new-field-name" : "rename-new-name"
+                    }
                 }
             },
             {
-                "retype-record-field": {
-                    "record": "my-record",
-                    "field": "retype",
-                    "new-type": "f32"
+                "operation": {
+                    "retype-record-field": {
+                        "record": "my-record",
+                        "field": "retype",
+                        "new-type": "f32"
+                    }
                 }
             }
         ]

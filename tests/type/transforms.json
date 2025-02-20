@@ -3,27 +3,33 @@
         "reason": "type transformations",
         "operations": [
             {
-                "remove-type": "to-remove"
+                "operation": {
+                    "remove-type": "to-remove"
+                }
             },
             {
-                "add-type": {
-                    "name": "added-type",
-                    "kind": {
-                        "record": {
-                            "fields": [
-                                {
-                                    "name": "my-field",
-                                    "type": "string"
-                                }
-                            ]
+                "operation": {
+                    "add-type": {
+                        "name": "added-type",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "my-field",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
                         }
                     }
                 }
             },
             {
-                "rename-type": {
-                    "from" : "rename-resource",
-                    "to" : "renamed-resource"
+                "operation": {
+                    "rename-type": {
+                        "from" : "rename-resource",
+                        "to" : "renamed-resource"
+                    }
                 }
             }
         ]

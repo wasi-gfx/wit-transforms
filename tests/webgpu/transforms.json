@@ -3,10 +3,14 @@
         "reason": "Remove navigators",
         "operations": [
             {
-                "remove-type": "navigator"
+                "operation": {
+                    "remove-type": "navigator"
+                }
             },
             {
-                "remove-type": "worker-navigator"
+                "operation": {
+                    "remove-type": "worker-navigator"
+                }
             }
         ]
     },
@@ -14,15 +18,21 @@
         "reason": "Have a single color type",
         "operations": [
             {
-                "remove-type": "gpu-color-dict-or-list-f64"
+                "operation": {
+                    "remove-type": "gpu-color-dict-or-list-f64"
+                }
             },
             {
-                "remove-type": "gpu-color"
+                "operation": {
+                    "remove-type": "gpu-color"
+                }
             },
             {
-                "rename-type": {
-                    "from": "gpu-color-dict",
-                    "to": "gpu-color"
+                "operation": {
+                    "rename-type": {
+                        "from": "gpu-color-dict",
+                        "to": "gpu-color"
+                    }
                 }
             }
         ]
@@ -31,15 +41,21 @@
         "reason": "Have a single origin 3D type",
         "operations": [
             {
-                "remove-type": "gpu-origin3-d-dict-or-list-gpu-integer-coordinate"
+                "operation": {
+                    "remove-type": "gpu-origin3-d-dict-or-list-gpu-integer-coordinate"
+                }
             },
             {
-                "remove-type": "gpu-origin3-d"
+                "operation": {
+                    "remove-type": "gpu-origin3-d"
+                }
             },
             {
-                "rename-type": {
-                    "from": "gpu-origin3-d-dict",
-                    "to": "gpu-origin3-d"
+                "operation": {
+                    "rename-type": {
+                        "from": "gpu-origin3-d-dict",
+                        "to": "gpu-origin3-d"
+                    }
                 }
             }
         ]
@@ -48,15 +64,21 @@
         "reason": "Have a single extent 3D type",
         "operations": [
             {
-                "remove-type": "gpu-extent3-d-dict-or-list-gpu-integer-coordinate"
+                "operation": {
+                    "remove-type": "gpu-extent3-d-dict-or-list-gpu-integer-coordinate"
+                }
             },
             {
-                "remove-type": "gpu-extent3-d"
+                "operation": {
+                    "remove-type": "gpu-extent3-d"
+                }
             },
             {
-                "rename-type": {
-                    "from": "gpu-extent3-d-dict",
-                    "to": "gpu-extent3-d"
+                "operation": {
+                    "rename-type": {
+                        "from": "gpu-extent3-d-dict",
+                        "to": "gpu-extent3-d"
+                    }
                 }
             }
         ]
@@ -65,52 +87,80 @@
         "reason": "Remove gpu-supported-limits.copy-external-image-to-texture as it's web related",
         "operations": [
             {
-                "remove-resource-func": {
-                    "resource": "gpu-queue",
-                    "func": "copy-external-image-to-texture"
+                "operation": {
+                    "remove-resource-func": {
+                        "resource": "gpu-queue",
+                        "func": "copy-external-image-to-texture"
+                    }
                 }
             },
             {
-                "remove-type": "gpu-image-copy-external-image"
-            },
-            {
-                "remove-type": "gpu-image-copy-external-image-source"
-            },
-            {
-                "remove-type": "html-canvas-element-or-html-image-element-or-html-video-element-or-image-bitmap-or-image-data-or-offscreen-canvas-or-video-frame"
-            },
-            {
-                "remove-type": "html-canvas-element"
-            },
-            {
-                "remove-type": "html-image-element"
-            },
-            {
-                "remove-type": "image-bitmap"
-            },
-            {
-                "remove-type": "image-data"
-            },
-            {
-                "remove-type": "offscreen-canvas"
-            },
-            {
-                "remove-type": "gpu-origin2-d-dict"
-            },
-            {
-                "remove-type": "gpu-origin2-d-dict-or-list-gpu-integer-coordinate"
-            },
-            {
-                "remove-type": "gpu-origin2-d"
-            },
-            {
-                "remove-resource-func": {
-                    "resource": "gpu-canvas-context",
-                    "func": "canvas"
+                "operation": {
+                    "remove-type": "gpu-image-copy-external-image"
                 }
             },
             {
-                "remove-type": "html-canvas-element-or-offscreen-canvas"
+                "operation": {
+                    "remove-type": "gpu-image-copy-external-image-source"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "html-canvas-element-or-html-image-element-or-html-video-element-or-image-bitmap-or-image-data-or-offscreen-canvas-or-video-frame"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "html-canvas-element"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "html-image-element"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "image-bitmap"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "image-data"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "offscreen-canvas"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-origin2-d-dict"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-origin2-d-dict-or-list-gpu-integer-coordinate"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-origin2-d"
+                }
+            },
+            {
+                "operation": {
+                    "remove-resource-func": {
+                        "resource": "gpu-canvas-context",
+                        "func": "canvas"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "html-canvas-element-or-offscreen-canvas"
+                }
             }
         ]
     },
@@ -118,51 +168,73 @@
         "reason": "Remove gpu-device.import-external-texture as it's web related",
         "operations": [
             {
-                "remove-resource-func": {
-                    "resource": "gpu-device",
-                    "func": "import-external-texture"
+                "operation": {
+                    "remove-resource-func": {
+                        "resource": "gpu-device",
+                        "func": "import-external-texture"
+                    }
                 }
             },
             {
-                "remove-type": "gpu-external-texture-descriptor"
-            },
-            {
-                "remove-type": "html-video-element-or-video-frame"
-            },
-            {
-                "remove-type": "html-video-element"
-            },
-            {
-                "remove-type": "video-frame"
-            },
-            {
-                "remove-record-field": {
-                    "record": "gpu-bind-group-layout-entry",
-                    "field": "external-texture"
+                "operation": {
+                    "remove-type": "gpu-external-texture-descriptor"
                 }
             },
             {
-                "remove-type": "gpu-external-texture-binding-layout"
-            },
-            {
-                "remove-type": "gpu-external-texture"
-            },
-            {
-                "remove-variant-case": {
-                    "variant": "gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view",
-                    "case": "gpu-external-texture"
+                "operation": {
+                    "remove-type": "html-video-element-or-video-frame"
                 }
             },
             {
-                "rename-type": {
-                    "from": "gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view",
-                    "to": "gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view"
+                "operation": {
+                    "remove-type": "html-video-element"
                 }
             },
             {
-                "replace-refs": {
-                    "old": "gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view",
-                    "new": "gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view"
+                "operation": {
+                    "remove-type": "video-frame"
+                }
+            },
+            {
+                "operation": {
+                    "remove-record-field": {
+                        "record": "gpu-bind-group-layout-entry",
+                        "field": "external-texture"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-external-texture-binding-layout"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-external-texture"
+                }
+            },
+            {
+                "operation": {
+                    "remove-variant-case": {
+                        "variant": "gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view",
+                        "case": "gpu-external-texture"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "rename-type": {
+                        "from": "gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view",
+                        "to": "gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "replace-refs": {
+                        "old": "gpu-buffer-binding-or-gpu-external-texture-or-gpu-sampler-or-gpu-texture-view",
+                        "new": "gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view"
+                    }
                 }
             }
         ]
@@ -171,22 +243,34 @@
         "reason": "Remove bases that are never used",
         "operations": [
             {
-                "remove-type": "dom-exception"
+                "operation": {
+                    "remove-type": "dom-exception"
+                }
             },
             {
-                "remove-type": "event-init"
+                "operation": {
+                    "remove-type": "event-init"
+                }
             },
             {
-                "remove-type": "gpu-object-descriptor-base"
+                "operation": {
+                    "remove-type": "gpu-object-descriptor-base"
+                }
             },
             {
-                "remove-type": "gpu-pipeline-descriptor-base"
+                "operation": {
+                    "remove-type": "gpu-pipeline-descriptor-base"
+                }
             },
             {
-                "remove-type": "event-target"
+                "operation": {
+                    "remove-type": "event-target"
+                }
             },
             {
-                "remove-type": "event"
+                "operation": {
+                    "remove-type": "event"
+                }
             }
         ]
     },
@@ -194,7 +278,9 @@
         "reason": "GPURenderPassLayout is only used as the base of GPURenderBundleEncoderDescriptor. Since wit doesn't have inheritance the fields are duplicated in the child so no need for the parent.",
         "operations": [
             {
-                "remove-type": "gpu-render-pass-layout"
+                "operation": {
+                    "remove-type": "gpu-render-pass-layout"
+                }
             }
         ]
     },
@@ -203,121 +289,132 @@
         "operations": [
             // TODO: add support for dynamic-offsets
             {
-                "retype-resource-func-params": {
-                    "resource": "gpu-render-bundle-encoder",
-                    "func": "set-bind-group",
-                    "new-params": {
-                        "items": [
-                            ["index", {
-                                "named": "gpu-index32"
-                            }],
-                            ["bind-group", {
-                                "option": {
-                                    "borrow": "gpu-bind-group"
-                                }
-                            }],
-                            ["dynamic-offsets-data", {
-                                "option": {
-                                    "list": {
-                                        "named": "gpu-buffer-dynamic-offset"
+                "operation": {
+                    "retype-resource-func-params": {
+                        "resource": "gpu-render-bundle-encoder",
+                        "func": "set-bind-group",
+                        "new-params": {
+                            "items": [
+                                ["index", {
+                                    "named": "gpu-index32"
+                                }],
+                                ["bind-group", {
+                                    "option": {
+                                        "borrow": "gpu-bind-group"
                                     }
-                                }
-                            }],
-                            ["dynamic-offsets-data-start", {
-                                "option": {
-                                    "named": "gpu-size64"
-                                }
-                            }],
-                            ["dynamic-offsets-data-length", {
-                                "option": {
-                                    "named": "gpu-size32"
-                                }
-                            }]
-                        ]
+                                }],
+                                ["dynamic-offsets-data", {
+                                    "option": {
+                                        "list": {
+                                            "named": "gpu-buffer-dynamic-offset"
+                                        }
+                                    }
+                                }],
+                                ["dynamic-offsets-data-start", {
+                                    "option": {
+                                        "named": "gpu-size64"
+                                    }
+                                }],
+                                ["dynamic-offsets-data-length", {
+                                    "option": {
+                                        "named": "gpu-size32"
+                                    }
+                                }]
+                            ]
+                        }
                     }
                 }
             },
             {
-                "remove-type": "gpu-render-bundle-encoder-set-bind-group-params"
+                "operation": {
+                    "remove-type": "gpu-render-bundle-encoder-set-bind-group-params"
+                }
             },
             // TODO: add support for dynamic-offsets
             {
-                "retype-resource-func-params": {
-                    "resource": "gpu-render-pass-encoder",
-                    "func": "set-bind-group",
-                    "new-params": {
-                        "items": [
-                            ["index", {
-                                "named": "gpu-index32"
-                            }],
-                            ["bind-group", {
-                                "option": {
-                                    "borrow": "gpu-bind-group"
-                                }
-                            }],
-                            ["dynamic-offsets-data", {
-                                "option": {
-                                    "list": {
-                                        "named": "gpu-buffer-dynamic-offset"
+                "operation": {
+                    "retype-resource-func-params": {
+                        "resource": "gpu-render-pass-encoder",
+                        "func": "set-bind-group",
+                        "new-params": {
+                            "items": [
+                                ["index", {
+                                    "named": "gpu-index32"
+                                }],
+                                ["bind-group", {
+                                    "option": {
+                                        "borrow": "gpu-bind-group"
                                     }
-                                }
-                            }],
-                            ["dynamic-offsets-data-start", {
-                                "option": {
-                                    "named": "gpu-size64"
-                                }
-                            }],
-                            ["dynamic-offsets-data-length", {
-                                "option": {
-                                    "named": "gpu-size32"
-                                }
-                            }]
-                        ]
+                                }],
+                                ["dynamic-offsets-data", {
+                                    "option": {
+                                        "list": {
+                                            "named": "gpu-buffer-dynamic-offset"
+                                        }
+                                    }
+                                }],
+                                ["dynamic-offsets-data-start", {
+                                    "option": {
+                                        "named": "gpu-size64"
+                                    }
+                                }],
+                                ["dynamic-offsets-data-length", {
+                                    "option": {
+                                        "named": "gpu-size32"
+                                    }
+                                }]
+                            ]
+                        }
                     }
                 }
             },
             {
-                "remove-type": "gpu-render-pass-encoder-set-bind-group-params"
+                "operation": {
+                    "remove-type": "gpu-render-pass-encoder-set-bind-group-params"
+                }
             },
             // TODO: add support for dynamic-offsets
             {
-                "retype-resource-func-params": {
-                    "resource": "gpu-compute-pass-encoder",
-                    "func": "set-bind-group",
-                    "new-params": {
-                        "items": [
-                            ["index", {
-                                "named": "gpu-index32"
-                            }],
-                            ["bind-group", {
-                                "option": {
-                                    "borrow": "gpu-bind-group"
-                                }
-                            }],
-                            ["dynamic-offsets-data", {
-                                "option": {
-                                    "list": {
-                                        "named": "gpu-buffer-dynamic-offset"
+                "operation": {
+                    "retype-resource-func-params": {
+                        "resource": "gpu-compute-pass-encoder",
+                        "func": "set-bind-group",
+                        "new-params": {
+                            "items": [
+                                ["index", {
+                                    "named": "gpu-index32"
+                                }],
+                                ["bind-group", {
+                                    "option": {
+                                        "borrow": "gpu-bind-group"
                                     }
-                                }
-                            }],
-                            ["dynamic-offsets-data-start", {
-                                "option": {
-                                    "named": "gpu-size64"
-                                }
-                            }],
-                            ["dynamic-offsets-data-length", {
-                                "option": {
-                                    "named": "gpu-size32"
-                                }
-                            }]
-                        ]
+                                }],
+                                ["dynamic-offsets-data", {
+                                    "option": {
+                                        "list": {
+                                            "named": "gpu-buffer-dynamic-offset"
+                                        }
+                                    }
+                                }],
+                                ["dynamic-offsets-data-start", {
+                                    "option": {
+                                        "named": "gpu-size64"
+                                    }
+                                }],
+                                ["dynamic-offsets-data-length", {
+                                    "option": {
+                                        "named": "gpu-size32"
+                                    }
+                                }]
+                            ]
+                        }
                     }
                 }
-
             },
             {
-                "remove-type": "gpu-compute-pass-encoder-set-bind-group-params"
+                "operation": {
+                    "remove-type": "gpu-compute-pass-encoder-set-bind-group-params"
+                }
             }
         ]
     },
@@ -325,128 +422,196 @@
         "reason": "Remove allow-shared-buffer-source as it's web related and temporarily replace it with list<u8>",
         "operations": [
             {
-                "retype-resource-func-param-type": {
-                    "resource": "gpu-queue",
-                    "func": "write-buffer",
-                    "param": "data",
-                    "new-type": {
-                        "list": "u8"
+                "operation": {
+                    "retype-resource-func-param-type": {
+                        "resource": "gpu-queue",
+                        "func": "write-buffer",
+                        "param": "data",
+                        "new-type": {
+                            "list": "u8"
+                        }
                     }
                 }
             },
             {
-                "rename-resource-func": {
-                    "resource": "gpu-queue",
-                    "old-func-name": "write-buffer",
-                    "new-func-name": "write-buffer-cloned"
-                }
-            },
-            {
-                "retype-resource-func-param-type": {
-                    "resource": "gpu-queue",
-                    "func": "write-texture",
-                    "param": "data",
-                    "new-type": {
-                        "list": "u8"
+                "operation": {
+                    "rename-resource-func": {
+                        "resource": "gpu-queue",
+                        "old-func-name": "write-buffer",
+                        "new-func-name": "write-buffer-cloned"
                     }
                 }
             },
             {
-                "rename-resource-func": {
-                    "resource": "gpu-queue",
-                    "old-func-name": "write-texture",
-                    "new-func-name": "write-texture-cloned"
+                "operation": {
+                    "retype-resource-func-param-type": {
+                        "resource": "gpu-queue",
+                        "func": "write-texture",
+                        "param": "data",
+                        "new-type": {
+                            "list": "u8"
+                        }
+                    }
                 }
             },
             {
-                "remove-type": "array-buffer-view"
+                "operation": {
+                    "rename-resource-func": {
+                        "resource": "gpu-queue",
+                        "old-func-name": "write-texture",
+                        "new-func-name": "write-texture-cloned"
+                    }
+                }
             },
             {
-                "remove-type": "allow-shared-buffer-source"
+                "operation": {
+                    "remove-type": "array-buffer-view"
+                }
             },
             {
-                "remove-type": "data-view"
+                "operation": {
+                    "remove-type": "allow-shared-buffer-source"
+                }
             },
             {
-                "remove-type": "uint8-array"
+                "operation": {
+                    "remove-type": "data-view"
+                }
             },
             {
-                "remove-type": "uint8-array-constructor-options"
+                "operation": {
+                    "remove-type": "uint8-array"
+                }
             },
             {
-                "remove-type": "uint8-array-set-src"
+                "operation": {
+                    "remove-type": "uint8-array-constructor-options"
+                }
             },
             {
-                "remove-type": "uint8-clamped-array"
+                "operation": {
+                    "remove-type": "uint8-array-set-src"
+                }
             },
             {
-                "remove-type": "uint8-clamped-array-constructor-options"
+                "operation": {
+                    "remove-type": "uint8-clamped-array"
+                }
             },
             {
-                "remove-type": "uint8-clamped-array-set-src"
+                "operation": {
+                    "remove-type": "uint8-clamped-array-constructor-options"
+                }
             },
             {
-                "remove-type": "uint16-array"
+                "operation": {
+                    "remove-type": "uint8-clamped-array-set-src"
+                }
             },
             {
-                "remove-type": "uint16-array-constructor-options"
+                "operation": {
+                    "remove-type": "uint16-array"
+                }
             },
             {
-                "remove-type": "uint16-array-set-src"
+                "operation": {
+                    "remove-type": "uint16-array-constructor-options"
+                }
             },
             {
-                "remove-type": "uint32-array"
+                "operation": {
+                    "remove-type": "uint16-array-set-src"
+                }
             },
             {
-                "remove-type": "uint32-array-constructor-options"
+                "operation": {
+                    "remove-type": "uint32-array"
+                }
             },
             {
-                "remove-type": "uint32-array-set-src"
+                "operation": {
+                    "remove-type": "uint32-array-constructor-options"
+                }
             },
             {
-                "remove-type": "int8-array"
+                "operation": {
+                    "remove-type": "uint32-array-set-src"
+                }
             },
             {
-                "remove-type": "int8-array-constructor-options"
+                "operation": {
+                    "remove-type": "int8-array"
+                }
             },
             {
-                "remove-type": "int8-array-set-src"
+                "operation": {
+                    "remove-type": "int8-array-constructor-options"
+                }
             },
             {
-                "remove-type": "int16-array"
+                "operation": {
+                    "remove-type": "int8-array-set-src"
+                }
             },
             {
-                "remove-type": "int16-array-constructor-options"
+                "operation": {
+                    "remove-type": "int16-array"
+                }
             },
             {
-                "remove-type": "int16-array-set-src"
+                "operation": {
+                    "remove-type": "int16-array-constructor-options"
+                }
             },
             {
-                "remove-type": "int32-array"
+                "operation": {
+                    "remove-type": "int16-array-set-src"
+                }
             },
             {
-                "remove-type": "int32-array-constructor-options"
+                "operation": {
+                    "remove-type": "int32-array"
+                }
             },
             {
-                "remove-type": "int32-array-set-src"
+                "operation": {
+                    "remove-type": "int32-array-constructor-options"
+                }
             },
             {
-                "remove-type": "float32-array"
+                "operation": {
+                    "remove-type": "int32-array-set-src"
+                }
             },
             {
-                "remove-type": "float32-array-constructor-options"
+                "operation": {
+                    "remove-type": "float32-array"
+                }
             },
             {
-                "remove-type": "float32-array-set-src"
+                "operation": {
+                    "remove-type": "float32-array-constructor-options"
+                }
             },
             {
-                "remove-type": "float64-array"
+                "operation": {
+                    "remove-type": "float32-array-set-src"
+                }
             },
             {
-                "remove-type": "float64-array-constructor-options"
+                "operation": {
+                    "remove-type": "float64-array"
+                }
             },
             {
-                "remove-type": "float64-array-set-src"
+                "operation": {
+                    "remove-type": "float64-array-constructor-options"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "float64-array-set-src"
+                }
             }
         ]
     },
@@ -454,21 +619,25 @@
         "reason": "Change predefined-color-space to enum",
         "operations": [
             {
-                "remove-type": "predefined-color-space"
+                "operation": {
+                    "remove-type": "predefined-color-space"
+                }
             },
             {
-                "add-type": {
-                    "name": "predefined-color-space",
-                    "kind": {
-                        "enum": {
-                            "cases": [
-                                {
-                                    "name": "srgb"
-                                },
-                                {
-                                    "name": "display-p3"
-                                }
-                            ]
+                "operation": {
+                    "add-type": {
+                        "name": "predefined-color-space",
+                        "kind": {
+                            "enum": {
+                                "cases": [
+                                    {
+                                        "name": "srgb"
+                                    },
+                                    {
+                                        "name": "display-p3"
+                                    }
+                                ]
+                            }
                         }
                     }
                 }
@@ -479,52 +648,66 @@
         "reason": "Remove prefixes of identifiers with leading digits",
         "operations": [
             {
-                "rename-enum-case": {
-                    "enum": "gpu-texture-dimension",
-                    "old-case-name" : "x1d",
-                    "new-case-name" : "d1"
+                "operation": {
+                    "rename-enum-case": {
+                        "enum": "gpu-texture-dimension",
+                        "old-case-name" : "x1d",
+                        "new-case-name" : "d1"
+                    }
                 }
             },
             {
-                "rename-enum-case": {
-                    "enum": "gpu-texture-dimension",
-                    "old-case-name" : "x2d",
-                    "new-case-name" : "d2"
+                "operation": {
+                    "rename-enum-case": {
+                        "enum": "gpu-texture-dimension",
+                        "old-case-name" : "x2d",
+                        "new-case-name" : "d2"
+                    }
                 }
             },
             {
-                "rename-enum-case": {
-                    "enum": "gpu-texture-dimension",
-                    "old-case-name" : "x3d",
-                    "new-case-name" : "d3"
+                "operation": {
+                    "rename-enum-case": {
+                        "enum": "gpu-texture-dimension",
+                        "old-case-name" : "x3d",
+                        "new-case-name" : "d3"
+                    }
                 }
             },
             {
-                "rename-enum-case": {
-                    "enum": "gpu-texture-view-dimension",
-                    "old-case-name" : "x1d",
-                    "new-case-name" : "d1"
+                "operation": {
+                    "rename-enum-case": {
+                        "enum": "gpu-texture-view-dimension",
+                        "old-case-name" : "x1d",
+                        "new-case-name" : "d1"
+                    }
                 }
             },
             {
-                "rename-enum-case": {
-                    "enum": "gpu-texture-view-dimension",
-                    "old-case-name" : "x2d",
-                    "new-case-name" : "d2"
+                "operation": {
+                    "rename-enum-case": {
+                        "enum": "gpu-texture-view-dimension",
+                        "old-case-name" : "x2d",
+                        "new-case-name" : "d2"
+                    }
                 }
             },
             {
-                "rename-enum-case": {
-                    "enum": "gpu-texture-view-dimension",
-                    "old-case-name" : "x2d-array",
-                    "new-case-name" : "d2-array"
+                "operation": {
+                    "rename-enum-case": {
+                        "enum": "gpu-texture-view-dimension",
+                        "old-case-name" : "x2d-array",
+                        "new-case-name" : "d2-array"
+                    }
                 }
             },
             {
-                "rename-enum-case": {
-                    "enum": "gpu-texture-view-dimension",
-                    "old-case-name" : "x3d",
-                    "new-case-name" : "d3"
+                "operation": {
+                    "rename-enum-case": {
+                        "enum": "gpu-texture-view-dimension",
+                        "old-case-name" : "x3d",
+                        "new-case-name" : "d3"
+                    }
                 }
             }
         ]
@@ -533,12 +716,16 @@
         "reason": "Simplify naming of gpu-binding-resource",
         "operations": [
             {
-                "remove-type": "gpu-binding-resource"
+                "operation": {
+                    "remove-type": "gpu-binding-resource"
+                }
             },
             {
-                "rename-type": {
-                    "from" : "gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view",
-                    "to" : "gpu-binding-resource"
+                "operation": {
+                    "rename-type": {
+                        "from" : "gpu-buffer-binding-or-gpu-sampler-or-gpu-texture-view",
+                        "to" : "gpu-binding-resource"
+                    }
                 }
             }
         ]
@@ -547,33 +734,43 @@
         "reason": "Simplify naming of gpu-layout, and merge gpu-auto-layout-mode cases into gpu-layout",
         "operations": [
             {
-                "rename-type": {
-                    "from" : "gpu-auto-layout-mode-or-gpu-pipeline-layout",
-                    // TODO: is this a good name?
-                    "to" : "gpu-layout"
-                }
-            },
-            {
-                "add-variant-case": {
-                    "variant": "gpu-layout",
-                    "case": {
-                        "name": "auto"
+                "operation": {
+                    "rename-type": {
+                        "from" : "gpu-auto-layout-mode-or-gpu-pipeline-layout",
+                        // TODO: is this a good name?
+                        "to" : "gpu-layout"
                     }
                 }
             },
             {
-                "remove-variant-case": {
-                    "variant": "gpu-layout",
-                    "case": "gpu-auto-layout-mode"
+                "operation": {
+                    "add-variant-case": {
+                        "variant": "gpu-layout",
+                        "case": {
+                            "name": "auto"
+                        }
+                    }
                 }
             },
             {
-                "remove-type": "gpu-auto-layout-mode"
+                "operation": {
+                    "remove-variant-case": {
+                        "variant": "gpu-layout",
+                        "case": "gpu-auto-layout-mode"
+                    }
+                }
             },
             {
-                "replace-refs": {
-                    "old": "gpu-auto-layout-mode-or-gpu-pipeline-layout",
-                    "new": "gpu-layout"
+                "operation": {
+                    "remove-type": "gpu-auto-layout-mode"
+                }
+            },
+            {
+                "operation": {
+                    "replace-refs": {
+                        "old": "gpu-auto-layout-mode-or-gpu-pipeline-layout",
+                        "new": "gpu-layout"
+                    }
                 }
             }
         ]
@@ -582,42 +779,52 @@
         "reason": "Remove array-buffer and replace it temporarily with list<u8>",
         "operations": [
             {
-                "remove-type": "array-buffer"
+                "operation": {
+                    "remove-type": "array-buffer"
+                }
             },
             {
-                "remove-type": "array-buffer-constructor-options"
+                "operation": {
+                    "remove-type": "array-buffer-constructor-options"
+                }
             },
             {
-                "retype-resource-func-results": {
-                    "resource": "gpu-buffer",
-                    "func": "get-mapped-range",
-                    "new-results": {
-                        "anon": {
-                            "list": "u8"
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-buffer",
+                        "func": "get-mapped-range",
+                        "new-results": {
+                            "anon": {
+                                "list": "u8"
+                            }
                         }
                     }
                 }
             },
             {
-                "rename-resource-func": {
-                    "resource": "gpu-buffer",
-                    "old-func-name": "get-mapped-range",
-                    "new-func-name": "get-mapped-range-get-cloned"
+                "operation": {
+                    "rename-resource-func": {
+                        "resource": "gpu-buffer",
+                        "old-func-name": "get-mapped-range",
+                        "new-func-name": "get-mapped-range-get-cloned"
+                    }
                 }
             },
             {
-                "add-resource-func": {
-                    "resource": "gpu-buffer",
-                    "func": {
-                        "kind": {
-                            "method": ["get-mapped-range-set-cloned", { "named": { "items": [] } }]
-                        },
-                        "params": {
-                            "items": [
-                                ["data", { "list": "u8" }],
-                                ["offset", { "option": { "named": "gpu-size64" } }],
-                                ["size", { "option": { "named": "gpu-size64" } }]
-                            ]
+                "operation": {
+                    "add-resource-func": {
+                        "resource": "gpu-buffer",
+                        "func": {
+                            "kind": {
+                                "method": ["get-mapped-range-set-cloned", { "named": { "items": [] } }]
+                            },
+                            "params": {
+                                "items": [
+                                    ["data", { "list": "u8" }],
+                                    ["offset", { "option": { "named": "gpu-size64" } }],
+                                    ["size", { "option": { "named": "gpu-size64" } }]
+                                ]
+                            }
                         }
                     }
                 }
