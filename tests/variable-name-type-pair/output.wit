@@ -1,0 +1,13 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  record my-record {
+    my-field: option<bool>,
+    my-other-field: u32,
+  }
+  variant my-variant {
+    original-case,
+    my-field(option<bool>),
+    my-other-field(u32),
+  }
+}

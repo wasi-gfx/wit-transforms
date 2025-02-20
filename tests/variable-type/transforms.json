@@ -1,0 +1,32 @@
+[
+    {
+        "reason": "transformations using variables referencing types",
+        "operations": [
+            {
+                "vars": {
+                    "$_TYPE": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "my-variant",
+                                "case": "my-case"
+                            },
+                            "unwrap-t": [
+                                "option",
+                                { "tuple": 2 },
+                                "option"
+                            ]
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-variant-case",
+                        "kind": {
+                            "type": "$_TYPE"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+]

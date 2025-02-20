@@ -89,3 +89,13 @@ fn resource() {
 fn replace_refs() {
     test("replace-refs");
 }
+
+#[test]
+fn variable_type() {
+    test("variable-type");
+}
+
+#[test]
+fn variable_name_type_pair() {
+    test("variable-name-type-pair");
+}
