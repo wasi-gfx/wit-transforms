@@ -3,9 +3,11 @@
         "reason": "Text replace refs",
         "operations": [
             {
-                "replace-refs": {
-                    "old": "a",
-                    "new": "b"
+                "operation": {
+                    "replace-refs": {
+                        "old": "a",
+                        "new": "b"
+                    }
                 }
             }
         ]

@@ -3,78 +3,94 @@
         "reason": "Resource transformations",
         "operations": [
             {
-                "retype-resource-func-params": {
-                    "resource": "my-resource",
-                    "func": "constructor",
-                    "new-params": {
-                        "items": [
-                            ["foo", "s32"]
-                        ]
+                "operation": {
+                    "retype-resource-func-params": {
+                        "resource": "my-resource",
+                        "func": "constructor",
+                        "new-params": {
+                            "items": [
+                                ["foo", "s32"]
+                            ]
+                        }
                     }
                 }
             },
             {
-                "remove-resource-func": {
-                    "resource": "my-resource",
-                    "func": "remove"
-                }
-            },
-            {
-                "rename-resource-func": {
-                    "resource": "my-resource",
-                    "old-func-name": "rename-old-name",
-                    "new-func-name": "rename-new-name"
-                }
-            },
-            {
-                "retype-resource-func-params": {
-                    "resource": "my-resource",
-                    "func": "change-params",
-                    "new-params": {
-                        "items": [
-                            ["foo", "s64"],
-                            ["bar", "string"]
-                        ]
+                "operation": {
+                    "remove-resource-func": {
+                        "resource": "my-resource",
+                        "func": "remove"
                     }
                 }
             },
             {
-                "retype-resource-func-param-name": {
-                    "resource": "my-resource",
-                    "func": "change-single-param-name",
-                    "old-param-name": "bar",
-                    "new-name": "biz"
-                }
-            },
-            {
-                "retype-resource-func-param-type": {
-                    "resource": "my-resource",
-                    "func": "change-single-param-type",
-                    "param": "bar",
-                    "new-type": "bool"
-                }
-            },
-            {
-                "retype-resource-func-results": {
-                    "resource": "my-resource",
-                    "func": "change-results",
-                    "new-results": {
-                        "anon": "s64"
+                "operation": {
+                    "rename-resource-func": {
+                        "resource": "my-resource",
+                        "old-func-name": "rename-old-name",
+                        "new-func-name": "rename-new-name"
                     }
                 }
             },
             {
-                "add-resource-func": {
-                    "resource": "my-resource",
-                    "func": {
-                        "kind": {
-                            "method": ["added-func", { "anon": "f64" }]
-                        },
-                        "params": {
+                "operation": {
+                    "retype-resource-func-params": {
+                        "resource": "my-resource",
+                        "func": "change-params",
+                        "new-params": {
                             "items": [
                                 ["foo", "s64"],
                                 ["bar", "string"]
                             ]
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-param-name": {
+                        "resource": "my-resource",
+                        "func": "change-single-param-name",
+                        "old-param-name": "bar",
+                        "new-name": "biz"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-param-type": {
+                        "resource": "my-resource",
+                        "func": "change-single-param-type",
+                        "param": "bar",
+                        "new-type": "bool"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "my-resource",
+                        "func": "change-results",
+                        "new-results": {
+                            "anon": "s64"
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-resource-func": {
+                        "resource": "my-resource",
+                        "func": {
+                            "kind": {
+                                "method": ["added-func", { "anon": "f64" }]
+                            },
+                            "params": {
+                                "items": [
+                                    ["foo", "s64"],
+                                    ["bar", "string"]
+                                ]
+                            }
                         }
                     }
                 }

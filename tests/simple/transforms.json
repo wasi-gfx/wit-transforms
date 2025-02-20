@@ -3,21 +3,29 @@
         "reason": "Just because",
         "operations": [
             {
-                "replace-refs": {
-                    "old": "gpu-color",
-                    "new": "gpu-color-dict"
+                "operation": {
+                    "replace-refs": {
+                        "old": "gpu-color",
+                        "new": "gpu-color-dict"
+                    }
                 }
             },
             {
-                "remove-type": "gpu-color-dict-or-list-f64"
+                "operation": {
+                    "remove-type": "gpu-color-dict-or-list-f64"
+                }
             },
             {
-                "remove-type": "gpu-color"
+                "operation": {
+                    "remove-type": "gpu-color"
+                }
             },
             {
-                "rename-type": {
-                    "from": "gpu-color-dict",
-                    "to": "gpu-color"
+                "operation": {
+                    "rename-type": {
+                        "from": "gpu-color-dict",
+                        "to": "gpu-color"
+                    }
                 }
             }
         ]

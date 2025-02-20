@@ -3,58 +3,70 @@
         "reason": "variant transformations",
         "operations": [
             {
-                "remove-variant-case": {
-                    "variant": "my-variant",
-                    "case": "remove"
+                "operation": {
+                    "remove-variant-case": {
+                        "variant": "my-variant",
+                        "case": "remove"
+                    }
                 }
             },
             {
-                "add-variant-case": {
-                    "variant": "my-variant",
-                    "case": {
-                        "name": "added",
-                        "type": {
-                            "option": "string"
+                "operation": {
+                    "add-variant-case": {
+                        "variant": "my-variant",
+                        "case": {
+                            "name": "added",
+                            "type": {
+                                "option": "string"
+                            }
                         }
                     }
                 }
             },
             {
-                "add-variant-cases": {
-                    "variant": "my-variant",
-                    "cases": [
-                        {
-                            "name": "from-list-a",
-                            "type": {
-                                "list": "bool"
+                "operation": {
+                    "add-variant-cases": {
+                        "variant": "my-variant",
+                        "cases": [
+                            {
+                                "name": "from-list-a",
+                                "type": {
+                                    "list": "bool"
+                                }
+                            },
+                            {
+                                "name": "from-list-b",
+                                "type": "string"
                             }
-                        },
-                        {
-                            "name": "from-list-b",
-                            "type": "string"
-                        }
-                    ]
+                        ]
+                    }
                 }
             },
             {
-                "rename-variant-case": {
-                    "variant": "my-variant",
-                    "old-case-name" : "rename-old-name",
-                    "new-case-name" : "rename-new-name"
+                "operation": {
+                    "rename-variant-case": {
+                        "variant": "my-variant",
+                        "old-case-name" : "rename-old-name",
+                        "new-case-name" : "rename-new-name"
+                    }
                 }
             },
             {
-                "retype-variant-case": {
-                    "variant": "my-variant",
-                    "case": "retype",
-                    "new-type": "f32"
+                "operation": {
+                    "retype-variant-case": {
+                        "variant": "my-variant",
+                        "case": "retype",
+                        "new-type": "f32"
+                    }
                 }
             },
             {
-                "retype-variant-case": {
-                    "variant": "my-variant",
-                    "case": "retype-remove-type",
-                    "new-type": null
+                "operation": {
+                    "retype-variant-case": {
+                        "variant": "my-variant",
+                        "case": "retype-remove-type",
+                        "new-type": null
+                    }
                 }
             }
         ]

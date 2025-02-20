@@ -4,13 +4,19 @@ use serde::{Deserialize, Serialize};
 #[serde(rename_all = "kebab-case")]
 pub struct Transform {
     pub reason: String,
-    pub operations: Vec<Operations>,
+    pub operations: Vec<OperationWithVars>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+pub struct OperationWithVars {
+    pub operation: Operation,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
-pub enum Operations {
+pub enum Operation {
     /// Add new wit
     AddType(wit_encoder::TypeDef),
     /// Remove a type
