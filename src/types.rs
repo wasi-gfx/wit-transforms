@@ -1,5 +1,4 @@
 use serde::{Deserialize, Serialize};
-use wit_encoder::{Params, Results, Type};
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
@@ -23,6 +22,11 @@ pub enum Operations {
         record: String,
         field: wit_encoder::Field,
     },
+    /// Add multiple fields to a record
+    AddRecordFields {
+        record: String,
+        fields: Vec<wit_encoder::Field>,
+    },
     /// Remove a field from a record
     RemoveRecordField { record: String, field: String },
     /// Rename a field of a record
@@ -35,7 +39,7 @@ pub enum Operations {
     RetypeRecordField {
         record: String,
         field: String,
-        new_type: Type,
+        new_type: wit_encoder::Type,
     },
     /// Add a function to a resource
     AddResourceFunc {
@@ -54,7 +58,7 @@ pub enum Operations {
     RetypeResourceFuncParams {
         resource: String,
         func: String,
-        new_params: Params,
+        new_params: wit_encoder::Params,
     },
     /// Change a single param name of a func in a resource
     RetypeResourceFuncParamName {
@@ -68,18 +72,23 @@ pub enum Operations {
         resource: String,
         func: String,
         param: String,
-        new_type: Type,
+        new_type: wit_encoder::Type,
     },
     /// Change the params of a func in a resource
     RetypeResourceFuncResults {
         resource: String,
         func: String,
-        new_results: Results,
+        new_results: wit_encoder::Results,
     },
     /// Add a case to a variant
     AddVariantCase {
         variant: String,
         case: wit_encoder::VariantCase,
+    },
+    /// Add multiple cases to a variant
+    AddVariantCases {
+        variant: String,
+        cases: Vec<wit_encoder::VariantCase>,
     },
     /// Remove a case from a variant
     RemoveVariantCase { variant: String, case: String },
@@ -93,7 +102,7 @@ pub enum Operations {
     RetypeVariantCase {
         variant: String,
         case: String,
-        new_type: Option<Type>,
+        new_type: Option<wit_encoder::Type>,
     },
     /// Add a case to a enum
     AddEnumCase {

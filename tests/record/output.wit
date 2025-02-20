@@ -5,5 +5,7 @@ interface my-interface {
     rename-new-name: string,
     retype: f32,
     added: option<string>,
+    from-list-a: tuple<u32, f32>,
+    from-list-b: string,
   }
 }
