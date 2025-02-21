@@ -859,12 +859,20 @@
                 }
             },
             {
-                "operation": {
-                    "add-variant-case": {
-                        "variant": "gpu-layout",
-                        "case": {
-                            "name": "auto"
+                "vars": {
+                    "$_CASES": {
+                        "find-string-list": {
+                            "enum-cases": {
+                                "enum": "gpu-auto-layout-mode"
+                            },
+                            "convert-to": "variant-cases"
                         }
+                    }
+                },
+                "operation": {
+                    "add-variant-cases": {
+                        "variant": "gpu-layout",
+                        "cases": "$_CASES"
                     }
                 }
             },
