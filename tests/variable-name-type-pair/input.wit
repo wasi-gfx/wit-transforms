@@ -2,10 +2,15 @@ package my-namespcae:my-package;
 
 interface my-interface {
   record my-record {
-    my-field: option<bool>,
-    my-other-field: u32,
+    field-a: f32,
+    field-b: option<f32>,
+    field-c: tuple<f32, f32>,
+  }
+  resource my-resource {
+    my-method: func(param-a: bool, param-b: option<option<f32>>);
   }
   variant my-variant {
-    original-case,
+    case-a(bool),
+    case-b(string),
   }
 }

@@ -19,6 +19,44 @@
                         "cases": "$_CASES"
                     }
                 }
+            },
+            {
+                "vars": {
+                    "$_FIELDS": {
+                        "find-name-type-pair-list": {
+                            "resource-func-params": {
+                                "resource": "my-resource",
+                                "func": "my-method"
+                            },
+                            "convert-to": "record-fields"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-record-fields": {
+                        "record": "my-record",
+                        "fields": "$_FIELDS"
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_PARAMS": {
+                        "find-name-type-pair-list": {
+                            "variant-cases": {
+                                "variant": "my-variant"
+                            },
+                            "convert-to": "func-params"
+                        }
+                    }
+                },
+                "operation": {
+                    "retype-resource-func-params": {
+                        "resource": "my-resource",
+                        "func": "my-method",
+                        "new-params": "$_PARAMS"
+                    }
+                }
             }
         ]
     }

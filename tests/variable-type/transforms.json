@@ -4,17 +4,94 @@
         "operations": [
             {
                 "vars": {
-                    "$_TYPE": {
+                    "$_PARAM": {
+                        "find-type": {
+                            "resource-func-param": {
+                                "resource": "my-resource",
+                                "func": "get-param",
+                                "name": "b"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-resource-param",
+                        "kind": {
+                            "type": "$_PARAM"
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_RESULT_ANON": {
+                        "find-type": {
+                            "resource-func-results-anon": {
+                                "resource": "my-resource",
+                                "func": "get-result-anon"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-resource-result-anon",
+                        "kind": {
+                            "type": "$_RESULT_ANON"
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_RESULT_NAMED": {
+                        "find-type": {
+                            "resource-func-results-named": {
+                                "resource": "my-resource",
+                                "func": "get-result-named",
+                                "name": "a"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-resource-result-named",
+                        "kind": {
+                            "type": "$_RESULT_NAMED"
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_FIELD": {
+                        "find-type": {
+                            "record-field": {
+                                "record": "my-record",
+                                "field": "get-field"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-record-field",
+                        "kind": {
+                            "type": "$_FIELD"
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_CASE": {
                         "find-type": {
                             "variant-case": {
                                 "variant": "my-variant",
-                                "case": "my-case"
-                            },
-                            "unwrap-t": [
-                                "option",
-                                { "tuple": 2 },
-                                "option"
-                            ]
+                                "case": "get-case"
+                            }
                         }
                     }
                 },
@@ -22,7 +99,7 @@
                     "add-type": {
                         "name": "took-variant-case",
                         "kind": {
-                            "type": "$_TYPE"
+                            "type": "$_CASE"
                         }
                     }
                 }

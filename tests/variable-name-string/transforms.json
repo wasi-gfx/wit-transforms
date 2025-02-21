@@ -1,0 +1,43 @@
+[
+    {
+        "reason": "transformations using variables referencing strings",
+        "operations": [
+            {
+                "vars": {
+                    "$_CASES": {
+                        "find-string-list": {
+                            "variant-case-names": {
+                                "variant": "my-variant"
+                            },
+                            "convert-to": "enum-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-enum-cases": {
+                        "enum": "my-enum",
+                        "cases": "$_CASES"
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_CASES": {
+                        "find-string-list": {
+                            "enum-cases": {
+                                "enum": "my-enum"
+                            },
+                            "convert-to": "variant-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-variant-cases": {
+                        "variant": "my-variant",
+                        "cases": "$_CASES"
+                    }
+                }
+            }
+        ]
+    }
+]

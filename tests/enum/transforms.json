@@ -25,6 +25,24 @@
             },
             {
                 "operation": {
+                    "add-enum-cases": {
+                        "enum": "my-enum",
+                        "cases": [
+                            {
+                                "name": "added-list-a"
+                            },
+                            {
+                                "name": "added-list-b"
+                            },
+                            {
+                                "name": "added-list-c"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "operation": {
                     "rename-enum-case": {
                         "enum": "my-enum",
                         "old-case-name" : "rename-old-name",
