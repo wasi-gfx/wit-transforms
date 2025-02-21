@@ -29,6 +29,19 @@ pub enum Find {
         #[serde(flatten)]
         find_type: FindType,
     },
+    // FindString {
+    //     #[serde(flatten)]
+    //     find_string: FindString,
+    // },
+    FindStringList {
+        #[serde(flatten)]
+        find_string_list: FindStringList,
+        convert_to: StringListInto,
+    },
+    // FindNameTypePair {
+    //     #[serde(flatten)]
+    //     find_name_type_pair: FindNameTypePair
+    // },
     FindNameTypePairList {
         #[serde(flatten)]
         find_name_type_pair_list: FindNameTypePairList,
@@ -39,21 +52,68 @@ pub enum Find {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
-pub enum NameTypePairConvertTo {
+pub enum StringListInto {
+    EnumCases,
     VariantCases,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
+pub enum NameTypePairConvertTo {
+    VariantCases,
+    FuncParams,
+    RecordFields,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
 pub enum FindType {
-    VariantCase { variant: String, case: String },
+    RecordField {
+        record: String,
+        field: String,
+    },
+    ResourceFuncParam {
+        resource: String,
+        func: String,
+        name: String,
+    },
+    ResourceFuncResultsAnon {
+        resource: String,
+        func: String,
+    },
+    ResourceFuncResultsNamed {
+        resource: String,
+        func: String,
+        name: String,
+    },
+    VariantCase {
+        variant: String,
+        case: String,
+    },
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
+pub enum FindStringList {
+    EnumCases {
+        #[serde(rename = "enum")]
+        enum_: String,
+    },
+    VariantCaseNames {
+        // TODO: call this case?
+        variant: String,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
 pub enum FindNameTypePairList {
+    VariantCases { variant: String },
+    ResourceFuncParams { resource: String, func: String },
     RecordFields { record: String },
 }
 
@@ -154,19 +214,25 @@ pub enum Operation {
         case: String,
         new_type: Option<wit_encoder::Type>,
     },
-    /// Add a case to a enum
+    /// Add a case to an enum
     AddEnumCase {
         #[serde(rename = "enum")]
         enum_: String,
         case: wit_encoder::EnumCase,
     },
-    /// Remove a case from a enum
+    /// Add a multiple cases to an enum
+    AddEnumCases {
+        #[serde(rename = "enum")]
+        enum_: String,
+        cases: Vec<wit_encoder::EnumCase>,
+    },
+    /// Remove a case from an enum
     RemoveEnumCase {
         #[serde(rename = "enum")]
         enum_: String,
         case: String,
     },
-    /// Rename a case of a enum
+    /// Rename a case of an enum
     RenameEnumCase {
         #[serde(rename = "enum")]
         enum_: String,

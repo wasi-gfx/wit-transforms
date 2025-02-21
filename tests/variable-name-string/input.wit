@@ -1,0 +1,14 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  variant my-variant {
+    variant-case-a(bool),
+    variant-case-b,
+  }
+  enum my-enum {
+    enum-case-a,
+    enum-case-b,
+    enum-case-c,
+    enum-case-d,
+  }
+}

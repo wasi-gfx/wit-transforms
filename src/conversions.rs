@@ -1,11 +1,14 @@
 use std::collections::HashMap;
 
 use wit_encoder::{
-    Enum, EnumCase, Field, Ident, Interface, InterfaceItem, Record, Resource, ResourceFunc, Type,
-    TypeDef, Variant, VariantCase,
+    Enum, EnumCase, Field, Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc,
+    Results, Type, TypeDef, Variant, VariantCase,
 };
 
-use crate::{Find, FindNameTypePairList, FindType, NameTypePairConvertTo, Operation, Transform};
+use crate::{
+    Find, FindNameTypePairList, FindStringList, FindType, NameTypePairConvertTo, Operation,
+    StringListInto, Transform,
+};
 
 pub fn transform(
     mut interface: wit_encoder::Interface,
@@ -216,6 +219,10 @@ pub fn transform(
                 Operation::AddEnumCase { enum_, case } => {
                     let enum_ = find_enum(&mut interface, &enum_);
                     enum_.cases_mut().push(case);
+                }
+                Operation::AddEnumCases { enum_, cases } => {
+                    let enum_ = find_enum(&mut interface, &enum_);
+                    enum_.cases_mut().extend(cases);
                 }
                 Operation::RemoveEnumCase { enum_, case } => {
                     let enum_ = find_enum(&mut interface, &enum_);
@@ -522,6 +529,59 @@ fn find_var_value(
     Ok(match finder {
         Find::FindType { find_type } => {
             let found_type = match find_type {
+                FindType::RecordField { record, field } => {
+                    let record = find_record(interface, &record);
+                    let field = find_record_field(record, &field);
+                    field.type_()
+                }
+                FindType::ResourceFuncParam {
+                    resource,
+                    func,
+                    name,
+                } => {
+                    let resource = find_resource(interface, &resource);
+                    let func = find_resource_func(resource, func, true);
+                    let name = Ident::new(name.to_string());
+                    let t = match func.params().items().iter().find(|(n, _)| n == &name) {
+                        Some((_, t)) => t,
+                        None => anyhow::bail!("Resource func doesn't take this param"),
+                    };
+                    t
+                }
+                FindType::ResourceFuncResultsAnon { resource, func } => {
+                    let resource = find_resource(interface, &resource);
+                    let func = find_resource_func(resource, func, false);
+                    let result_ = match func.results() {
+                        Some(Results::Anon(t)) => t,
+                        Some(Results::Named(_)) => {
+                            anyhow::bail!("Resource func doesn't return an anon result")
+                        }
+                        None => anyhow::bail!("Resource func doesn't return any value"),
+                    };
+                    result_
+                }
+                FindType::ResourceFuncResultsNamed {
+                    resource,
+                    func,
+                    name,
+                } => {
+                    let resource = find_resource(interface, &resource);
+                    let func = find_resource_func(resource, func, false);
+                    let name = Ident::new(name.to_string());
+                    let result_ = match func.results() {
+                        None => anyhow::bail!("Resource func doesn't return any value"),
+                        Some(Results::Anon(_)) => {
+                            anyhow::bail!("Resource func doesn't return a named result")
+                        }
+                        Some(Results::Named(named)) => {
+                            match named.items().iter().find(|(n, _)| n == &name) {
+                                Some((_, t)) => t,
+                                None => anyhow::bail!("Resource func return this named result"),
+                            }
+                        }
+                    };
+                    result_
+                }
                 FindType::VariantCase { variant, case } => {
                     let variant = find_variant(interface, &variant);
                     let case = find_variant_case(variant, &case);
@@ -534,11 +594,58 @@ fn find_var_value(
             };
             serde_json::to_value(found_type).unwrap()
         }
+        Find::FindStringList {
+            find_string_list,
+            convert_to,
+        } => {
+            let list: Vec<&Ident> = match find_string_list {
+                FindStringList::EnumCases { enum_ } => {
+                    let enum_ = find_enum(interface, &enum_);
+                    enum_.cases().iter().map(|c| c.name()).collect()
+                }
+                FindStringList::VariantCaseNames { variant } => {
+                    let variant = find_variant(interface, &variant);
+                    variant.cases().iter().map(|c| c.name()).collect()
+                }
+            };
+            match convert_to {
+                StringListInto::EnumCases => {
+                    let cases: Vec<EnumCase> =
+                        list.into_iter().map(|name| name.clone().into()).collect();
+                    serde_json::to_value(cases).unwrap()
+                }
+                StringListInto::VariantCases => {
+                    let cases: Vec<VariantCase> = list
+                        .into_iter()
+                        .map(|name| VariantCase::empty(name.clone()))
+                        .collect();
+                    serde_json::to_value(cases).unwrap()
+                }
+            }
+        }
         Find::FindNameTypePairList {
             find_name_type_pair_list,
-            convert_to: into,
+            convert_to,
         } => {
             let pairs: Vec<(&Ident, &Type)> = match find_name_type_pair_list {
+                FindNameTypePairList::VariantCases { variant } => {
+                    let variant = find_variant(interface, &variant);
+                    variant
+                        .cases()
+                        .iter()
+                        .map(|c| {
+                            (
+                                c.name(),
+                                c.type_().expect("Variant case doesn't have a value"),
+                            )
+                        })
+                        .collect()
+                }
+                FindNameTypePairList::ResourceFuncParams { resource, func } => {
+                    let resource = find_resource(interface, &resource);
+                    let func = find_resource_func(resource, func, true);
+                    func.params().items().iter().map(|(n, t)| (n, t)).collect()
+                }
                 FindNameTypePairList::RecordFields { record } => {
                     let record = find_record(interface, &record);
                     record
@@ -548,13 +655,27 @@ fn find_var_value(
                         .collect()
                 }
             };
-            match into {
+            match convert_to {
                 NameTypePairConvertTo::VariantCases => {
                     let cases: Vec<VariantCase> = pairs
                         .into_iter()
                         .map(|(n, t)| (n.clone(), t.clone()).into())
                         .collect();
                     serde_json::to_value(cases).unwrap()
+                }
+                NameTypePairConvertTo::FuncParams => {
+                    let params: Params = pairs
+                        .into_iter()
+                        .map(|(n, t)| (n.clone(), t.clone()).into())
+                        .collect();
+                    serde_json::to_value(params).unwrap()
+                }
+                NameTypePairConvertTo::RecordFields => {
+                    let fields: Vec<Field> = pairs
+                        .into_iter()
+                        .map(|(n, t)| (n.clone(), t.clone()).into())
+                        .collect();
+                    serde_json::to_value(fields).unwrap()
                 }
             }
         }

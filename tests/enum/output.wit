@@ -6,5 +6,8 @@ interface my-interface {
     retype,
     retype-remove-type,
     added,
+    added-list-a,
+    added-list-b,
+    added-list-c,
   }
 }

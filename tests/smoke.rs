@@ -96,6 +96,11 @@ fn variable_type() {
 }
 
 #[test]
+fn variable_name_string() {
+    test("variable-name-string");
+}
+
+#[test]
 fn variable_name_type_pair() {
     test("variable-name-type-pair");
 }
