@@ -10,7 +10,7 @@ interface my-interface {
     get-field: list<f32>,
   }
   variant my-variant {
-    get-case(option<tuple<bool, bool, option<list<f32>>, bool>>),
+    get-case(option<tuple<bool, bool, result<_, list<f32>>, bool>>),
     other-case(u32),
   }
 }

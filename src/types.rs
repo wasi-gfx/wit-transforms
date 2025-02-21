@@ -28,6 +28,9 @@ pub enum Find {
     FindType {
         #[serde(flatten)]
         find_type: FindType,
+        #[serde(default)]
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        unwrap_t: Vec<UnwrapT>,
     },
     // FindString {
     //     #[serde(flatten)]
@@ -69,6 +72,17 @@ pub enum NameTypePairConvertTo {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
+pub enum UnwrapT {
+    Option,
+    ResultOk,
+    ResultErr,
+    List,
+    Tuple(usize),
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
 pub enum FindType {
     RecordField {
         record: String,
@@ -103,7 +117,6 @@ pub enum FindStringList {
         enum_: String,
     },
     VariantCaseNames {
-        // TODO: call this case?
         variant: String,
     },
 }

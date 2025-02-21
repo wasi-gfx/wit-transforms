@@ -7,7 +7,7 @@ use wit_encoder::{
 
 use crate::{
     Find, FindNameTypePairList, FindStringList, FindType, NameTypePairConvertTo, Operation,
-    StringListInto, Transform,
+    StringListInto, Transform, UnwrapT,
 };
 
 pub fn transform(
@@ -527,7 +527,10 @@ fn find_var_value(
     finder: &Find,
 ) -> anyhow::Result<serde_json::Value> {
     Ok(match finder {
-        Find::FindType { find_type } => {
+        Find::FindType {
+            find_type,
+            unwrap_t,
+        } => {
             let found_type = match find_type {
                 FindType::RecordField { record, field } => {
                     let record = find_record(interface, &record);
@@ -592,6 +595,7 @@ fn find_var_value(
                     t
                 }
             };
+            let found_type = type_unwraps(found_type, &unwrap_t)?;
             serde_json::to_value(found_type).unwrap()
         }
         Find::FindStringList {
@@ -684,4 +688,38 @@ fn find_var_value(
 
 fn is_var(s: &str) -> bool {
     s.starts_with("$_") && s.len() >= 3
+}
+
+fn type_unwraps<'a>(t: &'a Type, unwraps: &[UnwrapT]) -> anyhow::Result<&'a Type> {
+    Ok(match unwraps.get(0) {
+        None => t,
+        Some(unwrap) => match unwrap {
+            UnwrapT::Option => match t {
+                Type::Option(inner) => type_unwraps(inner, &unwraps[1..])?,
+                _ => anyhow::bail!("Not an option"),
+            },
+            UnwrapT::ResultOk => match t {
+                Type::Result(inner) => match inner.get_ok() {
+                    Some(inner) => type_unwraps(inner, &unwraps[1..])?,
+                    None => anyhow::bail!("Result doesn't have an ok value"),
+                },
+                _ => anyhow::bail!("Not a result"),
+            },
+            UnwrapT::ResultErr => match t {
+                Type::Result(inner) => match inner.get_err() {
+                    Some(inner) => type_unwraps(inner, &unwraps[1..])?,
+                    None => anyhow::bail!("Result doesn't have an err value"),
+                },
+                _ => anyhow::bail!("Not an result"),
+            },
+            UnwrapT::List => match t {
+                Type::List(inner) => type_unwraps(inner, &unwraps[1..])?,
+                _ => anyhow::bail!("Not a list"),
+            },
+            UnwrapT::Tuple(i) => match t {
+                Type::Tuple(tuple) => type_unwraps(&tuple.types()[*i], &unwraps[1..])?,
+                _ => anyhow::bail!("Not a tuple"),
+            },
+        },
+    })
 }

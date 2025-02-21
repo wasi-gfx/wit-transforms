@@ -10,12 +10,12 @@ interface my-interface {
     get-field: list<f32>,
   }
   variant my-variant {
-    get-case(option<tuple<bool, bool, option<list<f32>>, bool>>),
+    get-case(option<tuple<bool, bool, result<_, list<f32>>, bool>>),
     other-case(u32),
   }
-  type took-resource-param = option<option<f32>>;
-  type took-resource-result-anon = result<f32, bool>;
+  type took-resource-param = option<f32>;
+  type took-resource-result-anon = f32;
   type took-resource-result-named = f32;
-  type took-record-field = list<f32>;
-  type took-variant-case = option<tuple<bool, bool, option<list<f32>>, bool>>;
+  type took-record-field = f32;
+  type took-variant-case = list<f32>;
 }

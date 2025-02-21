@@ -10,7 +10,10 @@
                                 "resource": "my-resource",
                                 "func": "get-param",
                                 "name": "b"
-                            }
+                            },
+                            "unwrap-t": [
+                                "option"
+                            ]
                         }
                     }
                 },
@@ -30,7 +33,10 @@
                             "resource-func-results-anon": {
                                 "resource": "my-resource",
                                 "func": "get-result-anon"
-                            }
+                            },
+                            "unwrap-t": [
+                                "result-ok"
+                            ]
                         }
                     }
                 },
@@ -71,7 +77,10 @@
                             "record-field": {
                                 "record": "my-record",
                                 "field": "get-field"
-                            }
+                            },
+                            "unwrap-t": [
+                                "list"
+                            ]
                         }
                     }
                 },
@@ -91,7 +100,12 @@
                             "variant-case": {
                                 "variant": "my-variant",
                                 "case": "get-case"
-                            }
+                            },
+                            "unwrap-t": [
+                                "option",
+                                { "tuple": 2 },
+                                "result-err"
+                            ]
                         }
                     }
                 },
