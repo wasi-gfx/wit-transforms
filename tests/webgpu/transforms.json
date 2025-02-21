@@ -744,6 +744,14 @@
             },
             {
                 "operation": {
+                    "replace-refs": {
+                        "old": "gpu-auto-layout-mode-or-gpu-pipeline-layout",
+                        "new": "gpu-layout"
+                    }
+                }
+            },
+            {
+                "operation": {
                     "add-variant-case": {
                         "variant": "gpu-layout",
                         "case": {
@@ -763,14 +771,6 @@
             {
                 "operation": {
                     "remove-type": "gpu-auto-layout-mode"
-                }
-            },
-            {
-                "operation": {
-                    "replace-refs": {
-                        "old": "gpu-auto-layout-mode-or-gpu-pipeline-layout",
-                        "new": "gpu-layout"
-                    }
                 }
             }
         ]
