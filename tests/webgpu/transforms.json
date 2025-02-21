@@ -287,39 +287,75 @@
     {
         "reason": "Beautify gpu-*-binding.set-bind-group, no tuple params. Note: offset & length are not optional in JS, but seems to be JS specific reason for this https://github.com/gpuweb/gpuweb/pull/440#discussion_r342299860",
         "operations": [
-            // TODO: add support for dynamic-offsets
             {
+                "vars": {
+                    "$_INDEX": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-bundle-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 0 }
+                            ]
+                        }
+                    },
+                    "$_BIND_GROUP": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-bundle-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 1 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-bundle-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 2 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA_START": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-bundle-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets-data-dynamic-offsets-data-start-dynamic-offsets-data-length"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 3 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA_LENGTH": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-bundle-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets-data-dynamic-offsets-data-start-dynamic-offsets-data-length"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 4 }
+                            ]
+                        }
+                    }
+                },
                 "operation": {
                     "retype-resource-func-params": {
                         "resource": "gpu-render-bundle-encoder",
                         "func": "set-bind-group",
                         "new-params": {
                             "items": [
-                                ["index", {
-                                    "named": "gpu-index32"
-                                }],
-                                ["bind-group", {
-                                    "option": {
-                                        "borrow": "gpu-bind-group"
-                                    }
-                                }],
-                                ["dynamic-offsets-data", {
-                                    "option": {
-                                        "list": {
-                                            "named": "gpu-buffer-dynamic-offset"
-                                        }
-                                    }
-                                }],
-                                ["dynamic-offsets-data-start", {
-                                    "option": {
-                                        "named": "gpu-size64"
-                                    }
-                                }],
-                                ["dynamic-offsets-data-length", {
-                                    "option": {
-                                        "named": "gpu-size32"
-                                    }
-                                }]
+                                ["index", "$_INDEX"],
+                                ["bind-group", "$_BIND_GROUP"],
+                                ["dynamic-offsets-data", "$_DYNAMIC_OFFSETS_DATA"],
+                                ["dynamic-offsets-data-start", { "option": "$_DYNAMIC_OFFSETS_DATA_START" }],
+                                ["dynamic-offsets-data-length", { "option": "$_DYNAMIC_OFFSETS_DATA_LENGTH" }]
                             ]
                         }
                     }
@@ -330,39 +366,75 @@
                     "remove-type": "gpu-render-bundle-encoder-set-bind-group-params"
                 }
             },
-            // TODO: add support for dynamic-offsets
             {
+                "vars": {
+                    "$_INDEX": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 0 }
+                            ]
+                        }
+                    },
+                    "$_BIND_GROUP": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 1 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 2 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA_START": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets-data-dynamic-offsets-data-start-dynamic-offsets-data-length"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 3 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA_LENGTH": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-render-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets-data-dynamic-offsets-data-start-dynamic-offsets-data-length"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 4 }
+                            ]
+                        }
+                    }
+                },
                 "operation": {
                     "retype-resource-func-params": {
                         "resource": "gpu-render-pass-encoder",
                         "func": "set-bind-group",
                         "new-params": {
                             "items": [
-                                ["index", {
-                                    "named": "gpu-index32"
-                                }],
-                                ["bind-group", {
-                                    "option": {
-                                        "borrow": "gpu-bind-group"
-                                    }
-                                }],
-                                ["dynamic-offsets-data", {
-                                    "option": {
-                                        "list": {
-                                            "named": "gpu-buffer-dynamic-offset"
-                                        }
-                                    }
-                                }],
-                                ["dynamic-offsets-data-start", {
-                                    "option": {
-                                        "named": "gpu-size64"
-                                    }
-                                }],
-                                ["dynamic-offsets-data-length", {
-                                    "option": {
-                                        "named": "gpu-size32"
-                                    }
-                                }]
+                                ["index", "$_INDEX"],
+                                ["bind-group", "$_BIND_GROUP"],
+                                ["dynamic-offsets-data", "$_DYNAMIC_OFFSETS_DATA"],
+                                ["dynamic-offsets-data-start", { "option": "$_DYNAMIC_OFFSETS_DATA_START" }],
+                                ["dynamic-offsets-data-length", { "option": "$_DYNAMIC_OFFSETS_DATA_LENGTH" }]
                             ]
                         }
                     }
@@ -373,39 +445,75 @@
                     "remove-type": "gpu-render-pass-encoder-set-bind-group-params"
                 }
             },
-            // TODO: add support for dynamic-offsets
             {
+                "vars": {
+                    "$_INDEX": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-compute-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 0 }
+                            ]
+                        }
+                    },
+                    "$_BIND_GROUP": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-compute-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 1 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-compute-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 2 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA_START": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-compute-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets-data-dynamic-offsets-data-start-dynamic-offsets-data-length"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 3 }
+                            ]
+                        }
+                    },
+                    "$_DYNAMIC_OFFSETS_DATA_LENGTH": {
+                        "find-type": {
+                            "variant-case": {
+                                "variant": "gpu-compute-pass-encoder-set-bind-group-params",
+                                "case": "index-bind-group-dynamic-offsets-data-dynamic-offsets-data-start-dynamic-offsets-data-length"
+                            },
+                            "unwrap-t": [
+                                { "tuple": 4 }
+                            ]
+                        }
+                    }
+                },
                 "operation": {
                     "retype-resource-func-params": {
                         "resource": "gpu-compute-pass-encoder",
                         "func": "set-bind-group",
                         "new-params": {
                             "items": [
-                                ["index", {
-                                    "named": "gpu-index32"
-                                }],
-                                ["bind-group", {
-                                    "option": {
-                                        "borrow": "gpu-bind-group"
-                                    }
-                                }],
-                                ["dynamic-offsets-data", {
-                                    "option": {
-                                        "list": {
-                                            "named": "gpu-buffer-dynamic-offset"
-                                        }
-                                    }
-                                }],
-                                ["dynamic-offsets-data-start", {
-                                    "option": {
-                                        "named": "gpu-size64"
-                                    }
-                                }],
-                                ["dynamic-offsets-data-length", {
-                                    "option": {
-                                        "named": "gpu-size32"
-                                    }
-                                }]
+                                ["index", "$_INDEX"],
+                                ["bind-group", "$_BIND_GROUP"],
+                                ["dynamic-offsets-data", "$_DYNAMIC_OFFSETS_DATA"],
+                                ["dynamic-offsets-data-start", { "option": "$_DYNAMIC_OFFSETS_DATA_START" }],
+                                ["dynamic-offsets-data-length", { "option": "$_DYNAMIC_OFFSETS_DATA_LENGTH" }]
                             ]
                         }
                     }
