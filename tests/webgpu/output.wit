@@ -750,18 +750,7 @@ interface my-interface {
   }
   resource gpu-error {
     message: func() -> string;
-  }
-  resource gpu-validation-error {
-    message: func() -> string;
-    constructor(message: string);
-  }
-  resource gpu-out-of-memory-error {
-    message: func() -> string;
-    constructor(message: string);
-  }
-  resource gpu-internal-error {
-    message: func() -> string;
-    constructor(message: string);
+    kind: func() -> gpu-error-kind;
   }
   enum gpu-error-filter {
     validation,
@@ -987,6 +976,11 @@ interface my-interface {
   enum predefined-color-space {
     srgb,
     display-p3,
+  }
+  variant gpu-error-kind {
+    validation-error,
+    out-of-memory-error,
+    internal-error,
   }
   variant request-device-error-kind {
     type-error,
