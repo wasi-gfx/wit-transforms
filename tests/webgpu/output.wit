@@ -123,7 +123,7 @@ interface my-interface {
     size: func() -> gpu-size64-out;
     usage: func() -> gpu-flags-constant;
     map-state: func() -> gpu-buffer-map-state;
-    map-async: func(mode: gpu-map-mode-flags, offset: option<gpu-size64>, size: option<gpu-size64>);
+    map-async: func(mode: gpu-map-mode-flags, offset: option<gpu-size64>, size: option<gpu-size64>) -> result<_, map-async-error>;
     get-mapped-range-get-cloned: func(offset: option<gpu-size64>, size: option<gpu-size64>) -> list<u8>;
     unmap: func();
     destroy: func();
@@ -1012,6 +1012,15 @@ interface my-interface {
   }
   record create-query-set-error {
     kind: create-query-set-error-kind,
+    message: string,
+  }
+  variant map-async-error-kind {
+    operation-error,
+    range-error,
+    abort-error,
+  }
+  record map-async-error {
+    kind: map-async-error-kind,
     message: string,
   }
   variant set-bind-group-error-kind {

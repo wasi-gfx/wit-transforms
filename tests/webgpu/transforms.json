@@ -1095,6 +1095,73 @@
         ]
     },
     {
+        "reason": "map-async can throw for various reasons. https://www.w3.org/TR/webgpu/#dom-gpubuffer-mapasync",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "map-async-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "operation-error"
+                                    },
+                                    {
+                                        "name": "range-error"
+                                    },
+                                    {
+                                        "name": "abort-error"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "map-async-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "map-async-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-buffer",
+                        "func": "map-async",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "err": {
+                                        "named": "map-async-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
         "reason": "set-bind-group throws if dynamic-offsets-data-start/length don't fit in dynamic-offsets-data. https://www.w3.org/TR/webgpu/#dom-gpubindingcommandsmixin-setbindgroup-index-bindgroup-dynamicoffsetsdata-dynamicoffsetsdatastart-dynamicoffsetsdatalength",
         "operations": [
             {
