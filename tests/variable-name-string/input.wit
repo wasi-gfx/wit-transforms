@@ -1,14 +1,24 @@
 package my-namespcae:my-package;
 
 interface my-interface {
-  variant my-variant {
+  variant variant2enum-variant {
     variant-case-a(bool),
     variant-case-b,
   }
-  enum my-enum {
+  enum variant2enum-enum {
     enum-case-a,
     enum-case-b,
     enum-case-c,
     enum-case-d,
+  }
+  enum enum2variant-enum {
+    enum-case-a,
+    enum-case-b,
+    enum-case-c,
+    enum-case-d,
+  }
+  variant enum2variant-variant {
+    variant-case-a(bool),
+    variant-case-b,
   }
 }

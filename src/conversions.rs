@@ -12,13 +12,20 @@ use crate::{
 
 pub fn transform(
     mut interface: wit_encoder::Interface,
-    mut transforms: Vec<Transform>,
+    transforms: Vec<Transform>,
 ) -> wit_encoder::Interface {
-    resolve_variables(&mut interface, &mut transforms);
-
     for transform in transforms {
-        for operation in transform.operations {
-            match operation.resolved_operation.unwrap() {
+        for mut operation in transform.operations {
+            resolve_variables_dfs(
+                &mut interface,
+                &operation.vars,
+                &mut operation.unresolved_operation,
+            );
+            // TODO: try to get rid of clone
+            let resolved_operation =
+                serde_json::from_value(operation.unresolved_operation.clone()).unwrap();
+
+            match resolved_operation {
                 Operation::AddType(new_type) => {
                     interface.items_mut().push(InterfaceItem::TypeDef(new_type));
                 }
@@ -480,22 +487,7 @@ where
 }
 
 // Doesn't actually have to take &mut reference to Interface, just easier with mut as we can reuse find functions.
-fn resolve_variables(interface: &mut wit_encoder::Interface, transforms: &mut Vec<Transform>) {
-    for transform in transforms {
-        for operation in &mut transform.operations {
-            find_variables_dfs(
-                interface,
-                &operation.vars,
-                &mut operation.unresolved_operation,
-            );
-            // TODO: get rid of clone
-            operation.resolved_operation =
-                Some(serde_json::from_value(operation.unresolved_operation.clone()).unwrap());
-        }
-    }
-}
-
-fn find_variables_dfs(
+fn resolve_variables_dfs(
     interface: &mut wit_encoder::Interface,
     vars: &HashMap<String, Find>,
     unresolved_operation: &mut serde_json::Value,
@@ -510,12 +502,12 @@ fn find_variables_dfs(
         }
         serde_json::Value::Array(values) => {
             for value in values {
-                find_variables_dfs(interface, vars, value);
+                resolve_variables_dfs(interface, vars, value);
             }
         }
         serde_json::Value::Object(map) => {
             for value in map.values_mut() {
-                find_variables_dfs(interface, vars, value);
+                resolve_variables_dfs(interface, vars, value);
             }
         }
         serde_json::Value::Null | serde_json::Value::Bool(_) | serde_json::Value::Number(_) => {}

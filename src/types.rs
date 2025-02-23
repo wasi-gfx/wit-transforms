@@ -15,8 +15,6 @@ pub struct OperationWithVars {
     #[serde(rename = "operation")]
     pub unresolved_operation: serde_json::Value,
     #[serde(default)]
-    pub resolved_operation: Option<Operation>,
-    #[serde(default)]
     #[serde(skip_serializing_if = "HashMap::is_empty")]
     pub vars: HashMap<String, Find>,
 }

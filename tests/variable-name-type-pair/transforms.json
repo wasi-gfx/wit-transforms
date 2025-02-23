@@ -7,7 +7,7 @@
                     "$_CASES": {
                         "find-name-type-pair-list": {
                             "record-fields": {
-                                "record": "my-record"
+                                "record": "record2variant-record"
                             },
                             "convert-to": "variant-cases"
                         }
@@ -15,7 +15,7 @@
                 },
                 "operation": {
                     "add-variant-cases": {
-                        "variant": "my-variant",
+                        "variant": "record2variant-variant",
                         "cases": "$_CASES"
                     }
                 }
@@ -25,8 +25,8 @@
                     "$_FIELDS": {
                         "find-name-type-pair-list": {
                             "resource-func-params": {
-                                "resource": "my-resource",
-                                "func": "my-method"
+                                "resource": "params2record-resource",
+                                "func": "params2record-method"
                             },
                             "convert-to": "record-fields"
                         }
@@ -34,7 +34,7 @@
                 },
                 "operation": {
                     "add-record-fields": {
-                        "record": "my-record",
+                        "record": "params2record-record",
                         "fields": "$_FIELDS"
                     }
                 }
@@ -44,7 +44,7 @@
                     "$_PARAMS": {
                         "find-name-type-pair-list": {
                             "variant-cases": {
-                                "variant": "my-variant"
+                                "variant": "variant2params-variant"
                             },
                             "convert-to": "func-params"
                         }
@@ -52,8 +52,8 @@
                 },
                 "operation": {
                     "retype-resource-func-params": {
-                        "resource": "my-resource",
-                        "func": "my-method",
+                        "resource": "variant2params-resource",
+                        "func": "variant2params-method",
                         "new-params": "$_PARAMS"
                     }
                 }

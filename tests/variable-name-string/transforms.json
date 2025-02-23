@@ -7,7 +7,7 @@
                     "$_CASES": {
                         "find-string-list": {
                             "variant-case-names": {
-                                "variant": "my-variant"
+                                "variant": "variant2enum-variant"
                             },
                             "convert-to": "enum-cases"
                         }
@@ -15,7 +15,7 @@
                 },
                 "operation": {
                     "add-enum-cases": {
-                        "enum": "my-enum",
+                        "enum": "variant2enum-enum",
                         "cases": "$_CASES"
                     }
                 }
@@ -25,7 +25,7 @@
                     "$_CASES": {
                         "find-string-list": {
                             "enum-cases": {
-                                "enum": "my-enum"
+                                "enum": "enum2variant-enum"
                             },
                             "convert-to": "variant-cases"
                         }
@@ -33,7 +33,7 @@
                 },
                 "operation": {
                     "add-variant-cases": {
-                        "variant": "my-variant",
+                        "variant": "enum2variant-variant",
                         "cases": "$_CASES"
                     }
                 }
