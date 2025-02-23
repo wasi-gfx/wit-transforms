@@ -946,5 +946,100 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "set-bind-group throws if dynamic-offsets-data-start/length don't fit in dynamic-offsets-data. https://www.w3.org/TR/webgpu/#dom-gpubindingcommandsmixin-setbindgroup-index-bindgroup-dynamicoffsetsdata-dynamicoffsetsdatastart-dynamicoffsetsdatalength",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "set-bind-group-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "range-error"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "set-bind-group-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "set-bind-group-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-compute-pass-encoder",
+                        "func": "set-bind-group",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "err": {
+                                        "named": "set-bind-group-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-render-pass-encoder",
+                        "func": "set-bind-group",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "err": {
+                                        "named": "set-bind-group-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-render-bundle-encoder",
+                        "func": "set-bind-group",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "err": {
+                                        "named": "set-bind-group-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
     }
 ]
