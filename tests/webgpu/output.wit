@@ -413,16 +413,9 @@ interface my-interface {
   resource gpu-compilation-info {
     messages: func() -> list<gpu-compilation-message>;
   }
-  resource gpu-pipeline-error {
-    constructor(message: option<string>, options: gpu-pipeline-error-init);
-    reason: func() -> gpu-pipeline-error-reason;
-  }
   enum gpu-pipeline-error-reason {
     validation,
     internal,
-  }
-  record gpu-pipeline-error-init {
-    reason: gpu-pipeline-error-reason,
   }
   variant gpu-layout {
     gpu-pipeline-layout(borrow<gpu-pipeline-layout>),
