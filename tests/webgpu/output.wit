@@ -111,7 +111,7 @@ interface my-interface {
     create-render-pipeline-async: func(descriptor: gpu-render-pipeline-descriptor) -> gpu-render-pipeline;
     create-command-encoder: func(descriptor: option<gpu-command-encoder-descriptor>) -> gpu-command-encoder;
     create-render-bundle-encoder: func(descriptor: gpu-render-bundle-encoder-descriptor) -> gpu-render-bundle-encoder;
-    create-query-set: func(descriptor: gpu-query-set-descriptor) -> gpu-query-set;
+    create-query-set: func(descriptor: gpu-query-set-descriptor) -> result<gpu-query-set, create-query-set-error>;
     label: func() -> string;
     set-label: func(label: string);
     lost: func() -> gpu-device-lost-info;
@@ -706,7 +706,7 @@ interface my-interface {
   resource gpu-queue {
     submit: func(command-buffers: list<borrow<gpu-command-buffer>>);
     on-submitted-work-done: func();
-    write-buffer-cloned: func(buffer: borrow<gpu-buffer>, buffer-offset: gpu-size64, data: list<u8>, data-offset: option<gpu-size64>, size: option<gpu-size64>);
+    write-buffer-cloned: func(buffer: borrow<gpu-buffer>, buffer-offset: gpu-size64, data: list<u8>, data-offset: option<gpu-size64>, size: option<gpu-size64>) -> result<_, write-buffer-error>;
     write-texture-cloned: func(destination: gpu-image-copy-texture, data: list<u8>, data-layout: gpu-image-data-layout, size: gpu-extent3-d);
     label: func() -> string;
     set-label: func(label: string);
@@ -999,11 +999,25 @@ interface my-interface {
     srgb,
     display-p3,
   }
+  variant create-query-set-error-kind {
+    type-error,
+  }
+  record create-query-set-error {
+    kind: create-query-set-error-kind,
+    message: string,
+  }
   variant set-bind-group-error-kind {
     range-error,
   }
   record set-bind-group-error {
     kind: set-bind-group-error-kind,
+    message: string,
+  }
+  variant write-buffer-error-kind {
+    operation-error,
+  }
+  record write-buffer-error {
+    kind: write-buffer-error-kind,
     message: string,
   }
 }

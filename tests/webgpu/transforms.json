@@ -948,6 +948,78 @@
         ]
     },
     {
+        "reason": "create-query-set throws if descriptor.type is 'timestamp', but 'timestamp-query' is not enabled for this device. https://www.w3.org/TR/webgpu/#dom-gpudevice-createqueryset",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "create-query-set-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "type-error"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "create-query-set-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "create-query-set-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_SUCCESS": {
+                        "find-type": {
+                            "resource-func-results-anon": {
+                                "resource": "gpu-device",
+                                "func": "create-query-set"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-device",
+                        "func": "create-query-set",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "ok": "$_SUCCESS",
+                                    "err": {
+                                        "named": "create-query-set-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
         "reason": "set-bind-group throws if dynamic-offsets-data-start/length don't fit in dynamic-offsets-data. https://www.w3.org/TR/webgpu/#dom-gpubindingcommandsmixin-setbindgroup-index-bindgroup-dynamicoffsetsdata-dynamicoffsetsdatastart-dynamicoffsetsdatalength",
         "operations": [
             {
@@ -1033,6 +1105,67 @@
                                 "result": {
                                     "err": {
                                         "named": "set-bind-group-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
+        "reason": "write-buffer can throw for various reasons. https://www.w3.org/TR/webgpu/#dom-gpuqueue-writebuffer",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "write-buffer-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "operation-error"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "write-buffer-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "write-buffer-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-queue",
+                        "func": "write-buffer-cloned",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "err": {
+                                        "named": "write-buffer-error"
                                     }
                                 }
                             }
