@@ -948,6 +948,24 @@
         ]
     },
     {
+        "reason": "Remove gpu-uncaptured-error-event constructor as it's not useful, it's only here because of web specific rules. https://github.com/gpuweb/gpuweb/pull/255#issuecomment-477308123 and https://w3ctag.github.io/design-principles/#constructors",
+        "operations": [
+            {
+                "operation": {
+                    "remove-resource-func": {
+                        "resource": "gpu-uncaptured-error-event",
+                        "func": "constructor"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-uncaptured-error-event-init"
+                }
+            }
+        ]
+    },
+    {
         "reason": "request-device can throw for various reasons. https://www.w3.org/TR/webgpu/#dom-gpuadapter-requestdevice",
         "operations": [
             {
