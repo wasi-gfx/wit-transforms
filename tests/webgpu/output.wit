@@ -769,11 +769,7 @@ interface my-interface {
     internal,
   }
   resource gpu-uncaptured-error-event {
-    constructor(%type: string, gpu-uncaptured-error-event-init-dict: gpu-uncaptured-error-event-init);
     error: func() -> gpu-error;
-  }
-  record gpu-uncaptured-error-event-init {
-    error: borrow<gpu-error>,
   }
   type gpu-buffer-dynamic-offset = u32;
   type gpu-stencil-value = u32;
