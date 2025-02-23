@@ -1023,6 +1023,109 @@
         ]
     },
     {
+        "reason": "create-*-pipeline-async throws throws if pipeline creation fails. https://www.w3.org/TR/webgpu/#async-pipeline-creation",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "create-pipeline-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "gpu-pipeline-error",
+                                        "type": {
+                                            "named": "gpu-pipeline-error-reason"
+                                        }
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "create-pipeline-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "create-pipeline-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_SUCCESS": {
+                        "find-type": {
+                            "resource-func-results-anon": {
+                                "resource": "gpu-device",
+                                "func": "create-compute-pipeline-async"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-device",
+                        "func": "create-compute-pipeline-async",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "ok": "$_SUCCESS",
+                                    "err": {
+                                        "named": "create-pipeline-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_SUCCESS": {
+                        "find-type": {
+                            "resource-func-results-anon": {
+                                "resource": "gpu-device",
+                                "func": "create-render-pipeline-async"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-device",
+                        "func": "create-render-pipeline-async",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "ok": "$_SUCCESS",
+                                    "err": {
+                                        "named": "create-pipeline-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
         "reason": "create-query-set throws if descriptor.type is 'timestamp', but 'timestamp-query' is not enabled for this device. https://www.w3.org/TR/webgpu/#dom-gpudevice-createqueryset",
         "operations": [
             {
