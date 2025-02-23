@@ -948,7 +948,7 @@
         ]
     },
     {
-        "reason": "request-device can throw for various reasons. https://www.w3.org/TR/webgpu/#dom-gpudevice-createqueryset",
+        "reason": "request-device can throw for various reasons. https://www.w3.org/TR/webgpu/#dom-gpuadapter-requestdevice",
         "operations": [
             {
                 "operation": {
@@ -1023,7 +1023,7 @@
         ]
     },
     {
-        "reason": "create-*-pipeline-async throws throws if pipeline creation fails. https://www.w3.org/TR/webgpu/#async-pipeline-creation",
+        "reason": "create-*-pipeline-async throws if pipeline creation fails. https://www.w3.org/TR/webgpu/#async-pipeline-creation",
         "operations": [
             {
                 "operation": {
