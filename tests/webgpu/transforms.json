@@ -1122,6 +1122,16 @@
                         }
                     }
                 }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-pipeline-error"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-pipeline-error-init"
+                }
             }
         ]
     },
