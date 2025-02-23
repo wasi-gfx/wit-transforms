@@ -1162,6 +1162,67 @@
         ]
     },
     {
+        "reason": "unmap throws if called while future returned by map-async is still pending. https://www.w3.org/TR/webgpu/#dom-gpubuffer-unmap",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "unmap-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "abort-error"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "unmap-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "unmap-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-buffer",
+                        "func": "unmap",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "err": {
+                                        "named": "unmap-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
         "reason": "set-bind-group throws if dynamic-offsets-data-start/length don't fit in dynamic-offsets-data. https://www.w3.org/TR/webgpu/#dom-gpubindingcommandsmixin-setbindgroup-index-bindgroup-dynamicoffsetsdata-dynamicoffsetsdatastart-dynamicoffsetsdatalength",
         "operations": [
             {
