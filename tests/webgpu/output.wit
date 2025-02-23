@@ -116,7 +116,7 @@ interface my-interface {
     set-label: func(label: string);
     lost: func() -> gpu-device-lost-info;
     push-error-scope: func(filter: gpu-error-filter);
-    pop-error-scope: func() -> option<gpu-error>;
+    pop-error-scope: func() -> result<option<gpu-error>, pop-error-scope-error>;
     onuncapturederror-subscribe: func() -> pollable;
   }
   resource gpu-buffer {
@@ -1019,6 +1019,13 @@ interface my-interface {
   }
   record create-query-set-error {
     kind: create-query-set-error-kind,
+    message: string,
+  }
+  variant pop-error-scope-error-kind {
+    operation-error,
+  }
+  record pop-error-scope-error {
+    kind: pop-error-scope-error-kind,
     message: string,
   }
   variant map-async-error-kind {
