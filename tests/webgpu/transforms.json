@@ -948,6 +948,81 @@
         ]
     },
     {
+        "reason": "request-device can throw for various reasons. https://www.w3.org/TR/webgpu/#dom-gpudevice-createqueryset",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "request-device-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "type-error"
+                                    },
+                                    {
+                                        "name": "operation-error"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "request-device-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "request-device-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_SUCCESS": {
+                        "find-type": {
+                            "resource-func-results-anon": {
+                                "resource": "gpu-adapter",
+                                "func": "request-device"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-adapter",
+                        "func": "request-device",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "ok": "$_SUCCESS",
+                                    "err": {
+                                        "named": "request-device-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
         "reason": "create-query-set throws if descriptor.type is 'timestamp', but 'timestamp-query' is not enabled for this device. https://www.w3.org/TR/webgpu/#dom-gpudevice-createqueryset",
         "operations": [
             {
