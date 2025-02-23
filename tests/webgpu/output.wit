@@ -65,7 +65,7 @@ interface my-interface {
     limits: func() -> gpu-supported-limits;
     info: func() -> gpu-adapter-info;
     is-fallback-adapter: func() -> bool;
-    request-device: func(descriptor: option<gpu-device-descriptor>) -> gpu-device;
+    request-device: func(descriptor: option<gpu-device-descriptor>) -> result<gpu-device, request-device-error>;
   }
   resource record-option-gpu-size64 {
     constructor();
@@ -998,6 +998,14 @@ interface my-interface {
   enum predefined-color-space {
     srgb,
     display-p3,
+  }
+  variant request-device-error-kind {
+    type-error,
+    operation-error,
+  }
+  record request-device-error {
+    kind: request-device-error-kind,
+    message: string,
   }
   variant create-query-set-error-kind {
     type-error,
