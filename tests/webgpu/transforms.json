@@ -1337,6 +1337,101 @@
         ]
     },
     {
+        "reason": "get-mapped-range can throw for various reasons. https://www.w3.org/TR/webgpu/#dom-gpubuffer-getmappedrange",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "get-mapped-range-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    {
+                                        "name": "operation-error"
+                                    },
+                                    {
+                                        "name": "range-error"
+                                    },
+                                    {
+                                        "name": "type-error"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "get-mapped-range-error",
+                        "kind": {
+                            "record": {
+                                "fields": [
+                                    {
+                                        "name": "kind",
+                                        "type": {
+                                            "named": "get-mapped-range-error-kind"
+                                        }
+                                    },
+                                    {
+                                        "name": "message",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_SUCCESS": {
+                        "find-type": {
+                            "resource-func-results-anon": {
+                                "resource": "gpu-buffer",
+                                "func": "get-mapped-range-get-cloned"
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-buffer",
+                        "func": "get-mapped-range-get-cloned",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "ok": "$_SUCCESS",
+                                    "err": {
+                                        "named": "get-mapped-range-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-resource-func-results": {
+                        "resource": "gpu-buffer",
+                        "func": "get-mapped-range-set-cloned",
+                        "new-results": {
+                            "anon": {
+                                "result": {
+                                    "err": {
+                                        "named": "get-mapped-range-error"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    {
         "reason": "unmap throws if called while future returned by map-async is still pending. https://www.w3.org/TR/webgpu/#dom-gpubuffer-unmap",
         "operations": [
             {
