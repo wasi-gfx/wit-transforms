@@ -948,6 +948,64 @@
         ]
     },
     {
+        "reason": "Errors have the message field raised to the top level type so that they don't have to be taken out of the inner error. Important if we allow new error types in the future that the developer has not yet handled. They also get a `kind` to enable detecting the error type. `kind` is a variant and not an enum so that they can have fields inside like `pipeline-error.reason`. Note: not changing gpu-error to a record even though errors added by us are records, because GPUError is an interface in the spec, and might one day gain interface like properties",
+        "operations": [
+            {
+                "operation": {
+                    "add-type": {
+                        "name": "gpu-error-kind",
+                        "kind": {
+                            "variant": {
+                                "cases": [
+                                    { "name": "validation-error" },
+                                    { "name": "out-of-memory-error" },
+                                    { "name": "internal-error" }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-resource-func": {
+                        "resource": "gpu-error",
+                        "func": {
+                            "kind": {
+                                "method": [
+                                    "kind",
+                                    {
+                                        "anon": {
+                                            "named": "gpu-error-kind"
+                                        }
+                                    }
+                                ]
+                            },
+                            "params": {
+                                "items": []
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-validation-error"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-out-of-memory-error"
+                }
+            },
+            {
+                "operation": {
+                    "remove-type": "gpu-internal-error"
+                }
+            }
+        ]
+    },
+    {
         "reason": "Remove gpu-uncaptured-error-event constructor as it's not useful, it's only here because of web specific rules. https://github.com/gpuweb/gpuweb/pull/255#issuecomment-477308123 and https://w3ctag.github.io/design-principles/#constructors",
         "operations": [
             {
