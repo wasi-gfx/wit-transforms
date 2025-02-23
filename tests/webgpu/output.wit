@@ -107,8 +107,8 @@ interface my-interface {
     create-shader-module: func(descriptor: gpu-shader-module-descriptor) -> gpu-shader-module;
     create-compute-pipeline: func(descriptor: gpu-compute-pipeline-descriptor) -> gpu-compute-pipeline;
     create-render-pipeline: func(descriptor: gpu-render-pipeline-descriptor) -> gpu-render-pipeline;
-    create-compute-pipeline-async: func(descriptor: gpu-compute-pipeline-descriptor) -> gpu-compute-pipeline;
-    create-render-pipeline-async: func(descriptor: gpu-render-pipeline-descriptor) -> gpu-render-pipeline;
+    create-compute-pipeline-async: func(descriptor: gpu-compute-pipeline-descriptor) -> result<gpu-compute-pipeline, create-pipeline-error>;
+    create-render-pipeline-async: func(descriptor: gpu-render-pipeline-descriptor) -> result<gpu-render-pipeline, create-pipeline-error>;
     create-command-encoder: func(descriptor: option<gpu-command-encoder-descriptor>) -> gpu-command-encoder;
     create-render-bundle-encoder: func(descriptor: gpu-render-bundle-encoder-descriptor) -> gpu-render-bundle-encoder;
     create-query-set: func(descriptor: gpu-query-set-descriptor) -> result<gpu-query-set, create-query-set-error>;
@@ -1005,6 +1005,13 @@ interface my-interface {
   }
   record request-device-error {
     kind: request-device-error-kind,
+    message: string,
+  }
+  variant create-pipeline-error-kind {
+    gpu-pipeline-error(gpu-pipeline-error-reason),
+  }
+  record create-pipeline-error {
+    kind: create-pipeline-error-kind,
     message: string,
   }
   variant create-query-set-error-kind {
