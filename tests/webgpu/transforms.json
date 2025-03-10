@@ -839,14 +839,14 @@
         ]
     },
     {
-        "reason": "Simplify naming of gpu-layout, and merge gpu-auto-layout-mode cases into gpu-layout",
+        "reason": "Simplify naming of gpu-layout-mode, and merge gpu-auto-layout-mode cases into gpu-layout-mode",
         "operations": [
             {
                 "operation": {
                     "rename-type": {
                         "from" : "gpu-auto-layout-mode-or-gpu-pipeline-layout",
                         // TODO: is this a good name?
-                        "to" : "gpu-layout"
+                        "to" : "gpu-layout-mode"
                     }
                 }
             },
@@ -854,7 +854,16 @@
                 "operation": {
                     "replace-refs": {
                         "old": "gpu-auto-layout-mode-or-gpu-pipeline-layout",
-                        "new": "gpu-layout"
+                        "new": "gpu-layout-mode"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "rename-variant-case": {
+                        "variant": "gpu-layout-mode",
+                        "old-case-name": "gpu-pipeline-layout",
+                        "new-case-name": "specific"
                     }
                 }
             },
@@ -871,7 +880,7 @@
                 },
                 "operation": {
                     "add-variant-cases": {
-                        "variant": "gpu-layout",
+                        "variant": "gpu-layout-mode",
                         "cases": "$_CASES"
                     }
                 }
@@ -879,7 +888,7 @@
             {
                 "operation": {
                     "remove-variant-case": {
-                        "variant": "gpu-layout",
+                        "variant": "gpu-layout-mode",
                         "case": "gpu-auto-layout-mode"
                     }
                 }

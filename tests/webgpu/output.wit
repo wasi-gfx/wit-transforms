@@ -417,13 +417,13 @@ interface my-interface {
     validation,
     internal,
   }
-  variant gpu-layout {
-    gpu-pipeline-layout(borrow<gpu-pipeline-layout>),
+  variant gpu-layout-mode {
+    specific(borrow<gpu-pipeline-layout>),
     auto,
   }
   record gpu-shader-module-compilation-hint {
     entry-point: string,
-    layout: option<gpu-layout>,
+    layout: option<gpu-layout-mode>,
   }
   record gpu-shader-module-descriptor {
     code: string,
@@ -453,7 +453,7 @@ interface my-interface {
   }
   record gpu-compute-pipeline-descriptor {
     compute: gpu-programmable-stage,
-    layout: gpu-layout,
+    layout: gpu-layout-mode,
     label: option<string>,
   }
   resource gpu-render-pipeline {
@@ -871,7 +871,7 @@ interface my-interface {
     depth-stencil: option<gpu-depth-stencil-state>,
     multisample: option<gpu-multisample-state>,
     fragment: option<gpu-fragment-state>,
-    layout: gpu-layout,
+    layout: gpu-layout-mode,
     label: option<string>,
   }
   record gpu-image-data-layout {
