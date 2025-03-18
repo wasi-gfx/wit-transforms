@@ -88,7 +88,7 @@
         "operations": [
             {
                 "operation": {
-                    "remove-resource-func": {
+                    "remove-func": {
                         "resource": "gpu-queue",
                         "func": "copy-external-image-to-texture"
                     }
@@ -151,7 +151,7 @@
             },
             {
                 "operation": {
-                    "remove-resource-func": {
+                    "remove-func": {
                         "resource": "gpu-canvas-context",
                         "func": "canvas"
                     }
@@ -169,7 +169,7 @@
         "operations": [
             {
                 "operation": {
-                    "remove-resource-func": {
+                    "remove-func": {
                         "resource": "gpu-device",
                         "func": "import-external-texture"
                     }
@@ -346,7 +346,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-params": {
+                    "retype-func-params": {
                         "resource": "gpu-render-bundle-encoder",
                         "func": "set-bind-group",
                         "new-params": {
@@ -425,7 +425,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-params": {
+                    "retype-func-params": {
                         "resource": "gpu-render-pass-encoder",
                         "func": "set-bind-group",
                         "new-params": {
@@ -504,7 +504,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-params": {
+                    "retype-func-params": {
                         "resource": "gpu-compute-pass-encoder",
                         "func": "set-bind-group",
                         "new-params": {
@@ -531,7 +531,7 @@
         "operations": [
             {
                 "operation": {
-                    "retype-resource-func-param-type": {
+                    "retype-func-param-type": {
                         "resource": "gpu-queue",
                         "func": "write-buffer",
                         "param": "data",
@@ -543,7 +543,7 @@
             },
             {
                 "operation": {
-                    "rename-resource-func": {
+                    "rename-func": {
                         "resource": "gpu-queue",
                         "old-func-name": "write-buffer",
                         "new-func-name": "write-buffer-cloned"
@@ -552,7 +552,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-param-type": {
+                    "retype-func-param-type": {
                         "resource": "gpu-queue",
                         "func": "write-texture",
                         "param": "data",
@@ -564,7 +564,7 @@
             },
             {
                 "operation": {
-                    "rename-resource-func": {
+                    "rename-func": {
                         "resource": "gpu-queue",
                         "old-func-name": "write-texture",
                         "new-func-name": "write-texture-cloned"
@@ -915,7 +915,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-buffer",
                         "func": "get-mapped-range",
                         "new-results": {
@@ -928,7 +928,7 @@
             },
             {
                 "operation": {
-                    "rename-resource-func": {
+                    "rename-func": {
                         "resource": "gpu-buffer",
                         "old-func-name": "get-mapped-range",
                         "new-func-name": "get-mapped-range-get-cloned"
@@ -1019,7 +1019,7 @@
         "operations": [
             {
                 "operation": {
-                    "remove-resource-func": {
+                    "remove-func": {
                         "resource": "gpu-uncaptured-error-event",
                         "func": "constructor"
                     }
@@ -1081,7 +1081,7 @@
                 "vars": {
                     "$_SUCCESS": {
                         "find-type": {
-                            "resource-func-results-anon": {
+                            "func-results-anon": {
                                 "resource": "gpu-adapter",
                                 "func": "request-device"
                             }
@@ -1089,7 +1089,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-adapter",
                         "func": "request-device",
                         "new-results": {
@@ -1156,7 +1156,7 @@
                 "vars": {
                     "$_SUCCESS": {
                         "find-type": {
-                            "resource-func-results-anon": {
+                            "func-results-anon": {
                                 "resource": "gpu-device",
                                 "func": "create-compute-pipeline-async"
                             }
@@ -1164,7 +1164,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-device",
                         "func": "create-compute-pipeline-async",
                         "new-results": {
@@ -1184,7 +1184,7 @@
                 "vars": {
                     "$_SUCCESS": {
                         "find-type": {
-                            "resource-func-results-anon": {
+                            "func-results-anon": {
                                 "resource": "gpu-device",
                                 "func": "create-render-pipeline-async"
                             }
@@ -1192,7 +1192,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-device",
                         "func": "create-render-pipeline-async",
                         "new-results": {
@@ -1266,7 +1266,7 @@
                 "vars": {
                     "$_SUCCESS": {
                         "find-type": {
-                            "resource-func-results-anon": {
+                            "func-results-anon": {
                                 "resource": "gpu-device",
                                 "func": "create-query-set"
                             }
@@ -1274,7 +1274,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-device",
                         "func": "create-query-set",
                         "new-results": {
@@ -1338,7 +1338,7 @@
                 "vars": {
                     "$_SUCCESS": {
                         "find-type": {
-                            "resource-func-results-anon": {
+                            "func-results-anon": {
                                 "resource": "gpu-device",
                                 "func": "pop-error-scope"
                             }
@@ -1346,7 +1346,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-device",
                         "func": "pop-error-scope",
                         "new-results": {
@@ -1414,7 +1414,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-buffer",
                         "func": "map-async",
                         "new-results": {
@@ -1483,7 +1483,7 @@
                 "vars": {
                     "$_SUCCESS": {
                         "find-type": {
-                            "resource-func-results-anon": {
+                            "func-results-anon": {
                                 "resource": "gpu-buffer",
                                 "func": "get-mapped-range-get-cloned"
                             }
@@ -1491,7 +1491,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-buffer",
                         "func": "get-mapped-range-get-cloned",
                         "new-results": {
@@ -1509,7 +1509,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-buffer",
                         "func": "get-mapped-range-set-cloned",
                         "new-results": {
@@ -1570,7 +1570,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-buffer",
                         "func": "unmap",
                         "new-results": {
@@ -1631,7 +1631,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-compute-pass-encoder",
                         "func": "set-bind-group",
                         "new-results": {
@@ -1648,7 +1648,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-render-pass-encoder",
                         "func": "set-bind-group",
                         "new-results": {
@@ -1665,7 +1665,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-render-bundle-encoder",
                         "func": "set-bind-group",
                         "new-results": {
@@ -1726,7 +1726,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "gpu-queue",
                         "func": "write-buffer-cloned",
                         "new-results": {

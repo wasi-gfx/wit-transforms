@@ -4,7 +4,7 @@
         "operations": [
             {
                 "operation": {
-                    "retype-resource-func-params": {
+                    "retype-func-params": {
                         "resource": "my-resource",
                         "func": "constructor",
                         "new-params": {
@@ -17,7 +17,7 @@
             },
             {
                 "operation": {
-                    "remove-resource-func": {
+                    "remove-func": {
                         "resource": "my-resource",
                         "func": "remove"
                     }
@@ -25,7 +25,7 @@
             },
             {
                 "operation": {
-                    "rename-resource-func": {
+                    "rename-func": {
                         "resource": "my-resource",
                         "old-func-name": "rename-old-name",
                         "new-func-name": "rename-new-name"
@@ -34,7 +34,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-params": {
+                    "retype-func-params": {
                         "resource": "my-resource",
                         "func": "change-params",
                         "new-params": {
@@ -48,7 +48,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-param-name": {
+                    "retype-func-param-name": {
                         "resource": "my-resource",
                         "func": "change-single-param-name",
                         "old-param-name": "bar",
@@ -58,7 +58,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-param-type": {
+                    "retype-func-param-type": {
                         "resource": "my-resource",
                         "func": "change-single-param-type",
                         "param": "bar",
@@ -68,7 +68,7 @@
             },
             {
                 "operation": {
-                    "retype-resource-func-results": {
+                    "retype-func-results": {
                         "resource": "my-resource",
                         "func": "change-results",
                         "new-results": {
@@ -91,6 +91,78 @@
                                     ["bar", "string"]
                                 ]
                             }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "remove-func": {
+                        "func": "remove"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "rename-func": {
+                        "old-func-name": "rename-old-name",
+                        "new-func-name": "rename-new-name"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-func-params": {
+                        "func": "change-params",
+                        "new-params": {
+                            "items": [
+                                ["foo", "s64"],
+                                ["bar", "string"]
+                            ]
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-func-param-name": {
+                        "func": "change-single-param-name",
+                        "old-param-name": "bar",
+                        "new-name": "biz"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-func-param-type": {
+                        "func": "change-single-param-type",
+                        "param": "bar",
+                        "new-type": "bool"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "retype-func-results": {
+                        "func": "change-results",
+                        "new-results": {
+                            "anon": "s64"
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-standalone-func": {
+                        "func": {
+                            "name": "added-func",
+                            "params": {
+                                "items": [
+                                    ["foo", "s64"],
+                                    ["bar", "string"]
+                                ]
+                            },
+                            "results": { "anon": "f64" }
                         }
                     }
                 }

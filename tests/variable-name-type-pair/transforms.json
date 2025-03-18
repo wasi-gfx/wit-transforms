@@ -24,7 +24,7 @@
                 "vars": {
                     "$_FIELDS": {
                         "find-name-type-pair-list": {
-                            "resource-func-params": {
+                            "func-params": {
                                 "resource": "params2record-resource",
                                 "func": "params2record-method"
                             },
@@ -51,7 +51,7 @@
                     }
                 },
                 "operation": {
-                    "retype-resource-func-params": {
+                    "retype-func-params": {
                         "resource": "variant2params-resource",
                         "func": "variant2params-method",
                         "new-params": "$_PARAMS"

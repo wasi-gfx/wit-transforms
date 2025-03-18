@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use wit_encoder::{
     Enum, EnumCase, Field, Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc,
-    Results, Type, TypeDef, Variant, VariantCase,
+    Results, StandaloneFunc, Type, TypeDef, Variant, VariantCase,
 };
 
 use crate::{
@@ -97,58 +97,84 @@ pub fn transform(
                     let resource = find_resource(&mut interface, &resource);
                     resource.func(func);
                 }
-                Operation::RemoveResourceFunc { resource, func } => {
-                    let func = Ident::new(func);
-                    let resource = find_resource(&mut interface, &resource);
-                    let funcs = resource.funcs_mut();
-                    let found = funcs
-                        .iter()
-                        .enumerate()
-                        .filter_map(|(i, f)| match f.kind() {
-                            wit_encoder::ResourceFuncKind::Method(n, _) if n == &func => Some(i),
-                            wit_encoder::ResourceFuncKind::Static(n, _) if n == &func => Some(i),
-                            wit_encoder::ResourceFuncKind::Constructor
-                                if func.raw_name() == "constructor" =>
-                            {
-                                Some(i)
-                            }
-                            _ => None,
-                        })
-                        .collect::<Vec<_>>();
-                    assert_eq!(
-                        found.len(),
-                        1,
-                        "`{}` has to match exactly one func",
-                        func.raw_name()
-                    );
-                    funcs.remove(found[0]);
+                Operation::AddStandaloneFunc { func } => {
+                    interface.function(func);
                 }
-                Operation::RenameResourceFunc {
+                Operation::RemoveFunc { resource, func } => {
+                    let func = Ident::new(func);
+                    match resource {
+                        Some(resource) => {
+                            let resource = find_resource(&mut interface, &resource);
+                            let funcs: &mut Vec<ResourceFunc> = resource.funcs_mut();
+                            let found = funcs
+                                .iter()
+                                .enumerate()
+                                .filter_map(|(i, f)| match f.kind() {
+                                    wit_encoder::ResourceFuncKind::Method(n, _) if n == &func => {
+                                        Some(i)
+                                    }
+                                    wit_encoder::ResourceFuncKind::Static(n, _) if n == &func => {
+                                        Some(i)
+                                    }
+                                    wit_encoder::ResourceFuncKind::Constructor
+                                        if func.raw_name() == "constructor" =>
+                                    {
+                                        Some(i)
+                                    }
+                                    _ => None,
+                                })
+                                .collect::<Vec<_>>();
+                            assert_eq!(
+                                found.len(),
+                                1,
+                                "`{}` has to match exactly one func",
+                                func.raw_name()
+                            );
+                            funcs.remove(found[0]);
+                        }
+                        None => {
+                            let items = interface.items_mut();
+                            let found: Vec<usize> = items
+                                .iter()
+                                .enumerate()
+                                .filter_map(|(index, item)| match item {
+                                    InterfaceItem::Function(f) if f.name() == &func => Some(index),
+                                    _ => None,
+                                })
+                                .collect::<Vec<_>>();
+                            assert_eq!(
+                                found.len(),
+                                1,
+                                "`{}` has to match exactly one func",
+                                func.raw_name()
+                            );
+                            items.remove(found[0]);
+                        }
+                    }
+                }
+                Operation::RenameFunc {
                     resource,
                     old_func_name,
                     new_func_name,
                 } => {
-                    let resource = find_resource(&mut interface, &resource);
-                    let func = find_resource_func(resource, &old_func_name, false);
+                    let mut func = find_func(&mut interface, &resource, &old_func_name, false);
                     func.set_name(new_func_name);
                 }
-                Operation::RetypeResourceFuncParams {
+                Operation::RetypeFuncParams {
                     resource,
                     func,
                     new_params,
                 } => {
-                    let resource = find_resource(&mut interface, &resource);
-                    let func = find_resource_func(resource, &func, true);
-                    func.set_params(new_params);
+                    let mut func = find_func(&mut interface, &resource, &func, true);
+                    *func.params_mut() = new_params;
                 }
-                Operation::RetypeResourceFuncParamName {
+                Operation::RetypeFuncParamName {
                     resource,
                     func,
                     old_param_name,
                     new_name,
                 } => {
-                    let resource = find_resource(&mut interface, &resource);
-                    let func = find_resource_func(resource, &func, true);
+                    let mut func = find_func(&mut interface, &resource, &func, true);
                     let param = func
                         .params_mut()
                         .items_mut()
@@ -157,14 +183,13 @@ pub fn transform(
                         .unwrap();
                     param.0 = Ident::new(new_name);
                 }
-                Operation::RetypeResourceFuncParamType {
+                Operation::RetypeFuncParamType {
                     resource,
                     func,
                     param,
                     new_type,
                 } => {
-                    let resource = find_resource(&mut interface, &resource);
-                    let func = find_resource_func(resource, &func, true);
+                    let mut func = find_func(&mut interface, &resource, &func, true);
                     let param = func
                         .params_mut()
                         .items_mut()
@@ -173,14 +198,13 @@ pub fn transform(
                         .unwrap();
                     param.1 = new_type;
                 }
-                Operation::RetypeResourceFuncResults {
+                Operation::RetypeFuncResults {
                     resource,
                     func,
                     new_results,
                 } => {
-                    let resource = find_resource(&mut interface, &resource);
-                    let func = find_resource_func(resource, &func, false);
-                    func.set_results(new_results);
+                    let mut func = find_func(&mut interface, &resource, &func, false);
+                    *func.results_mut() = new_results;
                 }
                 Operation::AddVariantCase { variant, case } => {
                     let variant = find_variant(&mut interface, &variant);
@@ -289,6 +313,46 @@ fn find_record_field<'a>(record: &'a mut Record, name: &str) -> &'a mut Field {
     field
 }
 
+enum Func<'a> {
+    Resource(&'a mut ResourceFunc),
+    Standalone(&'a mut StandaloneFunc),
+}
+impl<'a> Func<'a> {
+    fn params_mut(&mut self) -> &mut Params {
+        match self {
+            Func::Resource(f) => f.params_mut(),
+            Func::Standalone(f) => f.params_mut(),
+        }
+    }
+    fn results_mut(&mut self) -> &mut Results {
+        match self {
+            Func::Resource(f) => f.results_mut().unwrap(),
+            Func::Standalone(f) => f.results_mut(),
+        }
+    }
+    fn set_name(&mut self, name: impl Into<Ident>) {
+        match self {
+            Func::Resource(f) => f.set_name(name),
+            Func::Standalone(f) => *f.name_mut() = name.into(),
+        }
+    }
+}
+
+fn find_func<'a>(
+    interface: &'a mut Interface,
+    resource: &Option<String>,
+    name: &str,
+    allow_constructor: bool,
+) -> Func<'a> {
+    match resource {
+        Some(resource) => {
+            let resource = find_resource(interface, resource);
+            Func::Resource(find_resource_func(resource, name, allow_constructor))
+        }
+        None => Func::Standalone(find_standalone_func(interface, name)),
+    }
+}
+
 fn find_resource<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Resource {
     let type_def = find_type_def(interface, &name);
     let record = match type_def.kind_mut() {
@@ -313,6 +377,18 @@ fn find_resource_func<'a>(
             wit_encoder::ResourceFuncKind::Constructor => {
                 allow_constructor && name.raw_name() == "constructor"
             }
+        })
+        .expect(&format!("Can't find type {name}"))
+}
+
+fn find_standalone_func<'a>(interface: &'a mut Interface, name: &str) -> &'a mut StandaloneFunc {
+    let name = Ident::new(name.to_owned());
+    interface
+        .items_mut()
+        .iter_mut()
+        .find_map(|i| match i {
+            InterfaceItem::Function(f) if f.name() == &name => Some(f),
+            _ => None,
         })
         .expect(&format!("Can't find type {name}"))
 }
@@ -529,7 +605,7 @@ fn find_var_value(
                     let field = find_record_field(record, &field);
                     field.type_()
                 }
-                FindType::ResourceFuncParam {
+                FindType::FuncParam {
                     resource,
                     func,
                     name,
@@ -543,7 +619,7 @@ fn find_var_value(
                     };
                     t
                 }
-                FindType::ResourceFuncResultsAnon { resource, func } => {
+                FindType::FuncResultsAnon { resource, func } => {
                     let resource = find_resource(interface, &resource);
                     let func = find_resource_func(resource, func, false);
                     let result_ = match func.results() {
@@ -555,7 +631,7 @@ fn find_var_value(
                     };
                     result_
                 }
-                FindType::ResourceFuncResultsNamed {
+                FindType::FuncResultsNamed {
                     resource,
                     func,
                     name,
@@ -637,7 +713,7 @@ fn find_var_value(
                         })
                         .collect()
                 }
-                FindNameTypePairList::ResourceFuncParams { resource, func } => {
+                FindNameTypePairList::FuncParams { resource, func } => {
                     let resource = find_resource(interface, &resource);
                     let func = find_resource_func(resource, func, true);
                     func.params().items().iter().map(|(n, t)| (n, t)).collect()
