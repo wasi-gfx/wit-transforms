@@ -81,8 +81,8 @@ fn enum_() {
 }
 
 #[test]
-fn resource() {
-    test("resource");
+fn func() {
+    test("func");
 }
 
 #[test]

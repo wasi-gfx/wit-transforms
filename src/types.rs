@@ -86,16 +86,16 @@ pub enum FindType {
         record: String,
         field: String,
     },
-    ResourceFuncParam {
+    FuncParam {
         resource: String,
         func: String,
         name: String,
     },
-    ResourceFuncResultsAnon {
+    FuncResultsAnon {
         resource: String,
         func: String,
     },
-    ResourceFuncResultsNamed {
+    FuncResultsNamed {
         resource: String,
         func: String,
         name: String,
@@ -124,7 +124,7 @@ pub enum FindStringList {
 #[serde(rename_all_fields = "kebab-case")]
 pub enum FindNameTypePairList {
     VariantCases { variant: String },
-    ResourceFuncParams { resource: String, func: String },
+    FuncParams { resource: String, func: String },
     RecordFields { record: String },
 }
 
@@ -167,37 +167,54 @@ pub enum Operation {
         resource: String,
         func: wit_encoder::ResourceFunc,
     },
-    /// Remove a func from a resource
-    RemoveResourceFunc { resource: String, func: String },
-    /// Rename a func of a resource
-    RenameResourceFunc {
-        resource: String,
+    /// Add a standalone function
+    AddStandaloneFunc { func: wit_encoder::StandaloneFunc },
+    /// Remove a func
+    RemoveFunc {
+        /// For resource method. None for standalone funcs
+        #[serde(default)]
+        resource: Option<String>,
+        func: String,
+    },
+    /// Rename a func
+    RenameFunc {
+        /// For resource method. None for standalone funcs
+        #[serde(default)]
+        resource: Option<String>,
         old_func_name: String,
         new_func_name: String,
     },
-    /// Change the params of a func in a resource
-    RetypeResourceFuncParams {
-        resource: String,
+    /// Change the params of a func
+    RetypeFuncParams {
+        /// For resource method. None for standalone funcs
+        #[serde(default)]
+        resource: Option<String>,
         func: String,
         new_params: wit_encoder::Params,
     },
-    /// Change a single param name of a func in a resource
-    RetypeResourceFuncParamName {
-        resource: String,
+    /// Change a single param name of a func
+    RetypeFuncParamName {
+        /// For resource method. None for standalone funcs
+        #[serde(default)]
+        resource: Option<String>,
         func: String,
         old_param_name: String,
         new_name: String,
     },
-    /// Change a single param type of a func in a resource
-    RetypeResourceFuncParamType {
-        resource: String,
+    /// Change a single param type of a func
+    RetypeFuncParamType {
+        /// For resource method. None for standalone funcs
+        #[serde(default)]
+        resource: Option<String>,
         func: String,
         param: String,
         new_type: wit_encoder::Type,
     },
-    /// Change the params of a func in a resource
-    RetypeResourceFuncResults {
-        resource: String,
+    /// Change the params of a func
+    RetypeFuncResults {
+        /// For resource method. None for standalone funcs
+        #[serde(default)]
+        resource: Option<String>,
         func: String,
         new_results: wit_encoder::Results,
     },

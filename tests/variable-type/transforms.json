@@ -6,7 +6,7 @@
                 "vars": {
                     "$_PARAM": {
                         "find-type": {
-                            "resource-func-param": {
+                            "func-param": {
                                 "resource": "my-resource",
                                 "func": "get-param",
                                 "name": "b"
@@ -30,7 +30,7 @@
                 "vars": {
                     "$_RESULT_ANON": {
                         "find-type": {
-                            "resource-func-results-anon": {
+                            "func-results-anon": {
                                 "resource": "my-resource",
                                 "func": "get-result-anon"
                             },
@@ -53,7 +53,7 @@
                 "vars": {
                     "$_RESULT_NAMED": {
                         "find-type": {
-                            "resource-func-results-named": {
+                            "func-results-named": {
                                 "resource": "my-resource",
                                 "func": "get-result-named",
                                 "name": "a"
