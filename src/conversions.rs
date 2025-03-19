@@ -26,8 +26,11 @@ pub fn transform(
                 serde_json::from_value(operation.unresolved_operation.clone()).unwrap();
 
             match resolved_operation {
+                Operation::AddUse { use_ } => {
+                    interface.use_(use_);
+                }
                 Operation::AddType(new_type) => {
-                    interface.items_mut().push(InterfaceItem::TypeDef(new_type));
+                    interface.type_def(new_type);
                 }
                 Operation::RemoveType(item) => {
                     let items = interface.items_mut();

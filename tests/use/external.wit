@@ -1,0 +1,6 @@
+package external:external;
+
+interface external {
+  resource foo {}
+  resource bar {}
+}

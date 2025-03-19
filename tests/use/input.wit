@@ -1,0 +1,5 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  bar: func();
+}
