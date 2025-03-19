@@ -1,0 +1,20 @@
+[
+    {
+        "reason": "Resource transformations",
+        "operations": [
+            {
+                "operation": {
+                    "add-use": {
+                        "use": {
+                            "target": "external:external/external",
+                            "use-names-list": [
+                                [ "foo", null ],
+                                [ "bar", "biz" ]
+                            ]
+                        }
+                    }
+                }
+            }
+        ]
+    }
+]

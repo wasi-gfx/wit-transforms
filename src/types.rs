@@ -132,6 +132,11 @@ pub enum FindNameTypePairList {
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
 pub enum Operation {
+    /// Add a use
+    AddUse {
+        #[serde(rename = "use")]
+        use_: wit_encoder::Use,
+    },
     /// Add new wit
     AddType(wit_encoder::TypeDef),
     /// Remove a type

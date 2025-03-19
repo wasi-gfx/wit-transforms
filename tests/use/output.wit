@@ -1,0 +1,6 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  use external:external/external.{ foo, bar as biz };
+  bar: func();
+}

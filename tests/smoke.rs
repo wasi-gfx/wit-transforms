@@ -1,22 +1,34 @@
-use pretty_assertions::assert_eq;
+use similar_asserts::assert_eq;
 use std::{fs, path::Path};
 use wit_transforms::Transform;
 
-fn test(path: &str) {
-    assert_output_parses(path);
+struct TestOptions {
+    additional_wit_paths: Vec<&'static str>,
+}
+impl Default for TestOptions {
+    fn default() -> Self {
+        Self {
+            // TODO: remove this once we get rid of pollable
+            additional_wit_paths: vec!["./tests/pollable.wit"],
+        }
+    }
+}
+
+fn test(path: &str, options: TestOptions) {
+    assert_output_parses(path, &options);
     let mut resolve = wit_parser::Resolve::new();
-    // TODO: remove once we have streams
-    resolve.push_file(format!("./tests/pollable.wit")).unwrap();
+    for path in &options.additional_wit_paths {
+        resolve.push_file(path).unwrap();
+    }
     resolve
         .push_file(format!("./tests/{path}/input.wit"))
         .unwrap();
     let mut packages = wit_encoder::packages_from_parsed(&resolve);
-
-    // removes wasi:io/pollable
-    // TODO: remove this once we get rid of pollable
-    packages.remove(0);
-    assert!(packages.len() == 1, "Should create exactly one package");
-    let mut package = packages.remove(0);
+    let mut package = packages.pop().unwrap();
+    assert!(
+        packages.len() == options.additional_wit_paths.len(),
+        "Should output create exactly one package"
+    );
     assert!(
         package.items().len() == 1,
         "Package should contain exactly one item"
@@ -34,10 +46,11 @@ fn test(path: &str) {
     assert_eq!(expected, package.to_string());
 }
 
-fn assert_output_parses(path: &str) {
+fn assert_output_parses(path: &str, options: &TestOptions) {
     let mut resolve = wit_parser::Resolve::new();
-    // TODO: remove once we get rid of pollable
-    resolve.push_file(&format!("./tests/pollable.wit")).unwrap();
+    for path in &options.additional_wit_paths {
+        resolve.push_file(path).unwrap();
+    }
     resolve
         .push_file(&format!("./tests/{path}/output.wit"))
         .unwrap();
@@ -51,56 +64,66 @@ fn parse_json_file(path: String) -> Vec<Transform> {
 }
 
 #[test]
+fn use_() {
+    test(
+        "use",
+        TestOptions {
+            additional_wit_paths: vec!["./tests/use/external.wit"],
+        },
+    );
+}
+
+#[test]
 fn record() {
-    test("record");
+    test("record", TestOptions::default());
 }
 
 #[test]
 fn webgpu() {
-    test("webgpu");
+    test("webgpu", TestOptions::default());
 }
 
 #[test]
 fn simple() {
-    test("simple");
+    test("simple", TestOptions::default());
 }
 
 #[test]
 fn type_() {
-    test("type");
+    test("type", TestOptions::default());
 }
 
 #[test]
 fn variant() {
-    test("variant");
+    test("variant", TestOptions::default());
 }
 
 #[test]
 fn enum_() {
-    test("enum");
+    test("enum", TestOptions::default());
 }
 
 #[test]
 fn func() {
-    test("func");
+    test("func", TestOptions::default());
 }
 
 #[test]
 fn replace_refs() {
-    test("replace-refs");
+    test("replace-refs", TestOptions::default());
 }
 
 #[test]
 fn variable_type() {
-    test("variable-type");
+    test("variable-type", TestOptions::default());
 }
 
 #[test]
 fn variable_name_string() {
-    test("variable-name-string");
+    test("variable-name-string", TestOptions::default());
 }
 
 #[test]
 fn variable_name_type_pair() {
-    test("variable-name-type-pair");
+    test("variable-name-type-pair", TestOptions::default());
 }
