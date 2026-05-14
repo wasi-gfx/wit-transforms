@@ -1,4 +1,4 @@
-use similar_asserts::assert_eq;
+use pretty_assertions::assert_eq;
 use std::{fs, path::Path};
 use wit_transforms::Transform;
 
