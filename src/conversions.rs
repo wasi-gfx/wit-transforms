@@ -5,7 +5,7 @@ use std::collections::HashMap;
 
 use wit_encoder::{
     Enum, EnumCase, Field, Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc,
-    Results, StandaloneFunc, Type, TypeDef, Variant, VariantCase,
+    StandaloneFunc, Type, TypeDef, Variant, VariantCase,
 };
 
 use crate::{
@@ -116,13 +116,13 @@ pub fn transform(
                                 .iter()
                                 .enumerate()
                                 .filter_map(|(i, f)| match f.kind() {
-                                    wit_encoder::ResourceFuncKind::Method(n, _) if n == &func => {
+                                    wit_encoder::ResourceFuncKind::Method(n, ..) if n == &func => {
                                         Some(i)
                                     }
-                                    wit_encoder::ResourceFuncKind::Static(n, _) if n == &func => {
+                                    wit_encoder::ResourceFuncKind::Static(n, ..) if n == &func => {
                                         Some(i)
                                     }
-                                    wit_encoder::ResourceFuncKind::Constructor
+                                    wit_encoder::ResourceFuncKind::Constructor(..)
                                         if func.raw_name() == "constructor" =>
                                     {
                                         Some(i)
@@ -204,13 +204,13 @@ pub fn transform(
                         .unwrap();
                     param.1 = new_type;
                 }
-                Operation::RetypeFuncResults {
+                Operation::RetypeFuncResult {
                     resource,
                     func,
-                    new_results,
+                    new_result,
                 } => {
                     let mut func = find_func(&mut interface, &resource, &func, false);
-                    *func.results_mut() = new_results;
+                    *func.result_mut() = new_result;
                 }
                 Operation::AddVariantCase { variant, case } => {
                     let variant = find_variant(&mut interface, &variant);
@@ -330,10 +330,10 @@ impl<'a> Func<'a> {
             Func::Standalone(f) => f.params_mut(),
         }
     }
-    fn results_mut(&mut self) -> &mut Results {
+    fn result_mut(&mut self) -> &mut Option<Type> {
         match self {
-            Func::Resource(f) => f.results_mut().unwrap(),
-            Func::Standalone(f) => f.results_mut(),
+            Func::Resource(f) => f.result_mut(),
+            Func::Standalone(f) => f.result_mut(),
         }
     }
     fn set_name(&mut self, name: impl Into<Ident>) {
@@ -378,9 +378,9 @@ fn find_resource_func<'a>(
         .funcs_mut()
         .iter_mut()
         .find(|f| match f.kind() {
-            wit_encoder::ResourceFuncKind::Method(n, _) => n == &name,
-            wit_encoder::ResourceFuncKind::Static(n, _) => n == &name,
-            wit_encoder::ResourceFuncKind::Constructor => {
+            wit_encoder::ResourceFuncKind::Method(n, ..) => n == &name,
+            wit_encoder::ResourceFuncKind::Static(n, ..) => n == &name,
+            wit_encoder::ResourceFuncKind::Constructor(..) => {
                 allow_constructor && name.raw_name() == "constructor"
             }
         })
@@ -489,6 +489,11 @@ where
                     type_found(ty, f);
                 }
             }
+            Type::Map(_, _) => todo!(),
+            Type::FixedLengthList(_, _) => todo!(),
+            Type::Future(_) => todo!(),
+            Type::Stream(_) => todo!(),
+            Type::ErrorContext => todo!(),
             Type::Bool
             | Type::U8
             | Type::U16
@@ -520,17 +525,8 @@ where
                             for (_, ty) in func.params_mut().items_mut() {
                                 type_found(ty, &f);
                             }
-                            if let Some(results) = func.results_mut() {
-                                match results {
-                                    wit_encoder::Results::Named(named) => {
-                                        for (_, ty) in named.items_mut() {
-                                            type_found(ty, &f);
-                                        }
-                                    }
-                                    wit_encoder::Results::Anon(ty) => {
-                                        type_found(ty, &f);
-                                    }
-                                }
+                            if let Some(ty) = func.result_mut() {
+                                type_found(ty, &f);
                             }
                         }
                     }
@@ -553,15 +549,8 @@ where
                 for (_, ty) in func.params_mut().items_mut() {
                     type_found(ty, &f);
                 }
-                match func.results_mut() {
-                    wit_encoder::Results::Named(named) => {
-                        for (_, ty) in named.items_mut() {
-                            type_found(ty, &f);
-                        }
-                    }
-                    wit_encoder::Results::Anon(ty) => {
-                        type_found(ty, &f);
-                    }
+                if let Some(ty) = func.result_mut() {
+                    type_found(ty, &f);
                 }
             }
         }
@@ -625,37 +614,12 @@ fn find_var_value(
                     };
                     t
                 }
-                FindType::FuncResultsAnon { resource, func } => {
-                    let resource = find_resource(interface, resource);
+                FindType::FuncResult { resource, func } => {
+                    let resource = find_resource(interface, &resource);
                     let func = find_resource_func(resource, func, false);
-                    let result_ = match func.results() {
-                        Some(Results::Anon(t)) => t,
-                        Some(Results::Named(_)) => {
-                            anyhow::bail!("Resource func doesn't return an anon result")
-                        }
+                    let result_ = match func.result() {
+                        Some(t) => t,
                         None => anyhow::bail!("Resource func doesn't return any value"),
-                    };
-                    result_
-                }
-                FindType::FuncResultsNamed {
-                    resource,
-                    func,
-                    name,
-                } => {
-                    let resource = find_resource(interface, resource);
-                    let func = find_resource_func(resource, func, false);
-                    let name = Ident::new(name.to_string());
-                    let result_ = match func.results() {
-                        None => anyhow::bail!("Resource func doesn't return any value"),
-                        Some(Results::Anon(_)) => {
-                            anyhow::bail!("Resource func doesn't return a named result")
-                        }
-                        Some(Results::Named(named)) => {
-                            match named.items().iter().find(|(n, _)| n == &name) {
-                                Some((_, t)) => t,
-                                None => anyhow::bail!("Resource func return this named result"),
-                            }
-                        }
                     };
                     result_
                 }

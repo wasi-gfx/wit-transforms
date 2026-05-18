@@ -1,13 +1,12 @@
 package my-namespcae:my-package;
 
 interface my-interface {
-  resource my-resource {
-    get-param: func(a: bool, b: option<option<f32>>);
-    get-result-anon: func() -> result<f32, bool>;
-    get-result-named: func() -> (a: f32);
-  }
   record my-record {
     get-field: list<f32>,
+  }
+  resource my-resource {
+    get-param: func(a: bool, b: option<option<f32>>);
+    get-result: func() -> result<f32, bool>;
   }
   variant my-variant {
     get-case(option<tuple<bool, bool, result<_, list<f32>>, bool>>),

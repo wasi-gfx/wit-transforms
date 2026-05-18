@@ -68,12 +68,10 @@
             },
             {
                 "operation": {
-                    "retype-func-results": {
+                    "retype-func-result": {
                         "resource": "my-resource",
                         "func": "change-results",
-                        "new-results": {
-                            "anon": "s64"
-                        }
+                        "new-result": "s64"
                     }
                 }
             },
@@ -83,7 +81,7 @@
                         "resource": "my-resource",
                         "func": {
                             "kind": {
-                                "method": ["added-func", { "anon": "f64" }]
+                                "method": ["added-func", true, "f64"]
                             },
                             "params": {
                                 "items": [
@@ -143,11 +141,9 @@
             },
             {
                 "operation": {
-                    "retype-func-results": {
+                    "retype-func-result": {
                         "func": "change-results",
-                        "new-results": {
-                            "anon": "s64"
-                        }
+                        "new-result": "s64"
                     }
                 }
             },
@@ -162,7 +158,8 @@
                                     ["bar", "string"]
                                 ]
                             },
-                            "results": { "anon": "f64" }
+                            "result": "f64",
+                            "async-": true
                         }
                     }
                 }

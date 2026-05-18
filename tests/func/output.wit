@@ -1,11 +1,6 @@
 package my-namespcae:my-package;
 
 interface my-interface {
-  rename-new-name: func(foo: s32, bar: string) -> f64;
-  change-params: func(foo: s64, bar: string) -> f64;
-  change-single-param-name: func(foo: s32, biz: string) -> f64;
-  change-single-param-type: func(foo: s32, bar: bool) -> f64;
-  change-results: func(foo: s32, bar: string) -> s64;
   resource my-resource {
     constructor(foo: s32);
     rename-new-name: func(foo: s32, bar: string) -> f64;
@@ -13,7 +8,12 @@ interface my-interface {
     change-single-param-name: func(foo: s32, biz: string) -> f64;
     change-single-param-type: func(foo: s32, bar: bool) -> f64;
     change-results: func(foo: s32, bar: string) -> s64;
-    added-func: func(foo: s64, bar: string) -> f64;
+    added-func: async func(foo: s64, bar: string) -> f64;
   }
-  added-func: func(foo: s64, bar: string) -> f64;
+  added-func: async func(foo: s64, bar: string) -> f64;
+  change-params: func(foo: s64, bar: string) -> f64;
+  change-results: func(foo: s32, bar: string) -> s64;
+  change-single-param-name: func(foo: s32, biz: string) -> f64;
+  change-single-param-type: func(foo: s32, bar: bool) -> f64;
+  rename-new-name: func(foo: s32, bar: string) -> f64;
 }

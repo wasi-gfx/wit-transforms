@@ -39,7 +39,11 @@ fn test(path: &str, options: TestOptions) {
         wit_encoder::PackageItem::World(_) => panic!("Worlds not yet supported"),
     };
     let transforms = parse_json_file(format!("./tests/{path}/transforms.json"));
-    let interface = wit_transforms::transform(interface, transforms);
+    let mut interface = wit_transforms::transform(interface, transforms);
+    // match wit_encoder::packages_from_parsed which sorts the wit
+    interface.uses_mut().sort();
+    interface.items_mut().sort();
+
     package.item(wit_encoder::PackageItem::Interface(interface));
 
     let expected = fs::read_to_string(Path::new(&format!("./tests/{path}/output.wit"))).unwrap();
