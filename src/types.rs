@@ -91,14 +91,9 @@ pub enum FindType {
         func: String,
         name: String,
     },
-    FuncResultsAnon {
+    FuncResult {
         resource: String,
         func: String,
-    },
-    FuncResultsNamed {
-        resource: String,
-        func: String,
-        name: String,
     },
     VariantCase {
         variant: String,
@@ -216,12 +211,12 @@ pub enum Operation {
         new_type: wit_encoder::Type,
     },
     /// Change the params of a func
-    RetypeFuncResults {
+    RetypeFuncResult {
         /// For resource method. None for standalone funcs
         #[serde(default)]
         resource: Option<String>,
         func: String,
-        new_results: wit_encoder::Results,
+        new_result: Option<wit_encoder::Type>,
     },
     /// Add a case to a variant
     AddVariantCase {

@@ -1,6 +1,14 @@
 package my-namespcae:my-package;
 
 interface my-interface {
+  record params2record-record {
+    field-a: f32,
+    field-b: option<f32>,
+    field-c: tuple<f32, f32>,
+  }
+  resource params2record-resource {
+    params2record-method: func(case-a: bool, case-b: string);
+  }
   record record2variant-record {
     field-a: f32,
     field-b: option<f32>,
@@ -10,19 +18,11 @@ interface my-interface {
     case-a(bool),
     case-b(string),
   }
-  resource params2record-resource {
-    params2record-method: func(case-a: bool, case-b: string);
-  }
-  record params2record-record {
-    field-a: f32,
-    field-b: option<f32>,
-    field-c: tuple<f32, f32>,
+  resource variant2params-resource {
+    variant2params-method: func(param: option<option<f32>>);
   }
   variant variant2params-variant {
     case-a(bool),
     case-b(string),
-  }
-  resource variant2params-resource {
-    variant2params-method: func(param: option<option<f32>>);
   }
 }

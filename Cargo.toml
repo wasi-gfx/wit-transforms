@@ -9,9 +9,9 @@ edition = "2021"
 anyhow = "1.0.95"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-wit-encoder = "0.220.0"
+wit-encoder = "0.248"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
-wit-parser = "0.220.0"
+wit-parser = "0.248"
 json_comments = "0.2.2"

@@ -1,16 +1,11 @@
 package webidl:my-package-idl;
 
 interface my-interface {
-  my-func: func(foo: b) -> b;
   type a = f32;
   type b = f64;
   record my-record {
     foo: b,
     bar: string,
-  }
-  variant my-variant {
-    foo(b),
-    bar(string),
   }
   resource my-resource {
     single-param: func(foo: b, bar: string);
@@ -21,4 +16,9 @@ interface my-interface {
     result-err: func() -> result<_, b>;
   }
   type my-type = b;
+  variant my-variant {
+    foo(b),
+    bar(string),
+  }
+  my-func: func(foo: b) -> b;
 }

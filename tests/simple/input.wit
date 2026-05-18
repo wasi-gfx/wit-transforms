@@ -1,6 +1,7 @@
 package webidl:my-package-idl;
 
 interface my-interface {
+  type gpu-color = gpu-color-dict-or-list-f64;
   record gpu-color-dict {
     r: f64,
     g: f64,
@@ -11,5 +12,4 @@ interface my-interface {
     gpu-color-dict(gpu-color-dict),
     list-f64(list<f64>),
   }
-  type gpu-color = gpu-color-dict-or-list-f64;
 }

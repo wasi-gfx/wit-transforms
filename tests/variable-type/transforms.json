@@ -28,11 +28,11 @@
             },
             {
                 "vars": {
-                    "$_RESULT_ANON": {
+                    "$_RESULT": {
                         "find-type": {
-                            "func-results-anon": {
+                            "func-result": {
                                 "resource": "my-resource",
-                                "func": "get-result-anon"
+                                "func": "get-result"
                             },
                             "unwrap-t": [
                                 "result-ok"
@@ -42,30 +42,9 @@
                 },
                 "operation": {
                     "add-type": {
-                        "name": "took-resource-result-anon",
+                        "name": "took-func-result",
                         "kind": {
-                            "type": "$_RESULT_ANON"
-                        }
-                    }
-                }
-            },
-            {
-                "vars": {
-                    "$_RESULT_NAMED": {
-                        "find-type": {
-                            "func-results-named": {
-                                "resource": "my-resource",
-                                "func": "get-result-named",
-                                "name": "a"
-                            }
-                        }
-                    }
-                },
-                "operation": {
-                    "add-type": {
-                        "name": "took-resource-result-named",
-                        "kind": {
-                            "type": "$_RESULT_NAMED"
+                            "type": "$_RESULT"
                         }
                     }
                 }
