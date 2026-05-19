@@ -96,6 +96,98 @@
                         }
                     }
                 }
+            },
+            {
+                "vars": {
+                    "$_FUTURE": {
+                        "find-type": {
+                            "func-result": {
+                                "resource": "my-resource",
+                                "func": "get-future"
+                            },
+                            "unwrap-t": [
+                                "future"
+                            ]
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-future-result",
+                        "kind": {
+                            "type": "$_FUTURE"
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_STREAM": {
+                        "find-type": {
+                            "func-result": {
+                                "resource": "my-resource",
+                                "func": "get-stream"
+                            },
+                            "unwrap-t": [
+                                "stream"
+                            ]
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-stream-result",
+                        "kind": {
+                            "type": "$_STREAM"
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_MAP_KEY": {
+                        "find-type": {
+                            "func-result": {
+                                "resource": "my-resource",
+                                "func": "get-map-key"
+                            },
+                            "unwrap-t": [
+                                "map-key"
+                            ]
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-map-key",
+                        "kind": {
+                            "type": "$_MAP_KEY"
+                        }
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_MAP_VALUE": {
+                        "find-type": {
+                            "func-result": {
+                                "resource": "my-resource",
+                                "func": "get-map-value"
+                            },
+                            "unwrap-t": [
+                                "map-value"
+                            ]
+                        }
+                    }
+                },
+                "operation": {
+                    "add-type": {
+                        "name": "took-map-value",
+                        "kind": {
+                            "type": "$_MAP_VALUE"
+                        }
+                    }
+                }
             }
         ]
     }

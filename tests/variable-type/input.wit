@@ -7,6 +7,10 @@ interface my-interface {
   resource my-resource {
     get-param: func(a: bool, b: option<option<f32>>);
     get-result: func() -> result<f32, bool>;
+    get-future: func() -> future<f32>;
+    get-stream: func() -> stream<f32>;
+    get-map-key: func() -> map<string, f32>;
+    get-map-value: func() -> map<string, f32>;
   }
   variant my-variant {
     get-case(option<tuple<bool, bool, result<_, list<f32>>, bool>>),

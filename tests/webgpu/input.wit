@@ -1,7 +1,6 @@
 package webidl:my-package-idl;
 
 interface my-interface {
-  use wasi:io/poll.{ pollable };
   variant allow-shared-buffer-source {
     array-buffer-view(array-buffer-view),
     array-buffer(array-buffer),
@@ -106,7 +105,7 @@ interface my-interface {
     float64-array(float64-array),
   }
   resource gpu {
-    request-adapter: func(options: option<gpu-request-adapter-options>) -> option<gpu-adapter>;
+    request-adapter: func(options: option<gpu-request-adapter-options>) -> future<option<gpu-adapter>>;
     get-preferred-canvas-format: func() -> gpu-texture-format;
     wgsl-language-features: func() -> wgsl-language-features;
   }
@@ -115,7 +114,7 @@ interface my-interface {
     limits: func() -> gpu-supported-limits;
     info: func() -> gpu-adapter-info;
     is-fallback-adapter: func() -> bool;
-    request-device: func(descriptor: option<gpu-device-descriptor>) -> gpu-device;
+    request-device: func(descriptor: option<gpu-device-descriptor>) -> future<gpu-device>;
   }
   resource gpu-adapter-info {
     vendor: func() -> string;
@@ -205,7 +204,7 @@ interface my-interface {
     size: func() -> gpu-size64-out;
     usage: func() -> gpu-flags-constant;
     map-state: func() -> gpu-buffer-map-state;
-    map-async: func(mode: gpu-map-mode-flags, offset: option<gpu-size64>, size: option<gpu-size64>);
+    map-async: func(mode: gpu-map-mode-flags, offset: option<gpu-size64>, size: option<gpu-size64>) -> future;
     get-mapped-range: func(offset: option<gpu-size64>, size: option<gpu-size64>) -> array-buffer;
     unmap: func();
     destroy: func();
@@ -428,17 +427,17 @@ interface my-interface {
     create-shader-module: func(descriptor: gpu-shader-module-descriptor) -> gpu-shader-module;
     create-compute-pipeline: func(descriptor: gpu-compute-pipeline-descriptor) -> gpu-compute-pipeline;
     create-render-pipeline: func(descriptor: gpu-render-pipeline-descriptor) -> gpu-render-pipeline;
-    create-compute-pipeline-async: func(descriptor: gpu-compute-pipeline-descriptor) -> gpu-compute-pipeline;
-    create-render-pipeline-async: func(descriptor: gpu-render-pipeline-descriptor) -> gpu-render-pipeline;
+    create-compute-pipeline-async: func(descriptor: gpu-compute-pipeline-descriptor) -> future<gpu-compute-pipeline>;
+    create-render-pipeline-async: func(descriptor: gpu-render-pipeline-descriptor) -> future<gpu-render-pipeline>;
     create-command-encoder: func(descriptor: option<gpu-command-encoder-descriptor>) -> gpu-command-encoder;
     create-render-bundle-encoder: func(descriptor: gpu-render-bundle-encoder-descriptor) -> gpu-render-bundle-encoder;
     create-query-set: func(descriptor: gpu-query-set-descriptor) -> gpu-query-set;
     label: func() -> string;
     set-label: func(label: string);
-    lost: func() -> gpu-device-lost-info;
+    lost: func() -> future<gpu-device-lost-info>;
     push-error-scope: func(filter: gpu-error-filter);
-    pop-error-scope: func() -> option<gpu-error>;
-    onuncapturederror-subscribe: func() -> pollable;
+    pop-error-scope: func() -> future<option<gpu-error>>;
+    onuncapturederror: func() -> stream;
   }
   record gpu-device-descriptor {
     required-features: option<list<gpu-feature-name>>,
@@ -552,8 +551,8 @@ interface my-interface {
   type gpu-integer-coordinate = u32;
   type gpu-integer-coordinate-out = u32;
   resource gpu-internal-error {
-    message: func() -> string;
     constructor(message: string);
+    message: func() -> string;
   }
   enum gpu-load-op {
     load,
@@ -596,8 +595,8 @@ interface my-interface {
     list-gpu-integer-coordinate(list<gpu-integer-coordinate>),
   }
   resource gpu-out-of-memory-error {
-    message: func() -> string;
     constructor(message: string);
+    message: func() -> string;
   }
   type gpu-pipeline-constant-value = f64;
   record gpu-pipeline-descriptor-base {
@@ -664,7 +663,7 @@ interface my-interface {
   }
   resource gpu-queue {
     submit: func(command-buffers: list<borrow<gpu-command-buffer>>);
-    on-submitted-work-done: func();
+    on-submitted-work-done: func() -> future;
     write-buffer: func(buffer: borrow<gpu-buffer>, buffer-offset: gpu-size64, data: allow-shared-buffer-source, data-offset: option<gpu-size64>, size: option<gpu-size64>);
     write-texture: func(destination: gpu-image-copy-texture, data: allow-shared-buffer-source, data-layout: gpu-image-data-layout, size: gpu-extent3-d);
     copy-external-image-to-texture: func(source: gpu-image-copy-external-image, destination: gpu-image-copy-texture-tagged, copy-size: gpu-extent3-d);
@@ -819,7 +818,7 @@ interface my-interface {
     label: option<string>,
   }
   resource gpu-shader-module {
-    get-compilation-info: func() -> gpu-compilation-info;
+    get-compilation-info: func() -> future<gpu-compilation-info>;
     label: func() -> string;
     set-label: func(label: string);
   }
@@ -1092,8 +1091,8 @@ interface my-interface {
     error: borrow<gpu-error>,
   }
   resource gpu-validation-error {
-    message: func() -> string;
     constructor(message: string);
+    message: func() -> string;
   }
   record gpu-vertex-attribute {
     format: gpu-vertex-format,
