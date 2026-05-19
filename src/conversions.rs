@@ -1,3 +1,6 @@
+// allow `format!` calls inside expect for better errors
+#![allow(clippy::expect_fun_call)]
+
 use std::collections::HashMap;
 
 use wit_encoder::{
@@ -181,7 +184,7 @@ pub fn transform(
                     let param = func
                         .params_mut()
                         .items_mut()
-                        .into_iter()
+                        .iter_mut()
                         .find(|(name, _)| old_param_name == name.raw_name())
                         .unwrap();
                     param.0 = Ident::new(new_name);
@@ -196,7 +199,7 @@ pub fn transform(
                     let param = func
                         .params_mut()
                         .items_mut()
-                        .into_iter()
+                        .iter_mut()
                         .find(|(name, _)| param == name.raw_name())
                         .unwrap();
                     param.1 = new_type;
@@ -298,7 +301,7 @@ pub fn transform(
 }
 
 fn find_record<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Record {
-    let type_def = find_type_def(interface, &name);
+    let type_def = find_type_def(interface, name);
     let record = match type_def.kind_mut() {
         wit_encoder::TypeDefKind::Record(record) => record,
         _ => panic!("{name} is not a record"),
@@ -357,7 +360,7 @@ fn find_func<'a>(
 }
 
 fn find_resource<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Resource {
-    let type_def = find_type_def(interface, &name);
+    let type_def = find_type_def(interface, name);
     let record = match type_def.kind_mut() {
         wit_encoder::TypeDefKind::Resource(resource) => resource,
         _ => panic!("{name} is not a resource"),
@@ -397,7 +400,7 @@ fn find_standalone_func<'a>(interface: &'a mut Interface, name: &str) -> &'a mut
 }
 
 fn find_variant<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Variant {
-    let type_def = find_type_def(interface, &name);
+    let type_def = find_type_def(interface, name);
     let record = match type_def.kind_mut() {
         wit_encoder::TypeDefKind::Variant(variant) => variant,
         _ => panic!("{name} is not a variant"),
@@ -415,7 +418,7 @@ fn find_variant_case<'a>(variant: &'a mut Variant, name: &str) -> &'a mut Varian
 }
 
 fn find_enum<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Enum {
-    let type_def = find_type_def(interface, &name);
+    let type_def = find_type_def(interface, name);
     let record = match type_def.kind_mut() {
         wit_encoder::TypeDefKind::Enum(enum_) => enum_,
         _ => panic!("{name} is not a enum"),
@@ -604,8 +607,8 @@ fn find_var_value(
         } => {
             let found_type = match find_type {
                 FindType::RecordField { record, field } => {
-                    let record = find_record(interface, &record);
-                    let field = find_record_field(record, &field);
+                    let record = find_record(interface, record);
+                    let field = find_record_field(record, field);
                     field.type_()
                 }
                 FindType::FuncParam {
@@ -613,7 +616,7 @@ fn find_var_value(
                     func,
                     name,
                 } => {
-                    let resource = find_resource(interface, &resource);
+                    let resource = find_resource(interface, resource);
                     let func = find_resource_func(resource, func, true);
                     let name = Ident::new(name.to_string());
                     let t = match func.params().items().iter().find(|(n, _)| n == &name) {
@@ -623,7 +626,7 @@ fn find_var_value(
                     t
                 }
                 FindType::FuncResultsAnon { resource, func } => {
-                    let resource = find_resource(interface, &resource);
+                    let resource = find_resource(interface, resource);
                     let func = find_resource_func(resource, func, false);
                     let result_ = match func.results() {
                         Some(Results::Anon(t)) => t,
@@ -639,7 +642,7 @@ fn find_var_value(
                     func,
                     name,
                 } => {
-                    let resource = find_resource(interface, &resource);
+                    let resource = find_resource(interface, resource);
                     let func = find_resource_func(resource, func, false);
                     let name = Ident::new(name.to_string());
                     let result_ = match func.results() {
@@ -657,8 +660,8 @@ fn find_var_value(
                     result_
                 }
                 FindType::VariantCase { variant, case } => {
-                    let variant = find_variant(interface, &variant);
-                    let case = find_variant_case(variant, &case);
+                    let variant = find_variant(interface, variant);
+                    let case = find_variant_case(variant, case);
                     let t = match case.type_() {
                         Some(t) => t,
                         None => anyhow::bail!("Variant case doesn't have a value"),
@@ -666,7 +669,7 @@ fn find_var_value(
                     t
                 }
             };
-            let found_type = type_unwraps(found_type, &unwrap_t)?;
+            let found_type = type_unwraps(found_type, unwrap_t)?;
             serde_json::to_value(found_type).unwrap()
         }
         Find::FindStringList {
@@ -675,11 +678,11 @@ fn find_var_value(
         } => {
             let list: Vec<&Ident> = match find_string_list {
                 FindStringList::EnumCases { enum_ } => {
-                    let enum_ = find_enum(interface, &enum_);
+                    let enum_ = find_enum(interface, enum_);
                     enum_.cases().iter().map(|c| c.name()).collect()
                 }
                 FindStringList::VariantCaseNames { variant } => {
-                    let variant = find_variant(interface, &variant);
+                    let variant = find_variant(interface, variant);
                     variant.cases().iter().map(|c| c.name()).collect()
                 }
             };
@@ -704,7 +707,7 @@ fn find_var_value(
         } => {
             let pairs: Vec<(&Ident, &Type)> = match find_name_type_pair_list {
                 FindNameTypePairList::VariantCases { variant } => {
-                    let variant = find_variant(interface, &variant);
+                    let variant = find_variant(interface, variant);
                     variant
                         .cases()
                         .iter()
@@ -717,12 +720,12 @@ fn find_var_value(
                         .collect()
                 }
                 FindNameTypePairList::FuncParams { resource, func } => {
-                    let resource = find_resource(interface, &resource);
+                    let resource = find_resource(interface, resource);
                     let func = find_resource_func(resource, func, true);
                     func.params().items().iter().map(|(n, t)| (n, t)).collect()
                 }
                 FindNameTypePairList::RecordFields { record } => {
-                    let record = find_record(interface, &record);
+                    let record = find_record(interface, record);
                     record
                         .fields()
                         .iter()
@@ -741,7 +744,7 @@ fn find_var_value(
                 NameTypePairConvertTo::FuncParams => {
                     let params: Params = pairs
                         .into_iter()
-                        .map(|(n, t)| (n.clone(), t.clone()).into())
+                        .map(|(n, t)| (n.clone(), t.clone()))
                         .collect();
                     serde_json::to_value(params).unwrap()
                 }
@@ -762,7 +765,7 @@ fn is_var(s: &str) -> bool {
 }
 
 fn type_unwraps<'a>(t: &'a Type, unwraps: &[UnwrapT]) -> anyhow::Result<&'a Type> {
-    Ok(match unwraps.get(0) {
+    Ok(match unwraps.first() {
         None => t,
         Some(unwrap) => match unwrap {
             UnwrapT::Option => match t {
