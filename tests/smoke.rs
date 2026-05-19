@@ -2,16 +2,9 @@ use pretty_assertions::assert_eq;
 use std::{fs, path::Path};
 use wit_transforms::Transform;
 
+#[derive(Default)]
 struct TestOptions {
     additional_wit_paths: Vec<&'static str>,
-}
-impl Default for TestOptions {
-    fn default() -> Self {
-        Self {
-            // TODO: remove this once we get rid of pollable
-            additional_wit_paths: vec!["./tests/pollable.wit"],
-        }
-    }
 }
 
 fn test(path: &str, options: TestOptions) {

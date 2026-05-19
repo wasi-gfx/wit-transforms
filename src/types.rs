@@ -76,6 +76,10 @@ pub enum UnwrapT {
     ResultErr,
     List,
     Tuple(usize),
+    MapKey,
+    MapValue,
+    Future,
+    Stream,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

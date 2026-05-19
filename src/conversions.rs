@@ -475,6 +475,7 @@ where
             Type::Named(ty) => f(ty),
             Type::Option(ty) => type_found(ty, f),
             Type::List(ty) => type_found(ty, f),
+            Type::FixedLengthList(ty, _) => type_found(ty, f),
             Type::Borrow(resource) => f(resource),
             Type::Tuple(tuple) => {
                 for ty in tuple.types_mut() {
@@ -489,11 +490,17 @@ where
                     type_found(ty, f);
                 }
             }
-            Type::Map(_, _) => todo!(),
-            Type::FixedLengthList(_, _) => todo!(),
-            Type::Future(_) => todo!(),
-            Type::Stream(_) => todo!(),
-            Type::ErrorContext => todo!(),
+            Type::Map(_key, ty) => type_found(ty, f),
+            Type::Future(ty) => {
+                if let Some(ty) = ty {
+                    type_found(ty, f)
+                }
+            }
+            Type::Stream(ty) => {
+                if let Some(ty) = ty {
+                    type_found(ty, f)
+                }
+            }
             Type::Bool
             | Type::U8
             | Type::U16
@@ -506,7 +513,8 @@ where
             | Type::F32
             | Type::F64
             | Type::Char
-            | Type::String => {
+            | Type::String
+            | Type::ErrorContext => {
                 // Only named types can be replaced globally
             }
         }
@@ -615,7 +623,7 @@ fn find_var_value(
                     t
                 }
                 FindType::FuncResult { resource, func } => {
-                    let resource = find_resource(interface, &resource);
+                    let resource = find_resource(interface, resource);
                     let func = find_resource_func(resource, func, false);
                     let result_ = match func.result() {
                         Some(t) => t,
@@ -757,6 +765,24 @@ fn type_unwraps<'a>(t: &'a Type, unwraps: &[UnwrapT]) -> anyhow::Result<&'a Type
             UnwrapT::Tuple(i) => match t {
                 Type::Tuple(tuple) => type_unwraps(&tuple.types()[*i], &unwraps[1..])?,
                 _ => anyhow::bail!("Not a tuple"),
+            },
+            UnwrapT::Future => match t {
+                Type::Future(Some(inner)) => type_unwraps(inner, &unwraps[1..])?,
+                Type::Future(None) => anyhow::bail!("Future doesn't have a value"),
+                _ => anyhow::bail!("Not a future"),
+            },
+            UnwrapT::Stream => match t {
+                Type::Stream(Some(inner)) => type_unwraps(inner, &unwraps[1..])?,
+                Type::Stream(None) => anyhow::bail!("stream doesn't have a value"),
+                _ => anyhow::bail!("Not a stream"),
+            },
+            UnwrapT::MapKey => match t {
+                Type::Map(key, _value) => type_unwraps(key, &unwraps[1..])?,
+                _ => anyhow::bail!("Not a map"),
+            },
+            UnwrapT::MapValue => match t {
+                Type::Map(_key, value) => type_unwraps(value, &unwraps[1..])?,
+                _ => anyhow::bail!("Not a map"),
             },
         },
     })
