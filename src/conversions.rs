@@ -287,11 +287,14 @@ pub fn transform(
                 }
                 Operation::ReplaceRefs { old, new } => {
                     let old = Ident::new(old);
-                    let new = Ident::new(new);
-                    visit_refs_mut(&mut interface, |name| {
-                        if name == &old {
-                            *name = new.clone();
+                    visit_types_mut(&mut interface, |ty| match ty {
+                        Type::Named(name) if name == &old => {
+                            *ty = Type::Named(new.clone().into());
                         }
+                        Type::Borrow(name) if name == &old => {
+                            *ty = Type::Borrow(new.clone().into());
+                        }
+                        _ => {}
                     });
                 }
             }
@@ -463,45 +466,46 @@ where
     }
 }
 
-fn visit_refs_mut<F>(interface: &mut wit_encoder::Interface, f: F)
+fn visit_types_mut<F>(interface: &mut wit_encoder::Interface, f: F)
 where
-    F: Fn(&mut wit_encoder::Ident),
+    F: Fn(&mut wit_encoder::Type),
 {
-    fn type_found<F>(ty: &mut wit_encoder::Type, f: &F)
+    fn visit<F>(ty: &mut wit_encoder::Type, f: &F)
     where
-        F: Fn(&mut wit_encoder::Ident),
+        F: Fn(&mut wit_encoder::Type),
     {
+        f(ty);
         match ty {
-            Type::Named(ty) => f(ty),
-            Type::Option(ty) => type_found(ty, f),
-            Type::List(ty) => type_found(ty, f),
-            Type::FixedLengthList(ty, _) => type_found(ty, f),
-            Type::Borrow(resource) => f(resource),
+            Type::Option(ty) => visit(ty, f),
+            Type::List(ty) => visit(ty, f),
+            Type::FixedLengthList(ty, _) => visit(ty, f),
             Type::Tuple(tuple) => {
                 for ty in tuple.types_mut() {
-                    type_found(ty, f)
+                    visit(ty, f)
                 }
             }
             Type::Result(result) => {
                 if let Some(ty) = result.get_ok_mut() {
-                    type_found(ty, f);
+                    visit(ty, f);
                 }
                 if let Some(ty) = result.get_err_mut() {
-                    type_found(ty, f);
+                    visit(ty, f);
                 }
             }
-            Type::Map(_key, ty) => type_found(ty, f),
+            Type::Map(_key, ty) => visit(ty, f),
             Type::Future(ty) => {
                 if let Some(ty) = ty {
-                    type_found(ty, f)
+                    visit(ty, f)
                 }
             }
             Type::Stream(ty) => {
                 if let Some(ty) = ty {
-                    type_found(ty, f)
+                    visit(ty, f)
                 }
             }
-            Type::Bool
+            Type::Named(_)
+            | Type::Borrow(_)
+            | Type::Bool
             | Type::U8
             | Type::U16
             | Type::U32
@@ -514,9 +518,7 @@ where
             | Type::F64
             | Type::Char
             | Type::String
-            | Type::ErrorContext => {
-                // Only named types can be replaced globally
-            }
+            | Type::ErrorContext => {}
         }
     }
     for item in interface.items_mut() {
@@ -525,28 +527,28 @@ where
                 match ty.kind_mut() {
                     wit_encoder::TypeDefKind::Record(record) => {
                         for field in record.fields_mut() {
-                            type_found(field.type_mut(), &f);
+                            visit(field.type_mut(), &f);
                         }
                     }
                     wit_encoder::TypeDefKind::Resource(resource) => {
                         for func in resource.funcs_mut() {
                             for (_, ty) in func.params_mut().items_mut() {
-                                type_found(ty, &f);
+                                visit(ty, &f);
                             }
                             if let Some(ty) = func.result_mut() {
-                                type_found(ty, &f);
+                                visit(ty, &f);
                             }
                         }
                     }
                     wit_encoder::TypeDefKind::Variant(variant) => {
                         for case in variant.cases_mut() {
                             if let Some(ty) = case.type_mut() {
-                                type_found(ty, &f);
+                                visit(ty, &f);
                             }
                         }
                     }
                     wit_encoder::TypeDefKind::Type(ty) => {
-                        type_found(ty, &f);
+                        visit(ty, &f);
                     }
                     wit_encoder::TypeDefKind::Flags(_) | wit_encoder::TypeDefKind::Enum(_) => {
                         // no types in flags/enums
@@ -555,10 +557,10 @@ where
             }
             InterfaceItem::Function(func) => {
                 for (_, ty) in func.params_mut().items_mut() {
-                    type_found(ty, &f);
+                    visit(ty, &f);
                 }
                 if let Some(ty) = func.result_mut() {
-                    type_found(ty, &f);
+                    visit(ty, &f);
                 }
             }
         }
