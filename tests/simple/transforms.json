@@ -4,9 +4,13 @@
         "operations": [
             {
                 "operation": {
-                    "replace-refs": {
-                        "old": "gpu-color",
-                        "new": "gpu-color-dict"
+                    "replace-type-usages": {
+                        "old": {
+                            "named": "gpu-color"
+                        },
+                        "new": {
+                            "named": "gpu-color-dict"
+                        }
                     }
                 }
             },

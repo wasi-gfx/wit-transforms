@@ -271,6 +271,9 @@ pub enum Operation {
         old_case_name: String,
         new_case_name: String,
     },
-    /// Replace all references to a type with a reference to another type
-    ReplaceRefs { old: String, new: String },
+    /// Replace all usages of a type with another type
+    ReplaceTypeUsages {
+        old: wit_encoder::Type,
+        new: wit_encoder::Type,
+    },
 }
