@@ -159,7 +159,7 @@
                                 ]
                             },
                             "result": "f64",
-                            "async-": true
+                            "async": true
                         }
                     }
                 }
