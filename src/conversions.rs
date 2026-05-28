@@ -285,16 +285,11 @@ pub fn transform(
                     let case = find_enum_case(enum_, &old_case_name);
                     case.set_name(new_case_name);
                 }
-                Operation::ReplaceRefs { old, new } => {
-                    let old = Ident::new(old);
-                    visit_types_mut(&mut interface, |ty| match ty {
-                        Type::Named(name) if name == &old => {
-                            *ty = Type::Named(new.clone().into());
+                Operation::ReplaceTypeUsages { old, new } => {
+                    visit_types_mut(&mut interface, |ty| {
+                        if ty == &old {
+                            *ty = new.clone();
                         }
-                        Type::Borrow(name) if name == &old => {
-                            *ty = Type::Borrow(new.clone().into());
-                        }
-                        _ => {}
                     });
                 }
             }

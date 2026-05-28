@@ -106,8 +106,8 @@ fn func() {
 }
 
 #[test]
-fn replace_refs() {
-    test("replace-refs", TestOptions::default());
+fn replace_type_usages() {
+    test("replace-type-usages", TestOptions::default());
 }
 
 #[test]

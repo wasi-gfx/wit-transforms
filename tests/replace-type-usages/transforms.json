@@ -1,0 +1,19 @@
+[
+    {
+        "reason": "Test replace-type-usages",
+        "operations": [
+            {
+                "operation": {
+                    "replace-type-usages": {
+                        "old": {
+                            "named": "a"
+                        },
+                        "new": {
+                            "named": "b"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+]
