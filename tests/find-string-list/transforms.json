@@ -1,0 +1,97 @@
+[
+    {
+        "reason": "test all find-string-list variants",
+        "operations": [
+            {
+                "vars": {
+                    "$_ENUM_CASES": {
+                        "find-string-list": {
+                            "enum-cases": {
+                                "enum": "my-enum"
+                            },
+                            "convert-to": "variant-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-variant-cases": {
+                        "variant": "target-enum-variant",
+                        "cases": "$_ENUM_CASES"
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_VARIANT_CASES": {
+                        "find-string-list": {
+                            "variant-case-names": {
+                                "variant": "my-variant"
+                            },
+                            "convert-to": "enum-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-enum-cases": {
+                        "enum": "target-variant-enum",
+                        "cases": "$_VARIANT_CASES"
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_FIELDS": {
+                        "find-string-list": {
+                            "record-field-names": {
+                                "record": "my-record"
+                            },
+                            "convert-to": "enum-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-enum-cases": {
+                        "enum": "target-record-enum",
+                        "cases": "$_FIELDS"
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_FLAGS": {
+                        "find-string-list": {
+                            "flags-flag-names": {
+                                "flags": "my-flags"
+                            },
+                            "convert-to": "variant-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-variant-cases": {
+                        "variant": "target-flags-variant",
+                        "cases": "$_FLAGS"
+                    }
+                }
+            },
+            {
+                "vars": {
+                    "$_FUNCS": {
+                        "find-string-list": {
+                            "resource-funcs-names": {
+                                "resource": "my-resource"
+                            },
+                            "convert-to": "enum-cases"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-enum-cases": {
+                        "enum": "target-resource-enum",
+                        "cases": "$_FUNCS"
+                    }
+                }
+            }
+        ]
+    }
+]
