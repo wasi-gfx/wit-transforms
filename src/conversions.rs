@@ -4,8 +4,8 @@
 use std::collections::HashMap;
 
 use wit_encoder::{
-    Enum, EnumCase, Field, Ident, Interface, InterfaceItem, Params, Record, Resource, ResourceFunc,
-    StandaloneFunc, Type, TypeDef, Variant, VariantCase,
+    Enum, EnumCase, Field, Flags, Ident, Interface, InterfaceItem, Params, Record, Resource,
+    ResourceFunc, StandaloneFunc, Type, TypeDef, Variant, VariantCase,
 };
 
 use crate::{
@@ -415,6 +415,15 @@ fn find_variant_case<'a>(variant: &'a mut Variant, name: &str) -> &'a mut Varian
         .expect(&format!("Can't find variant case {name}"))
 }
 
+fn find_flags<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Flags {
+    let type_def = find_type_def(interface, name);
+    let flags = match type_def.kind_mut() {
+        wit_encoder::TypeDefKind::Flags(flags) => flags,
+        _ => panic!("{name} is not a flags"),
+    };
+    flags
+}
+
 fn find_enum<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Enum {
     let type_def = find_type_def(interface, name);
     let record = match type_def.kind_mut() {
@@ -653,6 +662,26 @@ fn find_var_value(
                 FindStringList::VariantCaseNames { variant } => {
                     let variant = find_variant(interface, variant);
                     variant.cases().iter().map(|c| c.name()).collect()
+                }
+                FindStringList::RecordFieldNames { record } => {
+                    let record = find_record(interface, record);
+                    record.fields().iter().map(|c| c.name()).collect()
+                }
+                FindStringList::FlagsFlagNames { flags } => {
+                    let flags = find_flags(interface, flags);
+                    flags.flags().iter().map(|f| f.name()).collect()
+                }
+                FindStringList::ResourceFuncsNames { resource } => {
+                    let resource = find_resource(interface, resource);
+                    resource
+                        .funcs()
+                        .iter()
+                        .filter_map(|f| match f.kind() {
+                            wit_encoder::ResourceFuncKind::Method(name, _, _) => Some(name),
+                            wit_encoder::ResourceFuncKind::Static(name, _, _) => Some(name),
+                            wit_encoder::ResourceFuncKind::Constructor(_) => None,
+                        })
+                        .collect()
                 }
             };
             match convert_to {

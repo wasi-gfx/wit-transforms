@@ -124,3 +124,8 @@ fn variable_name_string() {
 fn variable_name_type_pair() {
     test("variable-name-type-pair", TestOptions::default());
 }
+
+#[test]
+fn find_string_list() {
+    test("find-string-list", TestOptions::default());
+}

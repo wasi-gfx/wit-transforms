@@ -116,6 +116,15 @@ pub enum FindStringList {
     VariantCaseNames {
         variant: String,
     },
+    RecordFieldNames {
+        record: String,
+    },
+    FlagsFlagNames {
+        flags: String,
+    },
+    ResourceFuncsNames {
+        resource: String,
+    },
 }
 
 #[derive(Serialize, Deserialize, Debug)]
