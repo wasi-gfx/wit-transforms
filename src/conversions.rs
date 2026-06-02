@@ -10,7 +10,7 @@ use wit_encoder::{
 
 use crate::{
     Find, FindNameTypePairList, FindStringList, FindType, NameTypePairConvertTo, Operation,
-    StringListInto, Transform, UnwrapT,
+    StringListConvertTo, Transform, UnwrapT,
 };
 
 pub fn transform(
@@ -726,19 +726,19 @@ fn find_var_value(
                 }
             };
             match convert_to {
-                StringListInto::EnumCases => {
+                StringListConvertTo::EnumCases => {
                     let cases: Vec<EnumCase> =
                         list.into_iter().map(|name| name.clone().into()).collect();
                     serde_json::to_value(cases).unwrap()
                 }
-                StringListInto::VariantCases => {
+                StringListConvertTo::VariantCases => {
                     let cases: Vec<VariantCase> = list
                         .into_iter()
                         .map(|name| VariantCase::empty(name.clone()))
                         .collect();
                     serde_json::to_value(cases).unwrap()
                 }
-                StringListInto::FlagsItems => {
+                StringListConvertTo::FlagsItems => {
                     let items: Vec<wit_encoder::Flag> = list
                         .into_iter()
                         .map(|name| Flag::new(name.clone()))

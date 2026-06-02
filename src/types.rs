@@ -37,7 +37,7 @@ pub enum Find {
     FindStringList {
         #[serde(flatten)]
         find_string_list: FindStringList,
-        convert_to: StringListInto,
+        convert_to: StringListConvertTo,
     },
     // FindNameTypePair {
     //     #[serde(flatten)]
@@ -53,7 +53,7 @@ pub enum Find {
 #[derive(Serialize, Deserialize, Debug)]
 #[serde(rename_all = "kebab-case")]
 #[serde(rename_all_fields = "kebab-case")]
-pub enum StringListInto {
+pub enum StringListConvertTo {
     EnumCases,
     VariantCases,
     FlagsItems,
