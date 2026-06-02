@@ -36,6 +36,9 @@ interface my-interface {
   flags target-resource-flags {
     existing-case,
   }
+  variant target-uppercase-variant {
+    existing-case,
+  }
   enum target-variant-enum {
     existing-case,
   }

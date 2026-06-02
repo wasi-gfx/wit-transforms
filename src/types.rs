@@ -38,6 +38,7 @@ pub enum Find {
         #[serde(flatten)]
         find_string_list: FindStringList,
         convert_to: StringListConvertTo,
+        transform_strings: Option<StringTransform>,
     },
     // FindNameTypePair {
     //     #[serde(flatten)]
@@ -47,6 +48,7 @@ pub enum Find {
         #[serde(flatten)]
         find_name_type_pair_list: FindNameTypePairList,
         convert_to: NameTypePairConvertTo,
+        transform_strings: Option<StringTransform>,
     },
 }
 
@@ -66,6 +68,14 @@ pub enum NameTypePairConvertTo {
     VariantCases,
     FuncParams,
     RecordFields,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+#[serde(rename_all = "kebab-case")]
+#[serde(rename_all_fields = "kebab-case")]
+pub enum StringTransform {
+    Uppercase,
+    Lowercase,
 }
 
 #[derive(Serialize, Deserialize, Debug)]

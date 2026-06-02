@@ -10,7 +10,7 @@ use wit_encoder::{
 
 use crate::{
     Find, FindNameTypePairList, FindStringList, FindType, NameTypePairConvertTo, Operation,
-    StringListConvertTo, Transform, UnwrapT,
+    StringListConvertTo, StringTransform, Transform, UnwrapT,
 };
 
 pub fn transform(
@@ -694,6 +694,7 @@ fn find_var_value(
         Find::FindStringList {
             find_string_list,
             convert_to,
+            transform_strings,
         } => {
             let list: Vec<&Ident> = match find_string_list {
                 FindStringList::EnumCases { enum_ } => {
@@ -725,24 +726,22 @@ fn find_var_value(
                         .collect()
                 }
             };
+            let list: Vec<Ident> = apply_string_transform(list, transform_strings.as_ref());
             match convert_to {
                 StringListConvertTo::EnumCases => {
-                    let cases: Vec<EnumCase> =
-                        list.into_iter().map(|name| name.clone().into()).collect();
+                    let cases: Vec<EnumCase> = list.into_iter().map(|name| name.into()).collect();
                     serde_json::to_value(cases).unwrap()
                 }
                 StringListConvertTo::VariantCases => {
                     let cases: Vec<VariantCase> = list
                         .into_iter()
-                        .map(|name| VariantCase::empty(name.clone()))
+                        .map(|name| VariantCase::empty(name))
                         .collect();
                     serde_json::to_value(cases).unwrap()
                 }
                 StringListConvertTo::FlagsItems => {
-                    let items: Vec<wit_encoder::Flag> = list
-                        .into_iter()
-                        .map(|name| Flag::new(name.clone()))
-                        .collect();
+                    let items: Vec<wit_encoder::Flag> =
+                        list.into_iter().map(|name| Flag::new(name)).collect();
                     serde_json::to_value(items).unwrap()
                 }
             }
@@ -750,6 +749,7 @@ fn find_var_value(
         Find::FindNameTypePairList {
             find_name_type_pair_list,
             convert_to,
+            transform_strings,
         } => {
             let pairs: Vec<(&Ident, &Type)> = match find_name_type_pair_list {
                 FindNameTypePairList::VariantCases { variant } => {
@@ -779,26 +779,27 @@ fn find_var_value(
                         .collect()
                 }
             };
+            let names: Vec<Ident> = apply_string_transform(
+                pairs.iter().map(|(n, _)| *n).collect(),
+                transform_strings.as_ref(),
+            );
+            let pairs: Vec<(Ident, Type)> = names
+                .into_iter()
+                .zip(pairs.into_iter().map(|(_, t)| t.clone()))
+                .collect();
             match convert_to {
                 NameTypePairConvertTo::VariantCases => {
-                    let cases: Vec<VariantCase> = pairs
-                        .into_iter()
-                        .map(|(n, t)| (n.clone(), t.clone()).into())
-                        .collect();
+                    let cases: Vec<VariantCase> =
+                        pairs.into_iter().map(|(n, t)| (n, t).into()).collect();
                     serde_json::to_value(cases).unwrap()
                 }
                 NameTypePairConvertTo::FuncParams => {
-                    let params: Params = pairs
-                        .into_iter()
-                        .map(|(n, t)| (n.clone(), t.clone()))
-                        .collect();
+                    let params: Params = pairs.into_iter().collect();
                     serde_json::to_value(params).unwrap()
                 }
                 NameTypePairConvertTo::RecordFields => {
-                    let fields: Vec<Field> = pairs
-                        .into_iter()
-                        .map(|(n, t)| (n.clone(), t.clone()).into())
-                        .collect();
+                    let fields: Vec<Field> =
+                        pairs.into_iter().map(|(n, t)| (n, t).into()).collect();
                     serde_json::to_value(fields).unwrap()
                 }
             }
@@ -860,4 +861,18 @@ fn type_unwraps<'a>(t: &'a Type, unwraps: &[UnwrapT]) -> anyhow::Result<&'a Type
             },
         },
     })
+}
+
+fn apply_string_transform(names: Vec<&Ident>, transform: Option<&StringTransform>) -> Vec<Ident> {
+    match transform {
+        None => names.into_iter().cloned().collect(),
+        Some(StringTransform::Uppercase) => names
+            .into_iter()
+            .map(|n| Ident::new(n.raw_name().to_uppercase()))
+            .collect(),
+        Some(StringTransform::Lowercase) => names
+            .into_iter()
+            .map(|n| Ident::new(n.raw_name().to_lowercase()))
+            .collect(),
+    }
 }

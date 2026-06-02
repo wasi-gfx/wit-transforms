@@ -59,5 +59,29 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "test transform-strings lowercase on name-type-pair-list",
+        "operations": [
+            {
+                "vars": {
+                    "$_FIELDS": {
+                        "find-name-type-pair-list": {
+                            "record-fields": {
+                                "record": "record2variant-record"
+                            },
+                            "convert-to": "record-fields",
+                            "transform-strings": "lowercase"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-record-fields": {
+                        "record": "record2variant-lowercase-record",
+                        "fields": "$_FIELDS"
+                    }
+                }
+            }
+        ]
     }
 ]
