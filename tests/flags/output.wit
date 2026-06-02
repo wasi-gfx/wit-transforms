@@ -1,0 +1,12 @@
+package my-namespcae:my-package;
+
+interface my-interface {
+  flags my-flags {
+    keep-as-is,
+    rename-new-name,
+    added,
+    added-list-a,
+    added-list-b,
+    added-list-c,
+  }
+}
