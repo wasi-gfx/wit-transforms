@@ -4,7 +4,7 @@
 use std::collections::HashMap;
 
 use wit_encoder::{
-    Enum, EnumCase, Field, Flags, Ident, Interface, InterfaceItem, Params, Record, Resource,
+    Enum, EnumCase, Field, Flag, Flags, Ident, Interface, InterfaceItem, Params, Record, Resource,
     ResourceFunc, StandaloneFunc, Type, TypeDef, Variant, VariantCase,
 };
 
@@ -285,6 +285,38 @@ pub fn transform(
                     let case = find_enum_case(enum_, &old_case_name);
                     case.set_name(new_case_name);
                 }
+                Operation::AddFlagsItem { flags, item } => {
+                    let flags = find_flags(&mut interface, &flags);
+                    flags.flags_mut().push(item);
+                }
+                Operation::AddFlagsItems { flags, items } => {
+                    let flags = find_flags(&mut interface, &flags);
+                    flags.flags_mut().extend(items);
+                }
+                Operation::RemoveFlagsItem { flags, item } => {
+                    let flags = find_flags(&mut interface, &flags);
+                    let item = Ident::new(item.to_string());
+                    let items = flags.flags_mut();
+                    let found = items
+                        .iter()
+                        .enumerate()
+                        .filter_map(|(i, c)| match c.name() == &item {
+                            true => Some(i),
+                            false => None,
+                        })
+                        .collect::<Vec<_>>();
+                    assert_eq!(found.len(), 1, "`{}` has to match exactly one func", item);
+                    items.remove(found[0]);
+                }
+                Operation::RenameFlagsItem {
+                    flags,
+                    old_item_name,
+                    new_item_name,
+                } => {
+                    let flags = find_flags(&mut interface, &flags);
+                    let item = find_flags_item(flags, &old_item_name);
+                    item.set_name(new_item_name);
+                }
                 Operation::ReplaceTypeUsages { old, new } => {
                     visit_types_mut(&mut interface, |ty| {
                         if ty == &old {
@@ -422,6 +454,15 @@ fn find_flags<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Flags {
         _ => panic!("{name} is not a flags"),
     };
     flags
+}
+
+fn find_flags_item<'a>(flags: &'a mut Flags, name: &str) -> &'a mut Flag {
+    let name = Ident::new(name.to_string());
+    flags
+        .flags_mut()
+        .iter_mut()
+        .find(|f| f.name() == &name)
+        .expect(&format!("Can't find flags item {name}"))
 }
 
 fn find_enum<'a>(interface: &'a mut Interface, name: &str) -> &'a mut Enum {
@@ -667,11 +708,11 @@ fn find_var_value(
                     let record = find_record(interface, record);
                     record.fields().iter().map(|c| c.name()).collect()
                 }
-                FindStringList::FlagsFlagNames { flags } => {
+                FindStringList::FlagsItemNames { flags } => {
                     let flags = find_flags(interface, flags);
                     flags.flags().iter().map(|f| f.name()).collect()
                 }
-                FindStringList::ResourceFuncsNames { resource } => {
+                FindStringList::ResourceFuncNames { resource } => {
                     let resource = find_resource(interface, resource);
                     resource
                         .funcs()
@@ -696,6 +737,13 @@ fn find_var_value(
                         .map(|name| VariantCase::empty(name.clone()))
                         .collect();
                     serde_json::to_value(cases).unwrap()
+                }
+                StringListInto::FlagsItems => {
+                    let items: Vec<wit_encoder::Flag> = list
+                        .into_iter()
+                        .map(|name| Flag::new(name.clone()))
+                        .collect();
+                    serde_json::to_value(items).unwrap()
                 }
             }
         }

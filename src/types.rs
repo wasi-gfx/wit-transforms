@@ -56,6 +56,7 @@ pub enum Find {
 pub enum StringListInto {
     EnumCases,
     VariantCases,
+    FlagsItems,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -119,10 +120,10 @@ pub enum FindStringList {
     RecordFieldNames {
         record: String,
     },
-    FlagsFlagNames {
+    FlagsItemNames {
         flags: String,
     },
-    ResourceFuncsNames {
+    ResourceFuncNames {
         resource: String,
     },
 }
@@ -279,6 +280,24 @@ pub enum Operation {
         enum_: String,
         old_case_name: String,
         new_case_name: String,
+    },
+    /// Add a item to an flags
+    AddFlagsItem {
+        flags: String,
+        item: wit_encoder::Flag,
+    },
+    /// Add a multiple items to an flags
+    AddFlagsItems {
+        flags: String,
+        items: Vec<wit_encoder::Flag>,
+    },
+    /// Remove a item from an flags
+    RemoveFlagsItem { flags: String, item: String },
+    /// Rename a item of an flags
+    RenameFlagsItem {
+        flags: String,
+        old_item_name: String,
+        new_item_name: String,
     },
     /// Replace all usages of a type with another type
     ReplaceTypeUsages {

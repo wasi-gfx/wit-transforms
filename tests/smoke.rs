@@ -96,6 +96,11 @@ fn variant() {
 }
 
 #[test]
+fn flags() {
+    test("flags", TestOptions::default());
+}
+
+#[test]
 fn enum_() {
     test("enum", TestOptions::default());
 }

@@ -41,7 +41,7 @@ interface my-interface {
     field-b,
     field-c,
   }
-  enum target-resource-enum {
+  flags target-resource-flags {
     existing-case,
     method-a,
     static-b,

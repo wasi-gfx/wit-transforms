@@ -1,0 +1,55 @@
+[
+    {
+        "reason": "flags transformations",
+        "operations": [
+            {
+                "operation": {
+                    "remove-flags-item": {
+                        "flags": "my-flags",
+                        "item": "remove"
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-flags-item": {
+                        "flags": "my-flags",
+                        "item": {
+                            "name": "added",
+                            "type": {
+                                "option": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "add-flags-items": {
+                        "flags": "my-flags",
+                        "items": [
+                            {
+                                "name": "added-list-a"
+                            },
+                            {
+                                "name": "added-list-b"
+                            },
+                            {
+                                "name": "added-list-c"
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "operation": {
+                    "rename-flags-item": {
+                        "flags": "my-flags",
+                        "old-item-name" : "rename-old-name",
+                        "new-item-name" : "rename-new-name"
+                    }
+                }
+            }
+        ]
+    }
+]

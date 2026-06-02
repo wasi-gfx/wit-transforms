@@ -5,38 +5,38 @@ interface my-interface {
     enum-case-a,
     enum-case-b,
   }
-  variant my-variant {
-    variant-case-a(bool),
-    variant-case-b,
+  flags my-flags {
+    flag-a,
+    flag-b,
+    flag-c,
   }
   record my-record {
     field-a: string,
     field-b: u32,
     field-c: bool,
   }
-  flags my-flags {
-    flag-a,
-    flag-b,
-    flag-c,
-  }
   resource my-resource {
     constructor(x: s32);
     method-a: func() -> string;
     static-b: static func() -> bool;
   }
+  variant my-variant {
+    variant-case-a(bool),
+    variant-case-b,
+  }
   variant target-enum-variant {
-    existing-case,
-  }
-  enum target-variant-enum {
-    existing-case,
-  }
-  enum target-record-enum {
     existing-case,
   }
   variant target-flags-variant {
     existing-case,
   }
-  enum target-resource-enum {
+  enum target-record-enum {
+    existing-case,
+  }
+  flags target-resource-flags {
+    existing-case,
+  }
+  enum target-variant-enum {
     existing-case,
   }
 }

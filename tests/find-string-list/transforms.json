@@ -60,7 +60,7 @@
                 "vars": {
                     "$_FLAGS": {
                         "find-string-list": {
-                            "flags-flag-names": {
+                            "flags-item-names": {
                                 "flags": "my-flags"
                             },
                             "convert-to": "variant-cases"
@@ -78,17 +78,17 @@
                 "vars": {
                     "$_FUNCS": {
                         "find-string-list": {
-                            "resource-funcs-names": {
+                            "resource-func-names": {
                                 "resource": "my-resource"
                             },
-                            "convert-to": "enum-cases"
+                            "convert-to": "flags-items"
                         }
                     }
                 },
                 "operation": {
-                    "add-enum-cases": {
-                        "enum": "target-resource-enum",
-                        "cases": "$_FUNCS"
+                    "add-flags-items": {
+                        "flags": "target-resource-flags",
+                        "items": "$_FUNCS"
                     }
                 }
             }
