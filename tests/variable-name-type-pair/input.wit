@@ -9,6 +9,9 @@ interface my-interface {
   resource params2record-resource {
     params2record-method: func(case-a: bool, case-b: string);
   }
+  record record2variant-lowercase-record {
+    existing-field: bool,
+  }
   record record2variant-record {
     field-a: f32,
     field-b: option<f32>,

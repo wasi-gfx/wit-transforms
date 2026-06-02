@@ -93,5 +93,29 @@
                 }
             }
         ]
+    },
+    {
+        "reason": "test transform-strings lowercase",
+        "operations": [
+            {
+                "vars": {
+                    "$_FLAGS": {
+                        "find-string-list": {
+                            "flags-item-names": {
+                                "flags": "my-flags"
+                            },
+                            "convert-to": "variant-cases",
+                            "transform-strings": "uppercase"
+                        }
+                    }
+                },
+                "operation": {
+                    "add-variant-cases": {
+                        "variant": "target-uppercase-variant",
+                        "cases": "$_FLAGS"
+                    }
+                }
+            }
+        ]
     }
 ]

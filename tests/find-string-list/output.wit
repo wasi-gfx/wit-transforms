@@ -46,6 +46,12 @@ interface my-interface {
     method-a,
     static-b,
   }
+  variant target-uppercase-variant {
+    existing-case,
+    FLAG-A,
+    FLAG-B,
+    FLAG-C,
+  }
   enum target-variant-enum {
     existing-case,
     variant-case-a,
